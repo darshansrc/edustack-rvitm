@@ -1,0 +1,175 @@
+.pageContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    /* background-color: #f2f2f2; */
+}
+
+.navBar{
+    position: fixed;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    top: 0;
+    width: 100%;
+    height: 60px;
+}
+
+.formContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+    width: 95vw;
+    max-width: 400px;
+    background-color: white;
+    /* box-shadow: 0 5px 10px 0px rgba(0, 0, 0, 0.1); */
+    border-radius: 1rem;
+ 
+}
+
+.inputContainer{
+    position: relative;
+    width: 90vw;
+    max-width: 350px;
+}
+
+.formInput{
+    width: 90vw;
+    height: 3rem;
+    border: 1px solid #c9cace;
+    max-width: 350px;
+    border-radius: 0.5rem;
+    padding: 10px;
+    font-family: 'Poppins';
+    padding-left: 10%;
+    outline: #2150fa;
+}
+
+.formInput:focus{
+    border: 1.5px solid #005eff;
+}
+
+.inputHeading{
+    text-align: left;
+    width: 90vw;
+    max-width: 350px;
+    margin-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #545454;
+    cursor: pointer;
+    font-family: 'Poppins';
+  }
+
+.passwordButton {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #666;
+    padding: 15px;
+  }
+
+  .iconContainer{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 3%;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #666;
+    opacity: 1;
+  }
+
+
+.primaryButton {
+    display: inline-block;
+    width: 90vw; 
+    height: 3rem;
+    background-color: #2150fa;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    margin-bottom: 0rem;
+    margin-top: 0.7rem;
+    transition: background-color 0.3s, color 0.3s;
+    font-family: 'Poppins';
+    max-width: 350px;
+    font-weight: 600;
+    text-align: center; 
+    line-height: 3rem; 
+    text-decoration: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+  }
+  
+  .primaryButton:hover {
+    background-color: #0008ff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Slightly elevate the button on hover */
+  }
+
+  .or {
+    display: flex;
+    align-items: center;
+    margin: 20px;
+    font-size: 85%;
+    width: 90vw;
+    max-width: 350px;
+  }
+  
+  .bar {
+    flex: 1;
+    height: 1px;
+    background-color: #ccc;
+  }
+
+  .googleButton {
+    background-color: #ffffff;
+    color: #5c5c5c;
+    border-radius: 0.5rem;
+    width: 90vw;
+    max-width: 350px;
+    padding: 15px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: 1px solid #c9cace;
+    font-size: 16px;
+    font-weight: 500;
+    height: 3.1rem;
+  }
+
+  
+  .googleButton img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+  }
+
+  .forgotPassword{
+    text-align: left;
+    width: 90vw;
+    max-width: 350px;
+    margin-top: 0.7rem;
+    margin-left: 0.5rem;
+    font-size: 12px;
+    font-weight: 500;
+    color: #2150fa;
+    cursor: pointer;
+  }
