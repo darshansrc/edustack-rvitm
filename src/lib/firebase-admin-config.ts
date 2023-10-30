@@ -12,3 +12,9 @@ const adminApp =
   getApps().length <= 0 ? initializeApp(firebaseAdminConfig) : getApps()[0];
 
 export const adminAuth = getAuth(adminApp);
+
+export function customInitApp() {
+  if (getApps().length <= 0) {
+      initializeApp(firebaseAdminConfig);
+  }
+}

@@ -1,8 +1,9 @@
 import { auth } from "firebase-admin";
-// import { customInitApp } from "@/lib/firebase-admin-config";
+import { customInitApp } from "@/lib/firebase-admin-config";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
+customInitApp();
 
 export async function GET(request: NextRequest) {
   const session = cookies().get("session")?.value || "";
