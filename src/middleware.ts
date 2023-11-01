@@ -38,7 +38,7 @@ export async function middleware(request, response) {
         }
       }
     } else if (request.nextUrl.pathname.startsWith('/student') || request.nextUrl.pathname.startsWith('/faculty')) {
-      if (!session) {
+      if (!session && request.nextUrl.pathname === '/') {
         return NextResponse.rewrite(new URL('/', request.url));
       }
   
