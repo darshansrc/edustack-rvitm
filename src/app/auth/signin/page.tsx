@@ -3,10 +3,10 @@ import Link from 'next/link';
 import styles from './SignIn.module.css'
 import { FiMail, FiEye, FiEyeOff } from 'react-icons/fi';
 import { HiOutlineMail , HiOutlineLockClosed} from 'react-icons/hi'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MdArrowBackIosNew } from 'react-icons/md'
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { auth, db } from '@/lib/firebase-config';
+import { GoogleAuthProvider, getRedirectResult, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signInWithRedirect, signOut } from 'firebase/auth';
+import { auth, db, provider } from '@/lib/firebase-config';
 import { useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
  
@@ -17,6 +17,67 @@ const SignIn = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+
+  function googleSignIn() {
+    const googleAuthProvider = new GoogleAuthProvider();
+    return signInWithPopup(auth, googleAuthProvider);
+  }
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+
+    try {
+      await googleSignIn().then(async (res) => {
+
+        
+        const user = res.user;
+        const getRef = doc(db, 'users', user.uid);
+        const userDoc = await getDoc(getRef);
+
+        const idToken = await user.getIdToken();
+        const response = await fetch("/api/auth", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
+
+        if(!userDoc.exists()){
+          try{
+            setError("No Records Found, Please activate your account before logging in with google!");
+            console.log('here')
+            await user.delete();
+          }catch(err){
+             console.log("could not delete!")
+          }
+        }
+
+        if (response.status === 200) {
+          if (userDoc.exists()){
+            const userData = userDoc.data();
+            if(userData.type === 'student'){           
+              router.push('/student/home');
+            }
+            else if(userData.type === 'faculty'){
+              router.push('/faculty/home');
+            }
+            else if(userData.type === 'parent'){
+              router.push('/parent/home');
+            }
+            }
+          }else{
+            setError("No Records Found, Please activate your account before logging in with google!")
+        }    
+
+      });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const togglePasswordVisibility = (e: any) => {
     e.preventDefault();
@@ -136,7 +197,12 @@ const SignIn = () => {
           </div>
         </div>
         <div className={styles.forgotPassword}>Forgot Password?</div>
+
+        <div className={error? styles.errorMessage : null}>
         {error ? error : null}
+        </div>
+        
+
         <button className={styles.primaryButton} onClick={handleSubmit} disabled={isLoading || !isFormValid}>
           {isLoading ? 'Loading...' : 'Sign In'}
         </button>
@@ -148,9 +214,15 @@ const SignIn = () => {
           <span className="mx-3">OR</span>
           <hr className={styles.bar} />
         </div>
-        <button className={styles.googleButton}>
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo"></img> Continue with Google
-        </button>
+        <button className={styles.googleButton} onClick={handleGoogleSignIn} disabled={loading}>
+      {loading ? (        <>
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" /> Loading...
+        </>) : (
+        <>
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" /> Continue with Google
+        </>
+      )}
+    </button>
       </div>
     </main>
   );

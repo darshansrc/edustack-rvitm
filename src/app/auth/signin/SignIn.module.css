@@ -173,3 +173,16 @@
     color: #2150fa;
     cursor: pointer;
   }
+
+  .errorMessage{
+    width: 90vw;
+    max-width: 350px;
+    background-color: #f8d7da;
+    color: #58151c;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px;
+    padding-left: 10px;
+    font-size: 12px;
+    border: 1px solid #f1aeb5;
+  }
