@@ -1,10 +1,18 @@
+
+
 import getUser from '@/lib/getUser'
+
 import React from 'react'
+import SignOutButton from './SignOutButton';
 
 async function App() {
   const user = await getUser()
 
   const formattedString = JSON.stringify(user, null, "\t");
+
+  const handleSignOut = () => {
+    
+  }
 
   return (
     <div className='mx-auto max-w-4xl my-32 '>
@@ -14,11 +22,13 @@ async function App() {
         <pre  className="text-sm text-white font-mono">
           <code>{formattedString}</code>
         </pre>
+
   
       </div>
+      <SignOutButton/>
 
     </div>
-  )
+  ) 
 }
 
 export default App

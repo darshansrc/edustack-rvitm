@@ -9,6 +9,10 @@ import { GoogleAuthProvider, getRedirectResult, onAuthStateChanged, signInWithEm
 import { auth, db, provider } from '@/lib/firebase-config';
 import { useRouter } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
+import Image from 'next/image';
+import { CgSpinner } from 'react-icons/cg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
  
 const SignIn = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -31,7 +35,6 @@ const SignIn = () => {
     try {
       await googleSignIn().then(async (res) => {
 
-        
         const user = res.user;
         const getRef = doc(db, 'users', user.uid);
         const userDoc = await getDoc(getRef);
@@ -155,9 +158,9 @@ const SignIn = () => {
       </nav>
       <div className={styles.formContainer}>
         <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
-          <img src="/logo.png" style={{ maxWidth: '60px', maxHeight: '60px', alignItems: 'center' }} />
+          <Image priority alt='' src="/logo.png" width={60} height={60} style={{ maxWidth: '60px', maxHeight: '60px', alignItems: 'center' }} />
           <h1 style={{ fontSize: '25px', padding: '10px' }}> | </h1>
-          <img src="/logorv.png" style={{ maxWidth: '60px', maxHeight: '60px', alignItems: 'center' }} />
+          <Image priority alt='' src="/logorv.png" width={60} height={60}  style={{ maxWidth: '60px', maxHeight: '60px', alignItems: 'center' }} />
         </div>
         <div style={{ textAlign: 'center', margin: '25px' }}>
           <h1 style={{ fontWeight: '600', fontFamily: 'Poppins', fontSize: '1.5rem' }}>Welcome!</h1>
@@ -204,7 +207,14 @@ const SignIn = () => {
         
 
         <button className={styles.primaryButton} onClick={handleSubmit} disabled={isLoading || !isFormValid}>
-          {isLoading ? 'Loading...' : 'Sign In'}
+        {isLoading ? (
+          <div >
+            <FontAwesomeIcon icon={faSpinner} spinPulse style={{ color: "#fff", marginRight: '0.5rem' }} />
+            Loading
+          </div>
+        ) : (
+          'Sign In'
+        )}
         </button>
         <p style={{ fontSize: '14px', marginTop: '15px', fontWeight: '500', color: '#333' }}>
           Account not activated? <Link href="/" style={{ color: 'blue' }}>Click here</Link>
@@ -216,10 +226,10 @@ const SignIn = () => {
         </div>
         <button className={styles.googleButton} onClick={handleGoogleSignIn} disabled={loading}>
       {loading ? (        <>
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" /> Loading...
+          <Image  width={60} height={60}  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" /> Loading...
         </>) : (
         <>
-          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" /> Continue with Google
+          <Image  width={60} height={60} src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo" /> Continue with Google
         </>
       )}
     </button>
