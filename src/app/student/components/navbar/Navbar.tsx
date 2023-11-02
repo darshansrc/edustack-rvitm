@@ -24,28 +24,28 @@ const Navbar = () => {
         </div>
 
 
-        <Link href={'/student/home'}>
+        <Link href={'/student/home'} shallow={true}>
         <div className={pathname.endsWith("/home") ? styles.navItemActive : styles.navItem}>
         <i><BiHome style={{ fontSize: "20px" }} /></i>
-        <div style={{fontFamily: 'Poppins'}}>Home</div>
+        <div style={{fontFamily: 'Poppins'}}>Home</div> 
         </div>
         </Link>
     
-        <Link href='/student/attendance'>
+        <Link href='/student/attendance' shallow={true}>
         <div className={pathname.endsWith("/attendance") ? styles.navItemActive : styles.navItem}>
         <i><BsPersonCheck style={{ fontSize: "20px" }} /></i>
         <div style={{fontFamily: 'Poppins'}}>Attendance</div>
         </div>
         </Link>
 
-        <Link href='/student/course'>
+        <Link href='/student/course' shallow={true}>
         <div className={pathname.endsWith("/course") ? styles.navItemActive : styles.navItem}>
         <i><TbReport style={{ fontSize: "20px" }} /></i> 
         <div style={{fontFamily: 'Poppins'}}>Course</div>
         </div>
         </Link>
 
-        <Link href={'/student/profile'}>
+        <Link href={'/student/profile'} shallow={true}>
         <div className={pathname.endsWith("/profile") ? styles.navItemActive : styles.navItem}>
         <i><CgProfile style={{ fontSize: "20px" }} /></i>
         <div style={{fontFamily: 'Poppins'}}>Profile</div>

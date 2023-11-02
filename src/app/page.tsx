@@ -17,7 +17,7 @@ const HomePage = () => {
               <p style={{ margin: '20px', color: 'grey', fontFamily: 'sans-serif', marginBottom: '15vh'}}>A Platform Built to Simplify Attendance Tracking & Academics </p>
 
               <div className={styles.buttonContainer}>
-              <Link href='/auth/signin' style={{width: '95%'}}><button className={styles.primaryButton}>Sign In </button></Link>
+              <Link href='/auth/signin' shallow={true} style={{width: '95%'}}><button className={styles.primaryButton}>Sign In </button></Link>
               <button className={styles.secondaryButton}>Activate your Account</button>
             </div>
             </div>
