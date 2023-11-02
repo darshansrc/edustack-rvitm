@@ -1,0 +1,128 @@
+.navBar{
+    position: fixed;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+}
+
+
+@media (min-width: 768px) {
+
+    .navItem{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-weight: 400;
+        margin: 5px;
+        gap: 5px;
+        color: #474747;
+        font-size: 14px;
+    }
+
+        /* for desktop view */
+        .navLogo{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+    
+        .navBar{
+            flex-direction: column;
+            top: 0;
+            left: 0;
+            border-right: 1px solid #dddddd ;
+            height: 100vh;
+            width: 200px;
+            box-shadow: 4px 0 5px rgba(232, 232, 232, 0.1);
+        }
+    
+        .pageContainer{
+            margin-left: 200px;
+        }
+
+    .navItem{
+        flex-direction: row;
+        justify-content: left;
+        padding: 10px;
+        border-radius: 5px;
+
+    }
+
+    .navItem:hover{
+        background-color: #f6f6f6;
+    }
+
+    .navItemActive{
+        display: flex;
+        margin: 5px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-weight: 400;
+        gap: 5px;
+        background-color: #e9edff;
+        color: rgb(39, 86, 255);
+        flex-direction: row;
+        justify-content: left;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navLogo{
+        display: none;
+    }
+
+    /* for mobile view */
+    .navBar{
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        justify-content: space-between;
+        border-top: 1px solid #c1c1c1 ;
+        width: 100vw;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 5vw;
+        padding-right: 5vw;
+
+    }
+
+    .navItem{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-weight: 400;
+   
+      
+        color: #474747;
+        font-size: 14px;
+        height: 60px;
+        width: 20vw;
+    }
+
+    .navItemActive{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-weight: 400;
+        
+        
+        color: rgb(39, 86, 255);
+        font-size: 14px;   
+        border-top: 2px solid rgb(39, 86, 255);
+        height: 60px;
+        width: 20vw;
+    }
+
+
+}

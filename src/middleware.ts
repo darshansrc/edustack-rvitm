@@ -1,15 +1,15 @@
 import { doc, getDoc } from "firebase/firestore";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest } from "next/server";
 import { db } from "./lib/firebase-config";
 
 
 
-export async function middleware(request, response) {
+export async function middleware(request : NextRequest, response : NextResponse) {
     const session = request.cookies.get("session");
-  
-    if (request.nextUrl.pathname === '/') {
-      if (session) {
+
+    if (request.nextUrl.pathname === '/' && session) {
+
         const responseAPI = await fetch(`${request.nextUrl.origin}/api/auth`, {
           headers: {
             Cookie: `session=${session?.value}`,
@@ -36,8 +36,10 @@ export async function middleware(request, response) {
         } else {
           return NextResponse.redirect(new URL('/', request.url));
         }
-      }
-    } else if (request.nextUrl.pathname.startsWith('/student') || request.nextUrl.pathname.startsWith('/faculty')) {
+      
+    } 
+    
+    if (request.nextUrl.pathname.startsWith('/student') || request.nextUrl.pathname.startsWith('/faculty')) {
       if (!session) {
         return NextResponse.rewrite(new URL('/', request.url));
       }
