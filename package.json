@@ -9,15 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@mui/material": "^5.14.16",
+    "chart.js": "^4.4.0",
+    "chartjs": "^0.3.24",
     "firebase": "^10.5.2",
     "firebase-admin": "^11.11.0",
+    "mui": "^0.0.1",
     "next": "14.0.0",
     "react": "^18",
+    "react-datepicker": "^4.21.0",
     "react-dom": "^18",
-    "react-icons": "^4.11.0"
+    "react-icons": "^4.11.0",
+    "react-tabs": "^6.0.2"
   },
   "devDependencies": {
     "@types/node": "^20",

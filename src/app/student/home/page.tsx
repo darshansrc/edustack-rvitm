@@ -12,9 +12,7 @@ async function App() {
 
   const formattedString = JSON.stringify(user, null, "\t");
 
-  const handleSignOut = () => {
-    
-  }
+
 
   return (
     <>
