@@ -2,7 +2,10 @@
     position: fixed;
     background-color: rgb(255, 255, 255);
     display: flex;
+    z-index: 9999;
 }
+
+
 
 
 @media (min-width: 768px) {
@@ -84,7 +87,7 @@
         bottom: 0;
         left: 0;
         justify-content: space-between;
-        border-top: 1px solid #c1c1c1 ;
+        border-top: 0.5px solid #c1c1c1 ;
         width: 100vw;
         display: flex;
         flex-direction: row;
@@ -92,7 +95,7 @@
         justify-content: space-between;
         padding-left: 5vw;
         padding-right: 5vw;
-
+        box-shadow: 0 -4px 5px rgba(0,0,0,.1);
     }
 
     .navItem{
@@ -104,9 +107,10 @@
    
       
         color: #474747;
-        font-size: 14px;
+        font-size: 12px;
         height: 60px;
-        width: 20vw;
+        width: 16vw;
+        border-top: 2px solid white;
     }
 
     .navItemActive{
@@ -115,13 +119,11 @@
         align-items: center;
         justify-content: center;
         font-weight: 400;
-        
-        
         color: rgb(39, 86, 255);
-        font-size: 14px;   
+        font-size: 12px;   
         border-top: 2px solid rgb(39, 86, 255);
         height: 60px;
-        width: 20vw;
+        width: 16vw;
     }
 
 

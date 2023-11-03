@@ -40,8 +40,15 @@ const Navbar = () => {
 
         <Link href='/student/course' shallow={true}>
         <div className={pathname.endsWith("/course") ? styles.navItemActive : styles.navItem}>
-        <i><TbReport style={{ fontSize: "20px" }} /></i> 
+        <i><RiBookMarkLine style={{ fontSize: "20px" }} /></i>
         <div style={{fontFamily: 'Poppins'}}>Course</div>
+        </div>
+        </Link>
+
+        <Link href='/student/grades' shallow={true}>
+        <div className={pathname.endsWith("/grades") ? styles.navItemActive : styles.navItem}>
+        <i><TbReport style={{ fontSize: "20px" }} /></i> 
+        <div style={{fontFamily: 'Poppins'}}>Grades</div>
         </div>
         </Link>
 
