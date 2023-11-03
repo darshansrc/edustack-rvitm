@@ -17,7 +17,6 @@ const DonutChart = ({ totalAttendancePercentage }) => {
         return newPercentage < totalAttendancePercentage ? newPercentage : totalAttendancePercentage;
       });
     };
-
     animationInterval = setInterval(animate, 10);
 
     return () => {

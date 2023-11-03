@@ -49,6 +49,7 @@ function StudentAttendanceTable() {
 
   const [user, setUser] = useState<{ email?: string } | null>(null);
 
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
       console.log("Auth", currentuser);
@@ -60,98 +61,34 @@ function StudentAttendanceTable() {
     };
   }, []);
 
-  // Effect Hook: Fetch user details and related data
   useEffect(() => {
-    if (user && user.email) {
-      const fetchData = async () => {
-        const queryPath = 'students'; // Update this to the subcollection path
-        const collectionGroupRef = collectionGroup(db, queryPath);
-        const studentQuery = query(collectionGroupRef, where('email', '==', user.email));
-        const studentSnapshot = await getDocs(studentQuery);
-  
-        const subjectOptions = [];
-        let className : string;
-  
-        await Promise.all(
-          studentSnapshot.docs.map(async (studentDoc) => {
-            className = studentDoc.ref.parent.parent.id;
-  
-            const studentID = studentDoc.ref.id;
-  
-            const classDocRef = doc(db, 'database', className); // Update with your class collection name
-            const classDocSnapshot = await getDoc(classDocRef);
-    
-            if (classDocSnapshot.exists()) {
-              const classSemester = classDocSnapshot.data().currentSemester;
-              const studentLabBatch = studentDoc.data().labBatch;
-              const studentName = studentDoc.data().name;
-              const studentUSN = studentDoc.data().usn;
-              const studentEmail = studentDoc.data().email;
-              const parentEmail = studentDoc.data().parentEmail;
-              const parentPhone = studentDoc.data().parentPhone;
-              const studentDetails = {
-                studentName,
-                parentEmail,
-                studentEmail,
-                parentPhone,
-                studentID,
-                studentUSN,
-                studentLabBatch,
-                classSemester,
-                className,
-              };
-  
-              setClassSemester(classSemester);
-              setStudentDetails(studentDetails);
-              setUsn(studentDetails.studentUSN);
-              setClassId(className)
-  
-              if (className) {
-                const classDocRef = doc(db, 'database', className);
-                const classDocSnapshot = await getDoc(classDocRef);
-  
-                if (classDocSnapshot.exists()) {
-                  const subjectsCollectionRef = collection(classDocRef, 'subjects'); // Assuming 'subjects' is the subcollection name
-                  const subjectDocsSnapshot = await getDocs(subjectsCollectionRef);
-  
-                  subjectDocsSnapshot.docs.forEach((doc) => {
-                    const data = doc.data();
-  
-                    // Check if the subject is compulsory or elective and if it's elective, check if the user's USN is in the electiveStudents array
-                    const isElective = data.compulsoryElective === 'elective';
-                    const isUserInElective = isElective && data.electiveStudents.includes(studentDetails.studentUSN);
-  
-                    // Include the subject only if it's compulsory or if it's elective and the user is in the electiveStudents array
-                    if (data.compulsoryElective === 'compulsory' || isUserInElective) {
-                      subjectOptions.push({ value: data.code, label: data.name, subjectType: data.theoryLab });
-                    }
-                  });
-  
-                  // Define a custom comparator function to sort based on the last digit or alphabet
-                  const customComparator = (a, b) => {
-                    const lastCharA = a.value.slice(-1);
-                    const lastCharB = b.value.slice(-1);
-  
-                    if (lastCharA < lastCharB) return -1;
-                    if (lastCharA > lastCharB) return 1;
-                    return 0;
-                  };
-  
-                  // Sort the subjectOptions array using the custom comparator
-                  subjectOptions.sort(customComparator);
-  
-                  setSubjectOptions(subjectOptions);
-                }
-              }
-            }
-          })
-        );
-      };
-  
-      fetchData();
+    async function fetchAttendanceData() {
+      try {
+        const currentServerDomain = window.location.origin;
+        const responseAPI = await fetch(`${currentServerDomain}/api/student/attendance`, {
+          method: "GET",
+        });
+        if (responseAPI.status === 200) {
+          const responseBody = await responseAPI.json();
+          setStudentDetails(responseBody.studentDetails);
+          setUsn(responseBody.studentDetails.studentUSN);
+          setClassId(responseBody.studentDetails.className);
+          setClassSemester(responseBody.studentDetails.classSemester);
+          setSubjectOptions(responseBody.subjectOptions)
+          setAttendanceData(responseBody.attendanceDocs);
+        } else {
+          console.log("Cannot fetch data");
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
     }
-  }, [user, setClassId]);
-  
+
+    fetchAttendanceData();
+  }, []);
+
+
+
   
   // Effect Hook: Fetch attendance data for selected subjects and semester
 
@@ -256,35 +193,7 @@ function StudentAttendanceTable() {
   const theorySubjects = subjectOptions.filter((subject) => subject.subjectType === 'theory');
   const labSubjects = subjectOptions.filter((subject) => subject.subjectType === 'lab');
 
-  useEffect(() => {
-    async function fetchAttendanceData() {
-      try {
-        if (subjectOptions && classSemester && classId) {
-          const subjectValues = subjectOptions.map((option) => option.value);
-          const attendanceRefs = subjectValues.map((subject) =>
-            collection(db, 'database', classId, 'attendance', '' + classSemester + 'SEM', subject)
-          );
-          const attendanceSnapshots = await Promise.all(attendanceRefs.map((ref) => getDocs(ref)));
-  
-          // Check if any attendance data is null or undefined
-          if (attendanceSnapshots.some((snapshot) => !snapshot || !snapshot.docs)) {
-            console.error('Error: Firestore query returned null or undefined data.');
-            return;
-          }
-  
-          const attendanceDocs = attendanceSnapshots.map((snapshot) => snapshot.docs.map((doc) => doc.data()));
-          setAttendanceData(attendanceDocs);
-        }
-      } catch (error) {
-        console.error('Error fetching attendance data from Firestore', error);
-      }
-    }
-  
-    if (classId) {
-      fetchAttendanceData();
-    }
-  }, [setAttendanceData, subjectOptions, classSemester, classId]);
-
+ 
   return (
     <>
       <div className='table-containerrr'>
