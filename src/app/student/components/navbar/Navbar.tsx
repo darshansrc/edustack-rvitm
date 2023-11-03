@@ -11,8 +11,8 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 const Navbar = () => {
-
-  const pathname = usePathname()
+ 
+  const pathname : string= usePathname() || '';
 
 
 

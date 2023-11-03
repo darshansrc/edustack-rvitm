@@ -1,4 +1,6 @@
+
 import React, { useEffect, useState } from 'react';
+
 
 const DonutChart = ({ totalAttendancePercentage }) => {
   const [animatedPercentage, setAnimatedPercentage] = useState(0);
@@ -9,7 +11,7 @@ const DonutChart = ({ totalAttendancePercentage }) => {
     const animationDuration = 500; 
     const animationStep = (totalAttendancePercentage / animationDuration) * 10;
 
-    let animationInterval = null;
+    let animationInterval: NodeJS.Timeout | null = null;
 
     const animate = () => {
       setAnimatedPercentage((prevPercentage) => {
@@ -17,10 +19,13 @@ const DonutChart = ({ totalAttendancePercentage }) => {
         return newPercentage < totalAttendancePercentage ? newPercentage : totalAttendancePercentage;
       });
     };
+
     animationInterval = setInterval(animate, 10);
 
     return () => {
-      clearInterval(animationInterval);
+      if (animationInterval !== null) {
+        clearInterval(animationInterval);
+      }
     };
   }, [totalAttendancePercentage]);
 

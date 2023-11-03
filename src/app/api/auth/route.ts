@@ -8,6 +8,8 @@ import { db } from "@/lib/firebase-config";
 customInitApp();
 
 export async function GET(request: NextRequest) {
+
+  let userType : string = '';
   const session = cookies().get("session")?.value || "";
 
   if (!session) {
@@ -23,7 +25,7 @@ export async function GET(request: NextRequest) {
   const userUID = decodedClaims.uid; // Get the user's UID
   const getRef = doc(db, 'users', userUID);
   const userDoc = await getDoc(getRef);
-  let userType : string;
+  
   if (userDoc.exists()) {
     const userData = userDoc.data();
     userType = userData.type;

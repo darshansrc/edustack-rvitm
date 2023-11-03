@@ -201,7 +201,7 @@ const SignIn = () => {
         </div>
         <div className={styles.forgotPassword}>Forgot Password?</div>
 
-        <div className={error? styles.errorMessage : null}>
+        <div className={error? styles.errorMessage : ''}>
         {error ? error : null}
         </div>
         

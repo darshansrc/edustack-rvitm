@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     const getRef = doc(db, 'users', userUID);
     const userDoc = await getDoc(getRef);
   
-    let userType : string;
+    let userType : string = '';
     let studentDetails: {
         studentName: string;
         studentEmail: string;
@@ -34,9 +34,18 @@ export async function GET(request: NextRequest) {
         studentLabBatch: string;
         classSemester: string;
         className: string;
-      };
+      } = {
+        studentName: '',
+        studentEmail: '',
+        studentID: '',
+        studentUSN: '',
+        studentLabBatch: '',
+        classSemester: '',
+        className: '',
+      }
     let subjectOptions: { value: string; label: string; subjectType: string }[] = [];
     let attendanceDocs;
+
   
     if (userDoc.exists()) {
       const userData = userDoc.data();
@@ -52,7 +61,7 @@ export async function GET(request: NextRequest) {
 
         await Promise.all(
           studentSnapshot.docs.map(async (studentDoc) => {
-            const className = studentDoc.ref.parent.parent.id;
+            const className = studentDoc.ref.parent.parent?.id || '';
             const studentID = studentDoc.ref.id;
             const classDocRef = doc(db, 'database', className);
             const classDocSnapshot = await getDoc(classDocRef);

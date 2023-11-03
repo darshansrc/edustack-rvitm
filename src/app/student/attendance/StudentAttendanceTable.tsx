@@ -1,15 +1,6 @@
 'use client';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { auth, db } from '@/lib/firebase-config';
-import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  collectionGroup,
-  query,
-  where,
-} from 'firebase/firestore';
+import React, {  useEffect, useRef, useState } from 'react';
+
 import DonutChart from './DonutChart';
 import { Chart } from 'chart.js/auto';
 import Tabs from '@mui/material/Tabs';
@@ -26,7 +17,7 @@ import {
 import 'react-datepicker/dist/react-datepicker.css';
 import './StudentAttendanceTable.css';
 import { Card, CardContent, Typography } from '@mui/material';
-import { onAuthStateChanged } from 'firebase/auth';
+
 
 
 // Hook Definitions
@@ -47,19 +38,6 @@ function StudentAttendanceTable() {
     setValue(newValue);
   };
 
-  const [user, setUser] = useState<{ email?: string } | null>(null);
-
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
-      console.log("Auth", currentuser);
-      setUser(currentuser);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
 
   useEffect(() => {
     async function fetchAttendanceData() {
@@ -94,58 +72,7 @@ function StudentAttendanceTable() {
 
   
 
-  // Effect Hook: Create and update the attendance chart
-  useEffect(() => {
-    if (chartRef && chartRef.current) {
-      const attendancePercentages = attendanceData.map((data, index) => getAttendancePercentage(index));
 
-      const backgroundColors = attendancePercentages.map((percentage) => {
-
-          return 'rgba(127,106,152,1)'; // Green color for attendance above 75
-
-      });
-
-      const ctx = chartRef.current.getContext('2d');
-
-      if (chartRef.current.chart) {
-        chartRef.current.chart.destroy(); // Destroy the previous chart instance
-      }
-
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); // Clear the canvas
-
-      chartRef.current.chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: subjectOptions.slice(0, 9).map((option : any) => option.value),
-          datasets: [
-            {
-              label: 'Attendance Percentage',
-              data: attendancePercentages,
-              backgroundColor: backgroundColors,
-              borderColor: 'rgba(75, 192, 192, 0.1)',
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: 100,
-              ticks: {
-                stepSize: 10,
-              },
-            },
-          },
-          plugins: {
-            legend: {
-              display: false,
-            },
-          },
-        },
-      });
-    }
-  }, [attendanceData, subjectOptions]);
 
   // Function to get attendance count for a subject
   const getAttendanceCount = (subjectIndex: any) => {
@@ -207,7 +134,7 @@ function StudentAttendanceTable() {
               </p>
             </div>
           </div>
-          <canvas ref={chartRef} style={{ marginTop: '20px', width: '450px' }}></canvas>
+         
           <div>
             <MyTabs style={{ marginTop: '20px' }}>
               <MyTabList>
