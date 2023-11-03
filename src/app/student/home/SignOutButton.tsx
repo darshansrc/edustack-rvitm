@@ -23,4 +23,4 @@ const SignOutButton = () => {
   )
 }
 
-export default SignOutButton
+export default SignOutButton;

@@ -74,7 +74,7 @@ function StudentAttendanceTable() {
   
         await Promise.all(
           studentSnapshot.docs.map(async (studentDoc) => {
-             className = studentDoc.ref.parent.parent.id;
+            className = studentDoc.ref.parent.parent.id;
   
             const studentID = studentDoc.ref.id;
   

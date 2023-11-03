@@ -2,6 +2,8 @@ import { auth } from "firebase-admin";
 import { customInitApp } from "@/lib/firebase-admin-config";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase-config";
 
 customInitApp();
 
@@ -19,8 +21,15 @@ export async function GET(request: NextRequest) {
   }
 
   const userUID = decodedClaims.uid; // Get the user's UID
+  const getRef = doc(db, 'users', userUID);
+  const userDoc = await getDoc(getRef);
+  let userType : string;
+  if (userDoc.exists()) {
+    const userData = userDoc.data();
+    userType = userData.type;
+  }
 
-  return NextResponse.json({ isLogged: true, userUID }, { status: 200 });
+  return NextResponse.json({ isLogged: true, userUID , userType}, { status: 200 });
 }
 
 export async function POST(request: NextRequest, response: NextResponse) {
