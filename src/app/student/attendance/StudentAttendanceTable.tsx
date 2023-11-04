@@ -1,50 +1,55 @@
 'use client';
-import React, {  useEffect, useRef, useState } from 'react';
-
+import React, { useEffect, useRef, useState } from 'react';
 import DonutChart from './DonutChart';
 import { Chart } from 'chart.js/auto';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
 import { AiOutlineRightCircle } from 'react-icons/ai';
 import AppBar from '@mui/material/AppBar';
-import {
-  Tab as MyTab,
-  Tabs as MyTabs,
-  TabList as MyTabList,
-  TabPanel as MyTabPanel,
-} from 'react-tabs';
+import { Tab as MyTab, Tabs as MyTabs, TabList as MyTabList, TabPanel as MyTabPanel } from 'react-tabs';
 import 'react-datepicker/dist/react-datepicker.css';
 import './StudentAttendanceTable.css';
 import { Card, CardContent, Typography } from '@mui/material';
+import LoadingSkeleton from './LoadingSkeleton';
 
+interface SubjectOption {
+  value: string;
+  label: string;
+  subjectType: string;
+}
 
+interface AttendanceData {
+  slice: any;
+  attendance: { usn: string; Present: boolean }[];
+  date: string;
+  sessionTime: string;
+  presentCount: number;
+  absentCount: number;
+}
 
 // Hook Definitions
 function StudentAttendanceTable() {
- 
   const [value, setValue] = useState(0);
-  const [subjectOptions, setSubjectOptions] = useState<{ value: string; label: string; subjectType: string }[]>([]);
-  const [attendanceData, setAttendanceData] = useState<any[]>([{}]);
-
+  const [subjectOptions, setSubjectOptions] = useState<SubjectOption[]>([]);
+  const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
   const [usn, setUsn] = useState('');
-  const [studentDetails, setStudentDetails] = useState(null);
+  const [studentDetails, setStudentDetails] = useState<any>(null);
   const [classSemester, setClassSemester] = useState('');
-  const chartRef = useRef(null);
-  const [classId , setClassId] = useState(null);
+  const chartRef = useRef<Chart | null>(null);
+  const [classId, setClassId] = useState<any>(null);
+  const [dataFetched, setDataFetched] = useState(false);
 
   // Function to handle tab changes
-  const handleChange = (event, newValue) => {
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
-
 
   useEffect(() => {
     async function fetchAttendanceData() {
       try {
         const currentServerDomain = window.location.origin;
         const responseAPI = await fetch(`${currentServerDomain}/api/student/attendance`, {
-          method: "GET",
+          method: 'GET',
         });
         if (responseAPI.status === 200) {
           const responseBody = await responseAPI.json();
@@ -52,30 +57,22 @@ function StudentAttendanceTable() {
           setUsn(responseBody.studentDetails.studentUSN);
           setClassId(responseBody.studentDetails.className);
           setClassSemester(responseBody.studentDetails.classSemester);
-          setSubjectOptions(responseBody.subjectOptions)
+          setSubjectOptions(responseBody.subjectOptions);
           setAttendanceData(responseBody.attendanceDocs);
+
+          setDataFetched(true);
         } else {
-          console.log("Cannot fetch data");
+          console.log('Cannot fetch data');
         }
       } catch (error) {
-        console.error("An error occurred:", error);
+        console.error('An error occurred:', error);
       }
     }
 
     fetchAttendanceData();
   }, []);
 
-
-
-  
-  // Effect Hook: Fetch attendance data for selected subjects and semester
-
-  
-
-
-
-  // Function to get attendance count for a subject
-  const getAttendanceCount = (subjectIndex: any) => {
+  const getAttendanceCount = (subjectIndex: number): number => {
     const subjectData = attendanceData[subjectIndex];
     if (Array.isArray(subjectData)) {
       return subjectData.reduce((total, data) => {
@@ -87,7 +84,7 @@ function StudentAttendanceTable() {
   };
 
   // Function to get class count for a subject
-  const getClassCount = (subjectIndex : any) => {
+  const getClassCount = (subjectIndex: number): number => {
     let count = 0;
     const subjectData = attendanceData[subjectIndex];
     if (Array.isArray(subjectData)) {
@@ -99,10 +96,10 @@ function StudentAttendanceTable() {
       });
     }
     return count;
-  }
+  };
 
   // Function to calculate attendance percentage for a subject
-  const getAttendancePercentage = (subjectIndex: number) => {
+  const getAttendancePercentage = (subjectIndex: number): number => {
     const attendanceCount = getAttendanceCount(subjectIndex);
     const classCount = getClassCount(subjectIndex);
     const percentage = classCount > 0 ? (attendanceCount / classCount) * 100 : 0;
@@ -120,10 +117,17 @@ function StudentAttendanceTable() {
   const theorySubjects = subjectOptions.filter((subject) => subject.subjectType === 'theory');
   const labSubjects = subjectOptions.filter((subject) => subject.subjectType === 'lab');
 
- 
+  if (!dataFetched) {
+    return (
+      <LoadingSkeleton/>
+    );
+  }
+
   return (
+   
     <>
-      <div className='table-containerrr'>
+  
+      <div className="table-containerrr">
         <div className="table-containerr">
           <div className="attendance-card">
             <DonutChart totalAttendancePercentage={totalAttendancePercentage} />
@@ -134,7 +138,7 @@ function StudentAttendanceTable() {
               </p>
             </div>
           </div>
-         
+
           <div>
             <MyTabs style={{ marginTop: '20px' }}>
               <MyTabList>
@@ -146,52 +150,72 @@ function StudentAttendanceTable() {
                 <table className="responsive-table" style={{}}>
                   <thead className="sticky-header">
                     <tr>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: "#2f2f2f" }}>Subject Code</th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: "#2f2f2f" }}>Classes Held</th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: "#2f2f2f" }}>Classes Attended</th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: "#2f2f2f" }}>Attendance Percentage</th>
+                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                        Subject Code
+                      </th>
+                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                        Classes Held
+                      </th>
+                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                        Classes Attended
+                      </th>
+                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                        Attendance Percentage
+                      </th>
                     </tr>
                   </thead>
                   {subjectOptions && classSemester && classId ? (
-  <tbody>
-    {theorySubjects.map((subject, index) => (
-      <tr className={`table-row ${index % 2 === 0 ? "odd-row" : "even-row"}`} key={index}>
-        <td className="table-data" style={{ fontSize: '12px' }}>{subject.label + ' (' + subject.value + ')'}</td>
-        <td className="table-data">{getClassCount(index)}</td>
-        <td className="table-data">{getAttendanceCount(index)}</td>
-        <td className="table-data">{Math.round(getAttendancePercentage(index))}%</td>
-      </tr>
-    ))}
-  </tbody>
-) : (
-  <tbody></tbody>
-)}
+                    <tbody>
+                      {theorySubjects.map((subject, index) => (
+                        <tr className={`table-row ${index % 2 === 0 ? 'odd-row' : 'even-row'}`} key={index}>
+                          <td className="table-data" style={{ fontSize: '12px' }}>
+                            {subject.label + ' (' + subject.value + ')'}
+                          </td>
+                          <td className="table-data">{getClassCount(index)}</td>
+                          <td className="table-data">{getAttendanceCount(index)}</td>
+                          <td className="table-data">{Math.round(getAttendancePercentage(index))}%</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  ) : (
+                    <tbody></tbody>
+                  )}
                 </table>
               </MyTabPanel>
               <MyTabPanel>
                 <table className="responsive-table" style={{}}>
                   <thead className="sticky-header">
                     <tr>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: "#2f2f2f" }}>Subject Code</th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: "#2f2f2f" }}>Classes Held</th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: "#2f2f2f" }}>Classes Attended</th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: "#2f2f2f" }}>Attendance Percentage</th>
+                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                        Subject Code
+                      </th>
+                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                        Classes Held
+                      </th>
+                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                        Classes Attended
+                      </th>
+                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                        Attendance Percentage
+                      </th>
                     </tr>
                   </thead>
                   {subjectOptions && classSemester && classId ? (
-  <tbody>
-    {labSubjects.map((subject, index) => (
-      <tr className={`table-row ${index % 2 === 0 ? "odd-row" : "even-row"}`} key={index}>
-        <td className="table-data" style={{ fontSize: '12px' }}>{subject.label + ' (' + subject.value + ')'}</td>
-        <td className="table-data">{getClassCount(index)}</td>
-        <td className="table-data">{getAttendanceCount(index)}</td>
-        <td className="table-data">{Math.round(getAttendancePercentage(index))}%</td>
-      </tr>
-    ))}
-  </tbody>
-) : (
-  <tbody></tbody>
-)}
+                    <tbody>
+                      {labSubjects.map((subject, index) => (
+                        <tr className={`table-row ${index % 2 === 0 ? 'odd-row' : 'even-row'}`} key={index}>
+                          <td className="table-data" style={{ fontSize: '12px' }}>
+                            {subject.label + ' (' + subject.value + ')'}
+                          </td>
+                          <td className="table-data">{getClassCount(index)}</td>
+                          <td className="table-data">{getAttendanceCount(index)}</td>
+                          <td className="table-data">{Math.round(getAttendancePercentage(index))}%</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  ) : (
+                    <tbody></tbody>
+                  )}
                 </table>
               </MyTabPanel>
             </MyTabs>
@@ -210,11 +234,11 @@ function StudentAttendanceTable() {
               <Tab key={index} label={subject.value} />
             ))}
           </Tabs>
-          { subjectOptions.map((subject, index) => (
+          {subjectOptions.map((subject, index) => (
             <div key={index} hidden={value !== index}>
               <Card
                 style={{
-                  width: '100%', 
+                  width: '100%',
                   boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
                   position: 'relative',
                   marginTop: '12px',
@@ -239,12 +263,15 @@ function StudentAttendanceTable() {
                       </Typography>
                     ) : (
                       <Typography style={{ marginLeft: '10px', color: 'red', marginBottom: '20px' }}>
-                        🛑 You need to attend {Math.ceil(((0.75 * getClassCount(index)) - getAttendanceCount(index)) / 0.25)} more classes to reach 75%.
+                        🛑 You need to attend{' '}
+                        {Math.ceil(((0.75 * getClassCount(index)) - getAttendanceCount(index)) / 0.25)} more classes to reach 75%.
                       </Typography>
                     )}
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '15px' }}> <Typography>No Classes Held</Typography> </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '15px' }}>
+                    <Typography>No Classes Held</Typography>
+                  </div>
                 )}
               </Card>
               <div style={{ display: 'flex', flexWrap: 'wrap' }}>
