@@ -13,6 +13,7 @@ import { Card, CardContent, Typography } from '@mui/material';
 import LoadingSkeleton from './LoadingSkeleton';
 import styles from './StudentAttendanceTable.module.css'
 import Skeleton from '@mui/material/Skeleton';
+import { BsCheckCircleFill } from 'react-icons/bs'
 
 interface SubjectOption {
   value: string;
@@ -151,9 +152,9 @@ function StudentAttendanceTable() {
               <p style={{ marginLeft: '10px', marginBottom: '0px', fontSize: '14px', color: '#333',fontWeight: '500' }}>
                 {dataFetched ? (
                   <>
-                    Classes held: {totalClassesHeld} <br />
-                    Classes attended: {totalClassesAttended} <br />
-                    Classes absent: {totalClassesHeld - totalClassesAttended}
+                    Classes Held: {totalClassesHeld} <br />
+                    Classes Attended: {totalClassesAttended} <br />
+                    Classes Absent: {totalClassesHeld - totalClassesAttended}
                   </>
                 ) : (
                   <>
@@ -168,7 +169,8 @@ function StudentAttendanceTable() {
           </div>
 
           <div>
-            <MyTabs style={{ marginTop: '20px' }}>
+          <h6 style={{ marginTop: '15px', marginLeft: '10px', color: 'grey', fontFamily: 'Poppins', fontWeight: '500',fontSize: '14px' }}>SUBJECTS </h6>
+            <MyTabs style={{ marginTop: '10px' }}>
               <MyTabList style={{borderRadius: '10px', marginBottom: '15px'}}>
                 <MyTab style={{ width: '50%', textAlign: 'center' }}>Theory</MyTab>
                 <MyTab style={{ width: '50%', textAlign: 'center' }}>Lab</MyTab>
@@ -207,7 +209,7 @@ function StudentAttendanceTable() {
                     ))
                   ) : (
                     <tr>
-                    <td className={styles.tableData}>
+                    <td className={styles.tableSubject}>
                       <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
                     </td>
                     <td className={styles.tableData}>
@@ -225,48 +227,59 @@ function StudentAttendanceTable() {
               </table>
               </MyTabPanel>
               <MyTabPanel>
-                <table className={styles.attendanceTable} >
-                  <thead className="sticky-header">
-                    <tr>
-                      <th className={styles.tableHead} style={{ fontSize: '12px', color: '#2f2f2f' }}>
-                        Subject Code
-                      </th>
-                      <th className={styles.tableHead} style={{ fontSize: '12px', color: '#2f2f2f' }}>
-                        Classes Held
-                      </th>
-                      <th className={styles.tableHead} style={{ fontSize: '12px', color: '#2f2f2f' }}>
-                        Classes Attended
-                      </th>
-                      <th className={styles.tableHead} style={{ fontSize: '12px', color: '#2f2f2f' }}>
-                        Attendance Percentage
-                      </th>
-                    </tr>
-                  </thead>
+              <table className={styles.attendanceTable}>
+                <thead>
+                  <tr>
+                    <th className={styles.tableHead} style={{ borderTopLeftRadius: '10px' }}>
+                      Subject Code
+                    </th>
+                    <th className={styles.tableHead}>
+                      Classes Held
+                    </th>
+                    <th className={styles.tableHead}>
+                      Classes Attended
+                    </th>
+                    <th className={styles.tableHead} style={{ borderTopRightRadius: '10px' }}>
+                      Attendance Percentage
+                    </th>
+                  </tr>
+                </thead>
+              
+                <tbody>
                   {subjectOptions && classSemester && classId ? (
-                    <tbody>
-                      {labSubjects.map((subject, index) => (
-                        <tr className={`table-row ${index % 2 === 0 ? 'odd-row' : 'even-row'}`} key={index}>
-                          <td className={styles.tableSubject} style={{ fontSize: '12px' }}>
-                            {subject.label + ' (' + subject.value + ')'}
-                          </td>
-                          <td className={styles.tableData}>{getClassCount(index)}</td>
-                          <td className={styles.tableData}>{getAttendanceCount(index)}</td>
-                          <td className={styles.tableData}>{Math.round(getAttendancePercentage(index))}%</td>
-                        </tr>
-                      ))}
-                    </tbody>
+                    labSubjects.map((subject, index) => (
+                      <tr className={`table-row ${index % 2 === 0 ? 'odd-row' : 'even-row'}`} key={index}>
+                        <td className={styles.tableSubject}>
+                          {subject.label + ' (' + subject.value + ')'}
+                        </td>
+                        <td className={styles.tableData}>{getClassCount(index)}</td>
+                        <td className={styles.tableData}>{getAttendanceCount(index)}</td>
+                        <td className={styles.tableData}>{Math.round(getAttendancePercentage(index))}%</td>
+                      </tr>
+                    ))
                   ) : (
-                    <tbody>
+                    <tr>
+                    <td className={styles.tableSubject}>
                       <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </td>
+                    <td className={styles.tableData}>
                       <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </td>
+                    <td className={styles.tableData}>
                       <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                    </tbody>
+                    </td>
+                    <td className={styles.tableData}>
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </td>
+                  </tr>
                   )}
-                </table>
+                </tbody>
+              </table>
               </MyTabPanel>
             </MyTabs>
           </div>
-          <h6 style={{ marginTop: '20px', marginBottom: '10px', marginLeft: '10px', color: 'grey' }}>Subject Wise Details:</h6>
+
+          <h6 style={{ marginTop: '20px', marginBottom: '0px', marginLeft: '10px', color: 'grey', fontFamily: 'Poppins', fontWeight: '500',fontSize: '14px' }}>PREVIOUS CLASSES</h6>
           <Tabs
             value={value}
             onChange={handleChange}
@@ -285,30 +298,34 @@ function StudentAttendanceTable() {
               <Card
                 style={{
                   width: '100%',
-                  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+                  boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.1)',
                   position: 'relative',
                   marginTop: '12px',
                   paddingBottom: 0,
                   backgroundColor: 'white',
+                  borderRadius: '10px'
                 }}
               >
-                <Typography style={{ marginTop: '20px', marginLeft: '10px', fontWeight: 'bold' }}>
-                  SUBJECT: {subject.label} ({subject.value})
+                <Typography style={{ marginTop: '10px', marginLeft: '10px', fontWeight: '500', color: '#555', fontFamily: 'Poppins' }}>
+                  {subject.label} ({subject.value})
                 </Typography>
                 {getClassCount(index) ? (
                   <div>
-                    <Typography style={{ marginTop: '10px', marginLeft: '10px' }}>
+                    <Typography style={{ marginTop: '5px', marginLeft: '10px',fontSize: '13px' ,fontFamily: 'Poppins'}}>
                       You have attended {getAttendanceCount(index)} out of {getClassCount(index)} Classes.
                     </Typography>
-                    <Typography style={{ marginLeft: '10px' }}>
+                    <Typography style={{ marginLeft: '10px' ,fontSize: '13px',fontFamily: 'Poppins'}}>
                       Attendance Percentage: {Math.round(getAttendancePercentage(index))}%
                     </Typography>
                     {getAttendancePercentage(index) > 75 ? (
-                      <Typography style={{ marginLeft: '10px', color: 'green', marginBottom: '20px' }}>
-                        ✅ Your Attendance Requirement is Satisfied
+                      <Typography style={{ marginLeft: '10px',fontSize: '13px', color: 'rgb(92, 128, 104)', margin: '10px',fontFamily: 'Poppins' }}>
+                        <div style={{ backgroundColor: 'rgb(214, 237, 221)', padding: '5px', borderRadius: '5px', display: 'flex', alignItems: 'center' }}>
+                          <BsCheckCircleFill style={{ marginRight: '5px' }} /> Your Attendance Requirement is Satisfied
+                        </div>
+                        
                       </Typography>
                     ) : (
-                      <Typography style={{ marginLeft: '10px', color: 'red', marginBottom: '20px' }}>
+                      <Typography style={{ marginLeft: '10px', color: 'red', marginBottom: '10px',fontSize: '13px' }}>
                         🛑 You need to attend{' '}
                         {Math.ceil(((0.75 * getClassCount(index)) - getAttendanceCount(index)) / 0.25)} more classes to reach 75%.
                       </Typography>
@@ -327,11 +344,12 @@ function StudentAttendanceTable() {
                     key={classIndex}
                     style={{
                       width: '100%',
-                      boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+                      boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.1)',
                       position: 'relative',
                       marginTop: '12px',
                       paddingBottom: 0,
                       backgroundColor: 'white',
+                      borderRadius: '10px'
                     }}
                   >
                     <div
@@ -382,7 +400,7 @@ function StudentAttendanceTable() {
                             top: '50%',
                             right: '10px',
                             fontSize: '20px',
-                            color: '#9c27b0',
+                            color: '#333',
                           }}
                         />
                       </div>

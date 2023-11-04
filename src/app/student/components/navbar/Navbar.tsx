@@ -2,10 +2,10 @@
 import React from 'react'
 import styles from './Navbar.module.css'
 import { RiBookMarkLine } from "react-icons/ri";
-import { BiHome } from "react-icons/bi";
+import {BiSolidHome, BiHome } from "react-icons/bi";
 import { TbReport } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
-import { BsPersonCheck } from "react-icons/bs";
+import { BsPersonFillCheck,  BsPersonCheck } from "react-icons/bs";
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -26,35 +26,35 @@ const Navbar = () => {
 
         <Link href={'/student/home'} shallow={true}>
         <div className={pathname.endsWith("/home") ? styles.navItemActive : styles.navItem}>
-        <i><BiHome style={{ fontSize: "22px" }} /></i>
+        <i>{pathname.endsWith("/home") ? <BiSolidHome style={{ fontSize: "23px" }} /> : <BiHome style={{ fontSize: "23px" }} />}</i>
         <div style={{fontFamily: 'Poppins'}}>Home</div> 
         </div>
         </Link>
     
         <Link href='/student/attendance' shallow={true}>
         <div className={pathname.endsWith("/attendance") ? styles.navItemActive : styles.navItem}>
-        <i><BsPersonCheck style={{ fontSize: "22px" }} /></i>
+        <i>{pathname.endsWith("/attendance") ? <BsPersonFillCheck style={{ fontSize: "23px" }} /> : <BsPersonCheck style={{ fontSize: "23px" }} />}</i>  
         <div style={{fontFamily: 'Poppins'}}>Attendance</div>
         </div>
         </Link>
 
         <Link href='/student/course' shallow={true}>
         <div className={pathname.endsWith("/course") ? styles.navItemActive : styles.navItem}>
-        <i><RiBookMarkLine style={{ fontSize: "22px" }} /></i>
+        <i><RiBookMarkLine style={{ fontSize: "23px" }} /></i>
         <div style={{fontFamily: 'Poppins'}}>Course</div>
         </div>
         </Link>
 
         <Link href='/student/grades' shallow={true}>
         <div className={pathname.endsWith("/grades") ? styles.navItemActive : styles.navItem}>
-        <i><TbReport style={{ fontSize: "22px" }} /></i> 
+        <i><TbReport style={{ fontSize: "23px" }} /></i> 
         <div style={{fontFamily: 'Poppins'}}>Grades</div>
         </div>
         </Link>
 
         <Link href={'/student/profile'} shallow={true}>
         <div className={pathname.endsWith("/profile") ? styles.navItemActive : styles.navItem}>
-        <i><CgProfile style={{ fontSize: "22px" }} /></i>
+        <i><CgProfile style={{ fontSize: "23px" }} /></i>
         <div style={{fontFamily: 'Poppins'}}>Profile</div>
         </div>
         </Link>

@@ -110,7 +110,7 @@
         align-items: center;
         justify-content: center;
         font-weight: 500;
-        color: #474747;
+        color: #737373;
         font-size: 10px;
         height: 6vh;
         width: 16vw;
@@ -123,11 +123,11 @@
         align-items: center;
         justify-content: center;
         font-weight: 500;
-        color: #4400ff;
+        color: #333;
         font-size: 10px;   
-        height: 6vh;
+        height: 7vh;
         width: 16vw;
-        min-height: 50px;
+        min-height: 55px;
     }
 
 
