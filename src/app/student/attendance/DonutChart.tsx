@@ -73,7 +73,8 @@ const DonutChart = ({ totalAttendancePercentage }) => {
         y="63"
         textAnchor="middle"
         dominantBaseline="middle"
-        style={{ fontSize: "25px", fontWeight: 'bolder' }}
+        color='#333'
+        style={{ fontSize: "22px", fontWeight: 'bold' }}
       >
     {totalAttendancePercentage ? `${Math.round(totalAttendancePercentage)}%` : '0%'}
 

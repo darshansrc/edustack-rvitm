@@ -169,61 +169,75 @@ function StudentAttendanceTable() {
 
           <div>
             <MyTabs style={{ marginTop: '20px' }}>
-              <MyTabList>
+              <MyTabList style={{borderRadius: '10px', marginBottom: '15px'}}>
                 <MyTab style={{ width: '50%', textAlign: 'center' }}>Theory</MyTab>
                 <MyTab style={{ width: '50%', textAlign: 'center' }}>Lab</MyTab>
               </MyTabList>
 
               <MyTabPanel>
-                <table className="responsive-table" style={{}}>
-                  <thead className="sticky-header">
-                    <tr>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
-                        Subject Code
-                      </th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
-                        Classes Held
-                      </th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
-                        Classes Attended
-                      </th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
-                        Attendance Percentage
-                      </th>
-                    </tr>
-                  </thead>
+              <table className={styles.attendanceTable}>
+                <thead>
+                  <tr>
+                    <th className={styles.tableHead} style={{ borderTopLeftRadius: '10px' }}>
+                      Subject Code
+                    </th>
+                    <th className={styles.tableHead}>
+                      Classes Held
+                    </th>
+                    <th className={styles.tableHead}>
+                      Classes Attended
+                    </th>
+                    <th className={styles.tableHead} style={{ borderTopRightRadius: '10px' }}>
+                      Attendance Percentage
+                    </th>
+                  </tr>
+                </thead>
+              
+                <tbody>
                   {subjectOptions && classSemester && classId ? (
-                    <tbody>
-                      {theorySubjects.map((subject, index) => (
-                        <tr className={`table-row ${index % 2 === 0 ? 'odd-row' : 'even-row'}`} key={index}>
-                          <td className="table-data" style={{ fontSize: '12px' }}>
-                            {subject.label + ' (' + subject.value + ')'}
-                          </td>
-                          <td className="table-data">{getClassCount(index)}</td>
-                          <td className="table-data">{getAttendanceCount(index)}</td>
-                          <td className="table-data">{Math.round(getAttendancePercentage(index))}%</td>
-                        </tr>
-                      ))}
-                    </tbody>
+                    theorySubjects.map((subject, index) => (
+                      <tr className={`table-row ${index % 2 === 0 ? 'odd-row' : 'even-row'}`} key={index}>
+                        <td className={styles.tableSubject}>
+                          {subject.label + ' (' + subject.value + ')'}
+                        </td>
+                        <td className={styles.tableData}>{getClassCount(index)}</td>
+                        <td className={styles.tableData}>{getAttendanceCount(index)}</td>
+                        <td className={styles.tableData}>{Math.round(getAttendancePercentage(index))}%</td>
+                      </tr>
+                    ))
                   ) : (
-                    <tbody></tbody>
+                    <tr>
+                    <td className={styles.tableData}>
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </td>
+                    <td className={styles.tableData}>
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </td>
+                    <td className={styles.tableData}>
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </td>
+                    <td className={styles.tableData}>
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </td>
+                  </tr>
                   )}
-                </table>
+                </tbody>
+              </table>
               </MyTabPanel>
               <MyTabPanel>
-                <table className="responsive-table" style={{}}>
+                <table className={styles.attendanceTable} >
                   <thead className="sticky-header">
                     <tr>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                      <th className={styles.tableHead} style={{ fontSize: '12px', color: '#2f2f2f' }}>
                         Subject Code
                       </th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                      <th className={styles.tableHead} style={{ fontSize: '12px', color: '#2f2f2f' }}>
                         Classes Held
                       </th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                      <th className={styles.tableHead} style={{ fontSize: '12px', color: '#2f2f2f' }}>
                         Classes Attended
                       </th>
-                      <th className="table-header" style={{ fontSize: '12px', backgroundColor: '#2f2f2f' }}>
+                      <th className={styles.tableHead} style={{ fontSize: '12px', color: '#2f2f2f' }}>
                         Attendance Percentage
                       </th>
                     </tr>
@@ -232,17 +246,21 @@ function StudentAttendanceTable() {
                     <tbody>
                       {labSubjects.map((subject, index) => (
                         <tr className={`table-row ${index % 2 === 0 ? 'odd-row' : 'even-row'}`} key={index}>
-                          <td className="table-data" style={{ fontSize: '12px' }}>
+                          <td className={styles.tableSubject} style={{ fontSize: '12px' }}>
                             {subject.label + ' (' + subject.value + ')'}
                           </td>
-                          <td className="table-data">{getClassCount(index)}</td>
-                          <td className="table-data">{getAttendanceCount(index)}</td>
-                          <td className="table-data">{Math.round(getAttendancePercentage(index))}%</td>
+                          <td className={styles.tableData}>{getClassCount(index)}</td>
+                          <td className={styles.tableData}>{getAttendanceCount(index)}</td>
+                          <td className={styles.tableData}>{Math.round(getAttendancePercentage(index))}%</td>
                         </tr>
                       ))}
                     </tbody>
                   ) : (
-                    <tbody></tbody>
+                    <tbody>
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    </tbody>
                   )}
                 </table>
               </MyTabPanel>
