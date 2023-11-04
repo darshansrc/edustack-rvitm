@@ -38,5 +38,3 @@ next-env.d.ts
 # firebase
 .firebase
 
-./public/sw.js.map
-./public/sw.map

@@ -11,6 +11,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import './StudentAttendanceTable.css';
 import { Card, CardContent, Typography } from '@mui/material';
 import LoadingSkeleton from './LoadingSkeleton';
+import styles from './StudentAttendanceTable.module.css'
+import Skeleton from '@mui/material/Skeleton';
 
 interface SubjectOption {
   value: string;
@@ -59,8 +61,9 @@ function StudentAttendanceTable() {
           setClassSemester(responseBody.studentDetails.classSemester);
           setSubjectOptions(responseBody.subjectOptions);
           setAttendanceData(responseBody.attendanceDocs);
-
           setDataFetched(true);
+
+         
         } else {
           console.log('Cannot fetch data');
         }
@@ -117,24 +120,49 @@ function StudentAttendanceTable() {
   const theorySubjects = subjectOptions.filter((subject) => subject.subjectType === 'theory');
   const labSubjects = subjectOptions.filter((subject) => subject.subjectType === 'lab');
 
-  if (!dataFetched) {
-    return (
-      <LoadingSkeleton/>
-    );
-  }
+
 
   return (
    
     <>
   
-      <div className="table-containerrr">
-        <div className="table-containerr">
-          <div className="attendance-card">
-            <DonutChart totalAttendancePercentage={totalAttendancePercentage} />
+      <div className={styles.contentContainer}>
+
+      <div className={styles.container}>
+
+          <div className={styles.attendanceCard}>
+            {dataFetched ? (
+              <DonutChart totalAttendancePercentage={totalAttendancePercentage} />
+            ) : (
+              <Skeleton variant="circular" width={120} height={120} />
+            )}
+           
             <div style={{ alignItems: 'center' }}>
-              <h5 style={{ marginLeft: '30px', fontSize: '18px', marginBottom: '10px' }}>Attendance Summary</h5>
-              <p style={{ marginLeft: '30px', marginBottom: '0px', fontSize: '14px' }}>
-                Classes Held: {totalClassesHeld} <br /> Classes Attended: {totalClassesAttended} <br /> Classes Absent: {totalClassesHeld - totalClassesAttended}
+            <h5 style={{ marginLeft: '10px', fontSize: '16px', marginBottom: '10px' ,width: '200px', maxWidth: '40%',whiteSpace: 'nowrap',fontFamily: 'Poppins',fontWeight: '500',color: '#111' }}>
+              {dataFetched ? (
+                <>
+                  Attendance Summary
+                </>
+              ) : (
+                <Skeleton variant="text" sx={{ fontSize: '1.3rem', width: '100%' }} />
+              )}
+              </h5>
+             
+              <p style={{ marginLeft: '10px', marginBottom: '0px', fontSize: '14px', color: '#333',fontWeight: '500' }}>
+                {dataFetched ? (
+                  <>
+                    Classes held: {totalClassesHeld} <br />
+                    Classes attended: {totalClassesAttended} <br />
+                    Classes absent: {totalClassesHeld - totalClassesAttended}
+                  </>
+                ) : (
+                  <>
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                  </>
+                  
+                )}
               </p>
             </div>
           </div>
@@ -243,7 +271,7 @@ function StudentAttendanceTable() {
                   position: 'relative',
                   marginTop: '12px',
                   paddingBottom: 0,
-                  backgroundColor: '#f1f1f1',
+                  backgroundColor: 'white',
                 }}
               >
                 <Typography style={{ marginTop: '20px', marginLeft: '10px', fontWeight: 'bold' }}>
@@ -285,7 +313,7 @@ function StudentAttendanceTable() {
                       position: 'relative',
                       marginTop: '12px',
                       paddingBottom: 0,
-                      backgroundColor: '#f1f1f1',
+                      backgroundColor: 'white',
                     }}
                   >
                     <div

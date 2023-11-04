@@ -1,0 +1,22 @@
+.attendanceCard{
+    padding: 10px;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .contentContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    
+  }  
+
+  .container{
+
+    width: 450px;
+    max-width: 95vw;
+  }
