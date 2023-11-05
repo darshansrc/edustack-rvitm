@@ -121,7 +121,8 @@ function StudentAttendanceTable() {
   const theorySubjects = subjectOptions.filter((subject) => subject.subjectType === 'theory');
   const labSubjects = subjectOptions.filter((subject) => subject.subjectType === 'lab');
 
-
+  console.log(labSubjects)
+  console.log(theorySubjects)
 
   return (
    
@@ -179,9 +180,9 @@ function StudentAttendanceTable() {
               <MyTabPanel>
               <table className={styles.attendanceTable}>
                 <thead>
-                  <tr>
+                  <tr >
                     <th className={styles.tableHead} style={{ borderTopLeftRadius: '10px' }}>
-                      Subject Code
+                      Subject 
                     </th>
                     <th className={styles.tableHead}>
                       Classes Held
@@ -189,7 +190,7 @@ function StudentAttendanceTable() {
                     <th className={styles.tableHead}>
                       Classes Attended
                     </th>
-                    <th className={styles.tableHead} style={{ borderTopRightRadius: '10px' }}>
+                    <th className={styles.tableHead} style={{ borderTopRightRadius: '10px',paddingRight: '10px' }}>
                       Attendance Percentage
                     </th>
                   </tr>
@@ -197,14 +198,14 @@ function StudentAttendanceTable() {
               
                 <tbody>
                   {subjectOptions && classSemester && classId ? (
-                    theorySubjects.map((subject, index) => (
-                      <tr className={`table-row ${index % 2 === 0 ? 'odd-row' : 'even-row'}`} key={index}>
+                    theorySubjects.map((theorySubject, theoryIndex) => (
+                      <tr  key={theoryIndex}>
                         <td className={styles.tableSubject}>
-                          {subject.label + ' (' + subject.value + ')'}
+                          {theorySubject.label + ' (' + theorySubject.value + ')'}
                         </td>
-                        <td className={styles.tableData}>{getClassCount(index)}</td>
-                        <td className={styles.tableData}>{getAttendanceCount(index)}</td>
-                        <td className={styles.tableData}>{Math.round(getAttendancePercentage(index))}%</td>
+                        <td className={styles.tableData}>{getClassCount(1)}</td>
+                        <td className={styles.tableData}>{getAttendanceCount(1)}</td>
+                        <td className={styles.tableData}>{Math.round(getAttendancePercentage(1))}%</td>
                       </tr>
                     ))
                   ) : (
@@ -231,7 +232,7 @@ function StudentAttendanceTable() {
                 <thead>
                   <tr>
                     <th className={styles.tableHead} style={{ borderTopLeftRadius: '10px' }}>
-                      Subject Code
+                      Subject
                     </th>
                     <th className={styles.tableHead}>
                       Classes Held
