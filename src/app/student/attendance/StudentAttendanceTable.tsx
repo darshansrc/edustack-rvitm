@@ -15,6 +15,7 @@ import styles from './StudentAttendanceTable.module.css'
 import Skeleton from '@mui/material/Skeleton';
 import { BsCheckCircleFill, BsXCircleFill } from 'react-icons/bs'
 import { styled } from '@mui/material/styles';
+import { BiTime } from 'react-icons/bi';
 
 interface SubjectOption {
   value: string;
@@ -403,7 +404,7 @@ function StudentAttendanceTable() {
 
                   <div className={styles.lineCard}>
                     <div className={styles.line}></div>
-                    <Card className={styles.card}>
+                    <Card className={styles.card}  style={{boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)'}}>
                     <div
                       style={{
                         position: 'absolute',
@@ -420,7 +421,7 @@ function StudentAttendanceTable() {
                         justifyContent: 'center',
                         alignItems: 'center',
                         fontSize: '12px',
-                        fontWeight: 'bold',
+                        fontFamily: 'Poppins'
                       }}
                     >
                       {classData.attendance.find((student) => student.usn === usn)?.Present ? 'P' : 'A'}
@@ -436,8 +437,8 @@ function StudentAttendanceTable() {
                         }}
                       >
                         <div style={{ cursor: 'pointer', marginRight: '12px' }}>
-                          <Typography style={{fontSize: '14px',fontFamily: 'Poppins',fontWeight: '500',color: '#555'}}>
-                            {classData.sessionTime}
+                          <Typography style={{fontSize: '14px',fontFamily: 'Poppins',fontWeight: '500',color: '#555',display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
+                            <BiTime style={{marginRight: '5px'}}/>{classData.sessionTime}
                           </Typography>
                         </div>
                         <AiOutlineRightCircle
