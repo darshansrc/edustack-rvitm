@@ -42,6 +42,25 @@ interface StyledTabsProps {
   onChange: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
+const StyledTabs = styled((props: StyledTabsProps) => (
+  <Tabs
+    {...props}
+    variant="scrollable"
+    scrollButtons="auto"
+    TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+  />
+))({
+  '& .MuiTabs-indicator': {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  '& .MuiTabs-indicatorSpan': {
+    width: '100%',
+    backgroundColor: 'rgb(29 78 216)',
+  },
+});
+
 
 const StyledTab = styled((props: StyledTabProps) => (
   <Tab disableRipple {...props} />
@@ -340,11 +359,11 @@ function StudentAttendanceTable() {
           <h6 style={{ marginTop: '20px', marginBottom: '0px', marginLeft: '10px', color: 'grey', fontFamily: 'Poppins', fontWeight: '500',fontSize: '14px' }}>PREVIOUS CLASSES</h6>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             {dataFetched ? (
-              <Tabs value={value} onChange={handleChange} scrollButtons allowScrollButtonsMobile variant="scrollable" >
-                {subjectOptions.map((subject, index) => (
-                  <StyledTab key={index} label={subject.value} />
-                ))}
-              </Tabs>
+              <StyledTabs value={value} onChange={handleChange}   >
+              {subjectOptions.map((subject, index) => (
+                <StyledTab key={index} label={subject.value} />
+              ))}
+            </StyledTabs>
             ) : (
               <Skeleton variant="text" sx={{ fontSize: '1rem', width: '300px', marginBottom: '5px'}}/>
             )}

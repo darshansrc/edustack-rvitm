@@ -6,12 +6,14 @@
     border-radius: 10px;
     margin-top: 20px;
     box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04);
+    transition: 0.2s;
   }
 
   .contentContainer {
     display: flex;
     align-items: center;
     flex-direction: column;
+    transition: 0.2s;
     
   }  
 
@@ -19,6 +21,7 @@
 
     width: 600px;
     max-width: 95vw;
+    transition: 0.2s;
   }
 
 
@@ -29,6 +32,7 @@
   padding: 10px;
   font-family: 'Poppins';
   align-items: center;
+  transition: 0.2s;
 
   
 }
@@ -41,6 +45,7 @@
   color: #222222;
   padding: 5px;
   border-bottom: 1px solid #f3f3f3;
+  transition: 0.2s;
 }
 
 .tableData{
@@ -49,6 +54,7 @@
   border-bottom: 1px solid #f3f3f3;
   font-family: 'Poppins';
   font-size: 11px;
+  transition: 0.2s;
 }
 
 .tableSubject{
@@ -60,6 +66,7 @@
    font-size: 11px;
    width: 40vw;
    max-width: 40vw;
+   transition: 0.2s;
 
 }
 
@@ -78,6 +85,7 @@
   justify-content: left;
   width: 100%;
   margin-left: 10px;
+  transition: 0.2s;
 }
 
 .circle {
@@ -85,6 +93,7 @@
   height: 10px;
   background-color: rgb(29, 78, 216);
   border-radius: 50%;
+  transition: 0.2s;
 }
 
 .line {
@@ -93,6 +102,7 @@
   height: 100%;
   background-color: rgb(29, 78, 216);
   margin-left: 15px;
+  transition: 0.2s;
 }
 
 .dateText {
@@ -115,6 +125,7 @@
   position: relative;
   background-color: white;
   border-radius: 5px;
+  transition: 0.2s;
 }
 
 

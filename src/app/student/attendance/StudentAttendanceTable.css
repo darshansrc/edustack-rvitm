@@ -10,11 +10,13 @@
   background-color: rgb(234, 234, 234);
   display: flex;
   align-items: center;
+  transition: 0.2s;
 }
 
 .summary-table{
   max-width: 500px;
   margin-bottom: 70px;
+  transition: 0.2s;
  
   
   display: flex;

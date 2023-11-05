@@ -1,27 +1,24 @@
-
-
-import getUser from '@/lib/getUser'
-
 import React from 'react'
-import SignOutButton from './SignOutButton';
 import Navbar from '../components/navbar/Navbar';
 import styles from '../components/navbar/Navbar.module.css'
+import TopNavbar from '../components/topnavbar/TopNavbar';
+import StudentHomePage from './StudentHomePage';
 
 async function App() {
-  const user = await getUser()
-
-  const formattedString = JSON.stringify(user, null, "\t");
-
 
 
   return (
     <>
-    <Navbar/>
+   
+    
     <div className={styles.pageContainer}>
-        Home
+        <TopNavbar name='EduStack'/>
+        <StudentHomePage />
+        <Navbar />
     </div>
     </>
   ) 
+
 }
 
 export default App

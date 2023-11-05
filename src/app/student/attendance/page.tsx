@@ -10,10 +10,9 @@ const page = async () => {
 
   return (
     <>
-    
     <Navbar/>
     <div className={styles.pageContainer}>
-    <TopNavbar/>
+    <TopNavbar name={'Attendance Dashboard'}/>
         <StudentAttendanceTable/>
     </div>
     </>

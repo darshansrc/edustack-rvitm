@@ -20,7 +20,7 @@ const Navbar = () => {
     <nav className={styles.navBar}>
         <div className={styles.navLogo}>
             <Image src='/logo.png' alt='logo' height={30} width={30}/>
-            <h2 style={{fontWeight: '600', fontFamily: 'Poppins', fontSize: '20px',marginLeft: '5px'}}>EduStack</h2>
+            <h2 style={{fontWeight: '500', fontFamily: 'Poppins', fontSize: '12px',color: '#555'}}>EduStack</h2>
         </div>
 
 
