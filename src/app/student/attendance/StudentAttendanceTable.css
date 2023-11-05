@@ -51,21 +51,21 @@
 .react-tabs__tab {
   padding: 5px;
   outline: none; font-weight: 400;
-  background-color: #ffffff;
+  background-color: #ebebeb;
   border-radius: 10px;
   font-weight: 500;
   font-size: 14px;
   font-family: 'Poppins';
-  color: '#333'
+  color: '#666'
 
 }
 
 .react-tabs__tab--selected {
 
-  background-color: #353535;
+  background-color: rgb(255, 255, 255);
   transition: border-bottom 0.2s color 0.2s;
   font-weight: 500;
-  color: white;
+  color: rgb(29 78 216);
   border-radius: 10px;
 }
  
@@ -76,6 +76,7 @@
   padding: 0;
   align-items: center;
   box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04);
-  background-color: #ffffff;
+  background-color: #ebebeb;
+  color: #666
   
 }

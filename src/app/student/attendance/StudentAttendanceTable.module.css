@@ -17,7 +17,7 @@
 
   .container{
 
-    width: 450px;
+    width: 600px;
     max-width: 95vw;
   }
 
@@ -29,6 +29,7 @@
   padding: 10px;
   font-family: 'Poppins';
   align-items: center;
+
   
 }
 
@@ -47,6 +48,7 @@
   padding: 5px;
   border-bottom: 1px solid #f3f3f3;
   font-family: 'Poppins';
+  font-size: 12px;
 }
 
 .tableSubject{
@@ -59,4 +61,58 @@
    width: 40vw;
    max-width: 40vw;
 
+}
+
+.cardContainer {
+  display: flex;
+  flex-direction: column;
+  
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.connector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  width: 100%;
+  margin-left: 10px;
+}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  background-color: rgb(29, 78, 216);
+  border-radius: 50%;
+}
+
+.line {
+  width: 2px;
+  min-width: 2px;
+  height: 100%;
+  background-color: rgb(29, 78, 216);
+  margin-left: 15px;
+}
+
+.dateText {
+  flex: 1;
+  margin-left: 10px;
+}
+
+
+
+.lineCard{
+  display: flex;
+  flex-direction: row;
+}
+
+
+.card{
+  margin: 10px;
+  width: 100%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+  position: relative;
+  background-color: white;
+  border-radius: 5px;
 }

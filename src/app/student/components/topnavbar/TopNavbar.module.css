@@ -1,12 +1,28 @@
+
 .topNavbar{
-    width: 100vw;
-    height: 7vh;
-    min-height: 50px;
-    border-bottom: 0.5px solid #c1c1c1;
-    background-color: white;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+        width: 100vw;
+        height: 7vh;
+        min-height: 50px;
+        background-color: white;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+    }
+
+
+
+
+
+.container {
+    display: block; /* Initially, the container is displayed */
+  
+
+    }
+    
+@media (min-width: 769px) {
+    .container {
+      display: none; 
+    }
 }

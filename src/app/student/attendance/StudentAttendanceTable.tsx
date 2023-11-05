@@ -9,11 +9,12 @@ import AppBar from '@mui/material/AppBar';
 import { Tab as MyTab, Tabs as MyTabs, TabList as MyTabList, TabPanel as MyTabPanel } from 'react-tabs';
 import 'react-datepicker/dist/react-datepicker.css';
 import './StudentAttendanceTable.css';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Box, Card, CardContent, Typography } from '@mui/material';
 import LoadingSkeleton from './LoadingSkeleton';
 import styles from './StudentAttendanceTable.module.css'
 import Skeleton from '@mui/material/Skeleton';
-import { BsCheckCircleFill } from 'react-icons/bs'
+import { BsCheckCircleFill, BsXCircleFill } from 'react-icons/bs'
+import { styled } from '@mui/material/styles';
 
 interface SubjectOption {
   value: string;
@@ -29,6 +30,50 @@ interface AttendanceData {
   presentCount: number;
   absentCount: number;
 }
+
+interface StyledTabProps {
+  label: string;
+}
+
+interface StyledTabsProps {
+  children?: React.ReactNode;
+  value: number;
+  onChange: (event: React.SyntheticEvent, newValue: number) => void;
+}
+
+const StyledTabs = styled((props: StyledTabsProps) => (
+  <Tabs
+    {...props}
+    TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+  />
+))({
+  '& .MuiTabs-indicator': {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  '& .MuiTabs-indicatorSpan': {
+    width: '100%',
+    backgroundColor: 'rgb(29 78 216)',
+  },
+});
+
+
+const StyledTab = styled((props: StyledTabProps) => (
+  <Tab disableRipple {...props} />
+))(({ theme }) => ({
+  textTransform: 'none',
+  fontFamily: 'Poppins',
+  fontWeight: '500',
+  fontSize: theme.typography.pxToRem(12),
+  color: '#666666',
+  '&.Mui-selected': {
+    color: 'rgb(29 78 216)',
+  },
+  '&.Mui-focusVisible': {
+    backgroundColor: '#666666',
+  },
+}));
 
 // Hook Definitions
 function StudentAttendanceTable() {
@@ -281,30 +326,29 @@ function StudentAttendanceTable() {
           </div>
 
           <h6 style={{ marginTop: '20px', marginBottom: '0px', marginLeft: '10px', color: 'grey', fontFamily: 'Poppins', fontWeight: '500',fontSize: '14px' }}>PREVIOUS CLASSES</h6>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            textColor="secondary"
-            indicatorColor="secondary"
-            variant="scrollable"
-            scrollButtons="auto"
-            aria-label="full width tabs example"
-          >
-            {subjectOptions.map((subject, index) => (
-              <Tab key={index} label={subject.value} />
-            ))}
-          </Tabs>
-          {subjectOptions.map((subject, index) => (
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            {dataFetched ? (
+              <StyledTabs value={value} onChange={handleChange}>
+                {subjectOptions.map((subject, index) => (
+                  <StyledTab key={index} label={subject.value} />
+                ))}
+              </StyledTabs>
+            ) : (
+              <Skeleton variant="text" sx={{ fontSize: '1rem', width: '300px', marginBottom: '5px'}}/>
+            )}
+          </Box>
+          {dataFetched ?  subjectOptions.map((subject, index) => (
             <div key={index} hidden={value !== index}>
               <Card
                 style={{
                   width: '100%',
-                  boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.1)',
+                  boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04)',
                   position: 'relative',
                   marginTop: '12px',
                   paddingBottom: 0,
                   backgroundColor: 'white',
-                  borderRadius: '10px'
+                  borderRadius: '10px',
+                  marginBottom: '12px'
                 }}
               >
                 <Typography style={{ marginTop: '10px', marginLeft: '10px', fontWeight: '500', color: '#555', fontFamily: 'Poppins' }}>
@@ -326,9 +370,11 @@ function StudentAttendanceTable() {
                         
                       </Typography>
                     ) : (
-                      <Typography style={{ marginLeft: '10px', color: 'red', marginBottom: '10px',fontSize: '13px' }}>
-                        🛑 You need to attend{' '}
+                      <Typography style={{ marginLeft: '10px',fontSize: '13px', color: 'rgb(139, 78, 78)', margin: '10px',fontFamily: 'Poppins' }}>
+                        <div style={{ backgroundColor: 'rgb(237, 221, 221)', padding: '5px', borderRadius: '5px', display: 'flex', alignItems: 'center' }}>
+                        <BsXCircleFill style={{ marginRight: '5px' }}  /> You need to attend{' '}
                         {Math.ceil(((0.75 * getClassCount(index)) - getAttendanceCount(index)) / 0.25)} more classes to reach 75%.
+                        </div>
                       </Typography>
                     )}
                   </div>
@@ -341,18 +387,23 @@ function StudentAttendanceTable() {
               <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                 {/* Iterate over attendance data for the selected subject */}
                 {attendanceData[index]?.slice().reverse().map((classData, classIndex) => (
-                  <Card
-                    key={classIndex}
-                    style={{
-                      width: '100%',
-                      boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.1)',
-                      position: 'relative',
-                      marginTop: '12px',
-                      paddingBottom: 0,
-                      backgroundColor: 'white',
-                      borderRadius: '10px'
-                    }}
-                  >
+                  <>
+                  <div key={classIndex} className={styles.cardContainer}>
+                    
+                  <div className={styles.connector}>
+                      <div className={styles.circle}></div>
+                    <Typography style={{ fontFamily: 'Poppins', fontSize: '14px', fontWeight: '500', color: 'rgb(29 78 216)',marginLeft: '10px' }}>
+                    {' '}{new Date(classData.date).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })}{' '}
+                      </Typography>
+                  </div>                  
+
+                  <div className={styles.lineCard}>
+                    <div className={styles.line}></div>
+                    <Card className={styles.card}>
                     <div
                       style={{
                         position: 'absolute',
@@ -385,13 +436,8 @@ function StudentAttendanceTable() {
                         }}
                       >
                         <div style={{ cursor: 'pointer', marginRight: '12px' }}>
-                          <Typography sx={{ fontSize: 16 }}>
-                            {new Date(classData.date).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            })}{' '}
-                            ({classData.sessionTime})
+                          <Typography style={{fontSize: '14px',fontFamily: 'Poppins',fontWeight: '500',color: '#555'}}>
+                            {classData.sessionTime}
                           </Typography>
                         </div>
                         <AiOutlineRightCircle
@@ -406,21 +452,44 @@ function StudentAttendanceTable() {
                         />
                       </div>
                       <Typography
-                        sx={{
-                          fontSize: 12,
-                          color: 'grey',
-                          marginTop: '4px',
-                          marginLeft: '13%',
-                        }}
+                        style={{fontSize: '10px',fontFamily: 'Poppins',fontWeight: '400',color: '#555',marginLeft: '13%',}}
                       >
                         {classData.presentCount + ' out of your ' + (classData.presentCount + classData.absentCount) + ' classmates were present'}
                       </Typography>
                     </CardContent>
-                  </Card>
+                    </Card>
+                  </div>  
+                    
+                  </div>
+                  </>
                 ))}
               </div>
             </div>
-          ))}
+          )) : (
+            <Card 
+            style={{
+              width: '100%',
+              boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04)',
+              position: 'relative',
+              marginTop: '12px',
+              padding: '15px',
+              backgroundColor: 'white',
+              borderRadius: '10px'
+            }}>
+              <Typography>
+              <Skeleton variant="text" sx={{ fontSize: '1.3rem', width: '90%'}}/>
+              </Typography>
+              <Typography>
+              <Skeleton variant="text" sx={{ fontSize: '0.8rem', width: '80%'}}/>
+              </Typography>
+              <Typography>
+              <Skeleton variant="text" sx={{ fontSize: '0.8rem', width: '80%'}}/>
+              </Typography>
+              <Typography>
+              <Skeleton variant="text" sx={{ fontSize: '0.8rem', width: '80%'}}/>
+              </Typography>
+            </Card>
+          )}
         </div>
       </div>
     </>
