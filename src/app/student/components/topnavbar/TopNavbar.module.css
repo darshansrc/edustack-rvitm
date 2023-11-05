@@ -3,7 +3,7 @@
         width: 100vw;
         height: 7vh;
         min-height: 50px;
-        background-color: white;
+        background-color: #fafafa;
         display: flex;
         flex-direction: row;
         justify-content: space-between;

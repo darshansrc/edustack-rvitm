@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
         classSemester: '',
         className: '',
       }
-    let subjectOptions: { value: string; label: string; subjectType: string }[] = [];
+    let subjectOptions: { value: string; label: string; subjectType: string , subjectSemester: number}[] = [];
     let attendanceDocs;
 
   
@@ -100,8 +100,10 @@ export async function GET(request: NextRequest) {
   
                     // Include the subject only if it's compulsory or if it's elective and the user is in the electiveStudents array
                     if (data.compulsoryElective === 'compulsory' || isUserInElective) {
-                      subjectOptions.push({ value: data.code, label: data.name, subjectType: data.theoryLab });
+                        subjectOptions.push({ value: data.code, label: data.name, subjectType: data.theoryLab, subjectSemester: data.semester });
+                      
                     }
+
                   });
                 }
               }

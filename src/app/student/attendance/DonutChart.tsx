@@ -8,7 +8,7 @@ const DonutChart = ({ totalAttendancePercentage }) => {
   useEffect(() => {
     setAnimatedPercentage(0);
 
-    const animationDuration = 500; 
+    const animationDuration = 200; 
     const animationStep = (totalAttendancePercentage / animationDuration) * 10;
 
     let animationInterval: NodeJS.Timeout | null = null;

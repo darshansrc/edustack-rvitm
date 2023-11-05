@@ -93,6 +93,15 @@ function StudentAttendanceTable() {
     setValue(newValue);
   };
 
+                
+const customComparator = (a, b) => {
+  const lastCharA = a.value.slice(-1);
+  const lastCharB =  b.value.slice(-1);
+  if (lastCharA < lastCharB) return -1;
+  if (lastCharA > lastCharB) return 1;
+  return 0;
+};
+   
   useEffect(() => {
     async function fetchAttendanceData() {
       try {
@@ -106,7 +115,7 @@ function StudentAttendanceTable() {
           setUsn(responseBody.studentDetails.studentUSN);
           setClassId(responseBody.studentDetails.className);
           setClassSemester(responseBody.studentDetails.classSemester);
-          setSubjectOptions(responseBody.subjectOptions);
+          setSubjectOptions(responseBody.subjectOptions.sort(customComparator));
           setAttendanceData(responseBody.attendanceDocs);
           setDataFetched(true);
 
@@ -243,17 +252,24 @@ function StudentAttendanceTable() {
                 </thead>
               
                 <tbody>
-                  {subjectOptions && classSemester && classId ? (
-                    theorySubjects.map((theorySubject, theoryIndex) => (
-                      <tr  key={theoryIndex}>
-                        <td className={styles.tableSubject}>
-                          {theorySubject.label + ' (' + theorySubject.value + ')'}
-                        </td>
-                        <td className={styles.tableData}>{getClassCount(1)}</td>
-                        <td className={styles.tableData}>{getAttendanceCount(1)}</td>
-                        <td className={styles.tableData}>{Math.round(getAttendancePercentage(1))}%</td>
-                      </tr>
-                    ))
+                {subjectOptions && classSemester && classId ? (
+                  subjectOptions
+                    .filter((subject) => subject.subjectType === 'theory')
+                    .map((theorySubject, filteredIndex) => {
+                      // Find the original index in the unfiltered array
+                      const originalIndex = subjectOptions.findIndex(subject => subject === theorySubject);
+                      
+                      return (
+                        <tr key={filteredIndex}>
+                          <td className={styles.tableSubject}>
+                            {theorySubject.label + ' (' + theorySubject.value + ')'}
+                          </td>
+                          <td className={styles.tableData}>{getClassCount(originalIndex)}</td>
+                          <td className={styles.tableData}>{getAttendanceCount(originalIndex)}</td>
+                          <td className={styles.tableData}>{Math.round(getAttendancePercentage(originalIndex))}%</td>
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
                     <td className={styles.tableSubject}>
@@ -293,17 +309,24 @@ function StudentAttendanceTable() {
                 </thead>
               
                 <tbody>
-                  {subjectOptions && classSemester && classId ? (
-                    labSubjects.map((subject, index) => (
-                      <tr className={`table-row ${index % 2 === 0 ? 'odd-row' : 'even-row'}`} key={index}>
-                        <td className={styles.tableSubject}>
-                          {subject.label + ' (' + subject.value + ')'}
-                        </td>
-                        <td className={styles.tableData}>{getClassCount(index)}</td>
-                        <td className={styles.tableData}>{getAttendanceCount(index)}</td>
-                        <td className={styles.tableData}>{Math.round(getAttendancePercentage(index))}%</td>
-                      </tr>
-                    ))
+                {subjectOptions && classSemester && classId ? (
+                  subjectOptions
+                    .filter((subject) => subject.subjectType === 'lab')
+                    .map((labSubject, filteredIndex) => {
+                      // Find the original index in the unfiltered array
+                      const originalIndex = subjectOptions.findIndex(subject => subject === labSubject);
+                      
+                      return (
+                        <tr key={filteredIndex}>
+                          <td className={styles.tableSubject}>
+                            {labSubject.label + ' (' + labSubject.value + ')'}
+                          </td>
+                          <td className={styles.tableData}>{getClassCount(originalIndex)}</td>
+                          <td className={styles.tableData}>{getAttendanceCount(originalIndex)}</td>
+                          <td className={styles.tableData}>{Math.round(getAttendancePercentage(originalIndex))}%</td>
+                        </tr>
+                      );
+                    })
                   ) : (
                     <tr>
                     <td className={styles.tableSubject}>
@@ -329,11 +352,11 @@ function StudentAttendanceTable() {
           <h6 style={{ marginTop: '20px', marginBottom: '0px', marginLeft: '10px', color: 'grey', fontFamily: 'Poppins', fontWeight: '500',fontSize: '14px' }}>PREVIOUS CLASSES</h6>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             {dataFetched ? (
-              <StyledTabs value={value} onChange={handleChange}>
+              <Tabs value={value} onChange={handleChange} scrollButtons allowScrollButtonsMobile variant="scrollable" className={styles.muiTabs}>
                 {subjectOptions.map((subject, index) => (
                   <StyledTab key={index} label={subject.value} />
                 ))}
-              </StyledTabs>
+              </Tabs>
             ) : (
               <Skeleton variant="text" sx={{ fontSize: '1rem', width: '300px', marginBottom: '5px'}}/>
             )}
