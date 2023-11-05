@@ -117,15 +117,4 @@
   border-radius: 5px;
 }
 
-.muiTabs.Mui-selected{
-  border-bottom: 2px solid rgb(29, 78, 216);
-}
-
-.css-1aquho2-MuiTabs-indicator{
-  background-color: red;
-}
-
-.MuiTabs-indicator .css-1aquho2-MuiTabs-indicator{
-  background-color: red;
-}
 

@@ -42,23 +42,6 @@ interface StyledTabsProps {
   onChange: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
-const StyledTabs = styled((props: StyledTabsProps) => (
-  <Tabs
-    {...props}
-    TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
-  />
-))({
-  '& .MuiTabs-indicator': {
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  '& .MuiTabs-indicatorSpan': {
-    width: '100%',
-    backgroundColor: 'rgb(29 78 216)',
-  },
-});
-
 
 const StyledTab = styled((props: StyledTabProps) => (
   <Tab disableRipple {...props} />
@@ -93,14 +76,19 @@ function StudentAttendanceTable() {
     setValue(newValue);
   };
 
+  function getDayOfWeek(date) {
+    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    return daysOfWeek[date.getDay()];
+  }
+
                 
-const customComparator = (a, b) => {
-  const lastCharA = a.value.slice(-1);
-  const lastCharB =  b.value.slice(-1);
-  if (lastCharA < lastCharB) return -1;
-  if (lastCharA > lastCharB) return 1;
-  return 0;
-};
+  const customComparator = (a, b) => {
+    const lastCharA = a.value.slice(-1);
+    const lastCharB =  b.value.slice(-1);
+    if (lastCharA < lastCharB) return -1;
+    if (lastCharA > lastCharB) return 1;
+    return 0;
+  };
    
   useEffect(() => {
     async function fetchAttendanceData() {
@@ -404,7 +392,10 @@ const customComparator = (a, b) => {
                   </div>
                 ) : (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '15px' }}>
-                    <Typography>No Classes Held</Typography>
+                    <div style={{boxShadow: '0 0 0 1px rgba(0,0,0,.08)', width: '100%',marginLeft: '10px',marginRight: '10px',padding: '20px',borderRadius: '5px'}}>
+                    <Typography style={{fontFamily: 'Poppins', fontSize: '14px',color: '#333'}}>No Classes Held</Typography>
+                    </div>
+                    
                   </div>
                 )}
               </Card>
@@ -422,6 +413,7 @@ const customComparator = (a, b) => {
                           month: 'short',
                           day: 'numeric',
                         })}{' '}
+                        ({getDayOfWeek(new Date(classData.date))})
                       </Typography>
                   </div>                  
 
@@ -456,7 +448,7 @@ const customComparator = (a, b) => {
                           justifyContent: 'space-between',
                           alignItems: 'center',
                           position: 'relative',
-                          marginLeft: '13%',
+                          marginLeft: '15%',
                         }}
                       >
                         <div style={{ cursor: 'pointer', marginRight: '12px' }}>
@@ -464,7 +456,7 @@ const customComparator = (a, b) => {
                             <BiTime style={{marginRight: '5px'}}/>{classData.sessionTime}
                           </Typography>
                         </div>
-                        <AiOutlineRightCircle
+                        {/* <AiOutlineRightCircle
                           style={{
                             cursor: 'pointer',
                             position: 'absolute',
@@ -473,10 +465,10 @@ const customComparator = (a, b) => {
                             fontSize: '20px',
                             color: '#333',
                           }}
-                        />
+                        /> */}
                       </div>
                       <Typography
-                        style={{fontSize: '10px',fontFamily: 'Poppins',fontWeight: '400',color: '#555',marginLeft: '13%',}}
+                        style={{fontSize: '10px',fontFamily: 'Poppins',fontWeight: '400',color: '#555',marginLeft: '15%',}}
                       >
                         {classData.presentCount + ' out of your ' + (classData.presentCount + classData.absentCount) + ' classmates were present'}
                       </Typography>
