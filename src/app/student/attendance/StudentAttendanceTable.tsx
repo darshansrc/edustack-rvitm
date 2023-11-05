@@ -352,7 +352,7 @@ const customComparator = (a, b) => {
           <h6 style={{ marginTop: '20px', marginBottom: '0px', marginLeft: '10px', color: 'grey', fontFamily: 'Poppins', fontWeight: '500',fontSize: '14px' }}>PREVIOUS CLASSES</h6>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             {dataFetched ? (
-              <Tabs value={value} onChange={handleChange} scrollButtons allowScrollButtonsMobile variant="scrollable" className={styles.muiTabs}>
+              <Tabs value={value} onChange={handleChange} scrollButtons allowScrollButtonsMobile variant="scrollable" >
                 {subjectOptions.map((subject, index) => (
                   <StyledTab key={index} label={subject.value} />
                 ))}

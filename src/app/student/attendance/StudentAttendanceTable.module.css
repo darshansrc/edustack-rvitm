@@ -35,10 +35,10 @@
 
 .tableHead{
   text-align: center;
-  background-color: #ffffff;
+  background-color: rgb(255, 255, 255);
   font-size: 12px;
   font-weight: 500;
-  color: #333;
+  color: #222222;
   padding: 5px;
   border-bottom: 1px solid #f3f3f3;
 }
@@ -48,7 +48,7 @@
   padding: 5px;
   border-bottom: 1px solid #f3f3f3;
   font-family: 'Poppins';
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .tableSubject{
@@ -57,7 +57,7 @@
    text-align: left;
    border-bottom: 1px solid #f3f3f3;
    font-family: 'Poppins';
-   font-size: 12px;
+   font-size: 11px;
    width: 40vw;
    max-width: 40vw;
 
@@ -128,3 +128,4 @@
 .MuiTabs-indicator .css-1aquho2-MuiTabs-indicator{
   background-color: red;
 }
+

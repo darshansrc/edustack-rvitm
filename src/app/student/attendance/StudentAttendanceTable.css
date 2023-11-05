@@ -80,3 +80,13 @@
   color: #666
   
 }
+
+.MuiTabs-scrollButtons.Mui-disabled {
+  opacity: 0.3;
+}
+
+
+.css-1aquho2-MuiTabs-indicator{
+  background-color: rgb(29 78 216);
+}
+
