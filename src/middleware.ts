@@ -17,6 +17,7 @@ export async function middleware(request : NextRequest, response : NextResponse)
           const responseBody = await responseAPI.json();
           const userUID = responseBody.userUID;
           const userType = responseBody.userType;
+          const userEmail = responseBody.userEmail;
 
           if (userType) {
   

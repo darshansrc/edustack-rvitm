@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
   }
 
   const userUID = decodedClaims.uid; // Get the user's UID
+  const userEmail = decodedClaims.email; // Get the user's email
   const getRef = doc(db, 'users', userUID);
   const userDoc = await getDoc(getRef);
   
@@ -31,7 +32,7 @@ export async function GET(request: NextRequest) {
     userType = userData.type;
   }
 
-  return NextResponse.json({ isLogged: true, userUID , userType}, { status: 200 });
+  return NextResponse.json({ isLogged: true, userUID ,userEmail, userType}, { status: 200 });
 }
 
 export async function POST(request: NextRequest, response: NextResponse) {

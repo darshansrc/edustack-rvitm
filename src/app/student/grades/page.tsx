@@ -1,8 +1,15 @@
 import React from 'react'
+import Navbar from '../components/navbar/Navbar'
+import styles from '../components/navbar/Navbar.module.css'
 
 const page = () => {
   return (
-    <div>grades</div>
+    <>
+    <Navbar/>
+    <div className={styles.pageContainer}>
+        Grades
+    </div>
+    </>
   )
 }
 

@@ -3,6 +3,13 @@
     background-color: rgb(255, 255, 255);
     display: flex;
     z-index: 9999;
+    box-shadow: 0 0 0 1px #00000014, 0 4px 6px rgba(0, 0, 0, 0.04);
+}
+
+.pageContainer{
+    background-color: #fafafa;
+    min-height: 100vh;
+    padding-bottom: 60px;
 }
 
 
@@ -25,11 +32,12 @@
         /* for desktop view */
         .navLogo{
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-top: 30px;
-            margin-bottom: 30px;
+            margin-top: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #00000014;
         }
     
         .navBar{
@@ -38,19 +46,20 @@
             left: 0;
             border-right: 1px solid #dddddd ;
             height: 100vh;
-            width: 200px;
+            width: 80px;
             box-shadow: 4px 0 5px rgba(232, 232, 232, 0.1);
         }
     
         .pageContainer{
-            margin-left: 200px;
+            margin-left: 80px;
         }
 
     .navItem{
-        flex-direction: row;
+        flex-direction: column;
         justify-content: left;
         padding: 10px;
         border-radius: 5px;
+        font-size: 10px;
 
     }
 
@@ -68,11 +77,10 @@
         gap: 5px;
         background-color: #e9edff;
         color: rgb(39, 86, 255);
-        flex-direction: row;
         justify-content: left;
         padding: 10px;
         border-radius: 5px;
-        font-size: 14px;
+        font-size: 10px;
     }
 }
 
@@ -87,15 +95,14 @@
         bottom: 0;
         left: 0;
         justify-content: space-between;
-        border-top: 0.5px solid #c1c1c1 ;
         width: 100vw;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        padding-left: 5vw;
-        padding-right: 5vw;
-        box-shadow: 0 -4px 5px rgba(0,0,0,.1);
+        padding-left: 3vw;
+        padding-right: 3vw;
+       
     }
 
     .navItem{
@@ -103,14 +110,12 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-weight: 400;
-   
-      
-        color: #474747;
-        font-size: 12px;
-        height: 60px;
+        font-weight: 500;
+        color: #737373;
+        font-size: 10px;
+        height: 6vh;
         width: 16vw;
-        border-top: 2px solid white;
+        min-height: 50px;
     }
 
     .navItemActive{
@@ -118,12 +123,12 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-weight: 400;
-        color: rgb(39, 86, 255);
-        font-size: 12px;   
-        border-top: 2px solid rgb(39, 86, 255);
-        height: 60px;
+        font-weight: 500;
+        color: rgb(29 78 216);
+        font-size: 10px;   
+        height: 7vh;
         width: 16vw;
+        min-height: 55px;
     }
 
 

@@ -1,29 +1,5 @@
-.table-containerr {
-  overflow: auto;
-
-  margin-top: 10px;
-  padding: 10px;
-  width: 450px;
-  max-width: 98%;
-  margin-bottom: 80px;
-  
-}
-
-.table-containerrrr {
-  overflow: auto;
-
-  width: 450px;
-  max-width: 100%;
-
-  
-}
 
 
-.table-containerr thead th {
-
-  color: white;
-
-}
 
 .attendance-card{
   padding-top: 10px;
@@ -34,12 +10,13 @@
   background-color: rgb(234, 234, 234);
   display: flex;
   align-items: center;
-
+  transition: 0.2s;
 }
 
 .summary-table{
   max-width: 500px;
   margin-bottom: 70px;
+  transition: 0.2s;
  
   
   display: flex;
@@ -74,33 +51,44 @@
 
 
 .react-tabs__tab {
-  padding-bottom: 5px;
-  border-bottom: 1px solid #c6c6c6;
-  transition: border-bottom 0.2s color 0.2s;
-  padding-bottom: 5px;
+  padding: 5px;
   outline: none; font-weight: 400;
+  background-color: #ebebeb;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 14px;
+  font-family: 'Poppins';
+  color: '#666'
+
 }
 
 .react-tabs__tab--selected {
-  border-bottom: 2px solid #9c27b0;
-  background-color: #ffffff;
-  color: #9c27b0;
+
+  background-color: rgb(255, 255, 255);
   transition: border-bottom 0.2s color 0.2s;
   font-weight: 500;
-  padding-bottom: 4px;
+  color: rgb(29 78 216);
+  border-radius: 10px;
 }
  
-.react-tabs__tab-list {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  align-items: center;
-}
 
 .react-tabs__tab-list {
   display: flex;
   list-style: none;
   padding: 0;
   align-items: center;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04);
+  background-color: #ebebeb;
+  color: #666
   
+}
+
+
+
+.css-1aquho2-MuiTabs-indicator{
+  background-color: rgb(29 78 216);
+}
+
+.MuiTabs-scrollButtons.Mui-disabled {
+  opacity: 0.3;
 }
