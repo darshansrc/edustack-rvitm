@@ -14,7 +14,8 @@
     .courseNavbar{
         top: 0;
         left: 80px;
-        padding: 0px 30vw;
+        width: calc(100vw - 80px);
+        padding: 0px calc(50vw - 315px);
         box-shadow: none;
         background-color: #fafafa;
         border-bottom: none;

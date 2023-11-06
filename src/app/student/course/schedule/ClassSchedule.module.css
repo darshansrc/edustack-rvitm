@@ -1,0 +1,118 @@
+.scheduleContainer{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+}
+
+.schedulePage {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    width: 550px;
+    max-width: 95vw;
+}
+
+  .button {
+    background-color: #fafafa;
+    color: #fff;
+    border: none;
+    padding: 3px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    font-family: 'Poppins';
+    color: #333;
+  }
+  
+  .todayButton {
+    background-color: #fafafa;
+    color: #ffffff;
+    border: 1px solid rgb(29 78 216);
+    padding: 3px;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    font-family: 'Poppins';
+    background-color: rgb(29 78 216);
+    font-size: 12px;
+  }
+
+  .selectedDateBar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0;
+  }
+  
+
+  .selectedDate {
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Poppins';
+    color: #333;
+    padding-left: 15px;
+  }
+  
+  .dateGrid {
+    display: flex;
+    padding: 10px 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .dateContainer {
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+    
+  }
+  
+  .date {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 5px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 10vw;
+    max-width: 50px;
+  }
+  
+  .day {
+    font-size: 12px;
+    margin-top: 5px;
+
+  }
+  
+  .selectedDateDiv{
+    background-color: rgb(29 78 216);
+    color: #ffffff;
+  }
+
+  
+
+
+  .noClassContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    box-shadow:  0 0 0 1px #00000014 , 0 4px 6px rgba(0, 0, 0, 0.04);
+    border-radius: 10px;
+    width: 90%;
+    height: 50vh;
+    background-color: white;
+  }
+
+
+

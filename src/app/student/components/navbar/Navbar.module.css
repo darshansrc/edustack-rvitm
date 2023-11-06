@@ -127,6 +127,7 @@
         width: 16vw;
         min-height: 50px;
         border-top: 1.5px solid rgb(255, 255, 255);
+
     }
 
     .navItemActive{
@@ -140,7 +141,7 @@
         height: 7vh;
         width: 16vw;
         min-height: 55px;
-        border-top: 1.5px solid rgb(39, 86, 255);
+        border-top: 2px solid rgb(29 78 216);
     }
 
 

@@ -10,6 +10,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
+import ClassSchedule from './schedule/ClassSchedule';
 
 interface StyledTabProps {
   label: string;
@@ -61,7 +62,7 @@ const StyledTab = styled((props: StyledTabProps) => (
 const TabPanel = ({ value, index, children }) => {
   return (
     <div hidden={value !== index}>
-      {value === index && <Box p={3}>{children}</Box>}
+      {value === index && children}
     </div>
   );
 };
@@ -95,10 +96,7 @@ const Page = () => {
         
     <div className={styles1.pageContainer} style={{paddingTop: '90px'}}>
     <TabPanel value={selectedTab} index={0}>
-        <Typography variant="h6">Class Schedule</Typography>
-        <Typography>
-   
-        </Typography>
+        <ClassSchedule/>
       </TabPanel>
 
       <TabPanel value={selectedTab} index={1}>
