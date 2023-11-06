@@ -42,3 +42,5 @@ next-env.d.ts
 .firebase
 
 
+public/sw.js.map
+public/sw.js.map
