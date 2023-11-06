@@ -1,5 +1,5 @@
 'use client';
-import * as React from 'react'
+import React, { ReactNode, SyntheticEvent, useState } from 'react'
 import Navbar from '../components/navbar/Navbar'
 import styles1 from '../components/navbar/Navbar.module.css'
 import TopNavbar from '../components/topnavbar/TopNavbar'
@@ -12,7 +12,7 @@ import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
 interface TabPanelProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   index: number;
   value: number;
 }
@@ -46,9 +46,9 @@ function a11yProps(index: number) {
 
 const page = () => {
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
@@ -57,9 +57,9 @@ const page = () => {
   }
   
   interface StyledTabsProps {
-    children?: React.ReactNode;
+    children?: ReactNode;
     value: number;
-    onChange: (event: React.SyntheticEvent, newValue: number) => void;
+    onChange: (event: SyntheticEvent, newValue: number) => void;
   }
   
   const StyledTabs = styled((props: StyledTabsProps) => (
