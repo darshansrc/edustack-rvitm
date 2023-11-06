@@ -109,12 +109,14 @@ const page = () => {
         </Typography>
       </TabPanel>
 
-      <TabPanel value={selectedTab} index={3}>
+      <TabPanel value={selectedTab} index={2}>
         <Typography variant="h6">Tab 3 Content</Typography>
         <Typography>
           This is the content for Tab 3. You can replace this with your actual content.
         </Typography>
       </TabPanel>
+
+
     </div>
     </>
   )
