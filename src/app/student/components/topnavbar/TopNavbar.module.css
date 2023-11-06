@@ -1,8 +1,7 @@
 
 .topNavbar{
         width: 100vw;
-        height: 7vh;
-        min-height: 50px;
+        height: 55px;
         background-color: #ffffff;
         display: flex;
         flex-direction: row;
@@ -34,10 +33,10 @@
 
 .openNavbar {
     position: fixed;
-    top: 7vh;
+    top: 55px;
     left: 0;
     width: 100vw;
-    height: 93vh;
+    height: calc(100vh - 55px);
     background-color: white;
     z-index: 99;
     

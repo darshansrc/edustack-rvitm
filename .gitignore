@@ -38,7 +38,5 @@ next-env.d.ts
 # firebase
 .firebase
 public/sw.js.map
-src/app/student/components/topnavbar/TopNavbar.tsx
-public/sw.js.map
 public/sw.js
-public/sw.js.map
+
