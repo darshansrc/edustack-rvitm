@@ -1,5 +1,5 @@
 'use client';
-import React, { ReactNode, SyntheticEvent, useState } from 'react'
+import React, {  useState } from 'react'
 import Navbar from '../components/navbar/Navbar'
 import styles1 from '../components/navbar/Navbar.module.css'
 import TopNavbar from '../components/topnavbar/TopNavbar'
@@ -16,9 +16,9 @@ interface StyledTabProps {
 }
 
 interface StyledTabsProps {
-  children?: ReactNode;
+  children?: React.ReactNode;
   value: number;
-  onChange: (event: SyntheticEvent, newValue: number) => void;
+  onChange: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
 const StyledTabs = styled((props: StyledTabsProps) => (
