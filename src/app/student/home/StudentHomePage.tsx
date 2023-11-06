@@ -19,6 +19,7 @@ import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/fi
 type user = {
   uid: string;
   email?: string;
+  picture?: string;
 
 }
 
@@ -38,6 +39,8 @@ const StudentHomePage = async () => {
 
 
   if (user) {
+
+    console.log(user)
       
     const queryPath = 'students';
     const collectionGroupRef = collectionGroup(db, queryPath);
@@ -90,7 +93,12 @@ const StudentHomePage = async () => {
 
       <div className={styles.welcomeCard}>
         <div style={{marginRight: '14px'}}>
-         <Image priority width={60} height={60} src='/None.jpg' alt={''} style={{margin: '0 10px',borderRadius: '50%'}}/>
+          {user?.picture ? (
+             <img  width={60} height={60} src={user.picture} alt={''} style={{margin: '0 10px',borderRadius: '50%'}}/>
+          ) : (
+            <Image priority width={60} height={60} src='/None.jpg' alt={''} style={{margin: '0 10px',borderRadius: '50%'}}/>
+          )}
+         
         </div>
         {dataFetched ? (
         <div>
