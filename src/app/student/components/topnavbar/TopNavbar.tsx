@@ -7,13 +7,29 @@ import { Cross } from './hamburger-react';
 import { Skeleton } from '@mui/material';
 import { FiSun } from 'react-icons/fi';
 import { HiSelector } from 'react-icons/hi';
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
+import { auth } from '@/lib/firebase-config';
 
 const TopNavbar = ({name}) => {
+
+  const router = useRouter();
 
   const [isOpen, setOpen] = useState(false)
   const [userUID, setUserUID] = useState(null)
   const [userType, setUserType] = useState(null)
   const[userEmail, setUserEmail] = useState(null)
+
+
+  const handleSignOut = async () => {
+    signOut(auth);
+    const response = await fetch(`${window.location.origin}/api/signout`, {
+        method: "POST",
+      });
+      if (response.status === 200) {
+        router.push("/");
+      }
+    }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,7 +105,7 @@ const TopNavbar = ({name}) => {
           </div>
         </div>
       </div>
-      <div className={styles.openNavbarItem}>
+      <div className={styles.openNavbarItem} onClick={() => handleSignOut()}>
         Log Out
       </div>
       <div className={styles.openNavbarItem}>
