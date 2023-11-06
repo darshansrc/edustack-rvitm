@@ -4,8 +4,6 @@ import styles from '../components/navbar/Navbar.module.css'
 import TopNavbar from '../components/topnavbar/TopNavbar';
 import StudentHomePage from './StudentHomePage';
 
-import { AppProps } from 'next/app';
-
 async function App() {
 
 

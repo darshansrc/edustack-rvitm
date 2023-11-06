@@ -1,8 +1,6 @@
-'use client';
-import { auth } from '@/lib/firebase-config';
+
+import {  db } from '@/lib/firebase-config';
 import { signOut } from 'firebase/auth';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react'
 import styles from './StudentHomePage.module.css'
 import Image from 'next/image';
 import { BsClockHistory, BsFiletypePdf, BsPersonCheck } from 'react-icons/bs';
@@ -13,57 +11,82 @@ import { RiThreadsLine } from 'react-icons/ri';
 import { FiEdit } from 'react-icons/fi';
 import { BiSpreadsheet } from 'react-icons/bi';
 import { Skeleton } from '@mui/material';
-import { useStudentContext } from '@/app/context/StudentContext';
+
+import getUser from '@/lib/getUser';
+import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 
 
-const StudentHomePage = () => {
+type user = {
+  uid: string;
+  email?: string;
 
-  const { studentDetails, setStudentDetails } = useStudentContext();
+}
 
-  const [classSemester, setClassSemester] = useState('');
-  const [classId, setClassId] = useState<any>(null);
-  const [dataFetched, setDataFetched] = useState(false);
+const StudentHomePage = async () => {
 
-  const router = useRouter();
+  const user : user | null = await getUser();
 
-  useEffect(() => {
-    async function fetchAttendanceData() {
-      try {
-        const currentServerDomain = window.location.origin;
-        const responseAPI = await fetch(`${currentServerDomain}/api/student/attendance`, {
-          method: 'GET',
-        });
-        if (responseAPI.status === 200) {
-          const responseBody = await responseAPI.json();
-          setStudentDetails(responseBody.studentDetails);        
-          setClassId(responseBody.studentDetails.className);
-          setClassSemester(responseBody.studentDetails.classSemester);
-          setDataFetched(true);
+  let studentDetails = {
+    studentName: '',
+    studentUSN: '',
+    className: '',
+  };
 
-         
-        } else {
-          console.log('Cannot fetch data');
+
+  
+  const dataFetched = true;
+
+
+  if (user) {
+      
+    const queryPath = 'students';
+    const collectionGroupRef = collectionGroup(db, queryPath);
+    const studentQuery = query(collectionGroupRef, where('email', '==', user.email));
+    const studentSnapshot = await getDocs(studentQuery);
+
+    await Promise.all(
+      studentSnapshot.docs.map(async (studentDoc) => {
+        const className = studentDoc.ref.parent.parent?.id || '';
+        const studentID = studentDoc.ref.id;
+        const classDocRef = doc(db, 'database', className);
+        const classDocSnapshot = await getDoc(classDocRef);
+
+        if (classDocSnapshot.exists()) {
+          const classSemester = classDocSnapshot.data().currentSemester;
+          const studentLabBatch = studentDoc.data().labBatch;
+          const studentName = studentDoc.data().name;
+          const studentUSN = studentDoc.data().usn;
+          const studentEmail = studentDoc.data().email;
+          studentDetails = {
+            studentName,
+            studentUSN,
+            className,
+          };
+
+
         }
-      } catch (error) {
-        console.error('An error occurred:', error);
-      }
-    }
+      })
+    );
 
-    fetchAttendanceData();
-  }, []);
+}
 
-  const handleSignOut = async () => {
-    signOut(auth);
-    const response = await fetch(`${window.location.origin}/api/signout`, {
-        method: "POST",
-      });
-      if (response.status === 200) {
-        router.push("/");
-      }
-    }
+
+
+  // const handleSignOut = async () => {
+  //   signOut(auth);
+  //   const response = await fetch(`${window.location.origin}/api/signout`, {
+  //       method: "POST",
+  //     });
+  //     if (response.status === 200) {
+  //       router.push("/");
+  //     }
+  //   }
   
   return (
     <div className={styles.homePageContainer}>
+
+
+      
 
       <div className={styles.welcomeCard}>
         <div style={{marginRight: '14px'}}>
@@ -94,42 +117,42 @@ const StudentHomePage = () => {
       </div>
 
       <div className={styles.menuBox}>
-        <div className={styles.menuItem} onClick={() => router.push('/student/attendance')}>
+        <div className={styles.menuItem} >
           <div className={styles.menuItemIcon}>
             <BsPersonCheck size={25} style={{margin: '0 10px', color: '#333'}}/>
           </div>
           <div className={styles.menuItemText}>Attendance</div>
         </div>
 
-        <div className={styles.menuItem} onClick={() => router.push('/student/assignments')}>
+        <div className={styles.menuItem}>
           <div className={styles.menuItemIcon}>
           <BsClockHistory size={25} style={{margin: '0 10px' , color: '#333'}}/>
           </div>
           <div className={styles.menuItemText}>Schedule</div>
         </div>
 
-        <div className={styles.menuItem} onClick={() => router.push('/student/notes')}>
+        <div className={styles.menuItem} >
           <div className={styles.menuItemIcon}>
           <BiSpreadsheet size={25} style={{margin: '0 10px' , color: '#333'}}/>
           </div>
           <div className={styles.menuItemText}>Assignment</div>
         </div>
 
-        <div className={styles.menuItem} onClick={() => router.push('/student/fees')}>
+        <div className={styles.menuItem} >
           <div className={styles.menuItemIcon}>
           <RxReader size={25} style={{margin: '0 10px' , color: '#333'}}/>
           </div>
           <div className={styles.menuItemText}>IA Marks</div>
         </div>
 
-        <div className={styles.menuItem} onClick={() => router.push('/student/fees')}>
+        <div className={styles.menuItem} >
           <div className={styles.menuItemIcon}>
           <TbReportAnalytics size={25} style={{margin: '0 10px' , color: '#333'}}/>
           </div>
           <div className={styles.menuItemText}>CGPA</div>
         </div>
 
-        <div className={styles.menuItem} onClick={() => router.push('/student/profile')}>
+        <div className={styles.menuItem} >
           <div className={styles.menuItemIcon}>
           <RiThreadsLine size={25} style={{margin: '0 10px' , color: '#333'}}/>
           </div>
