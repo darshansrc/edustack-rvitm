@@ -27,7 +27,6 @@ const StyledTabs = styled((props: StyledTabsProps) => (
     variant="fullWidth"
     scrollButtons="auto"
     TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
-
   />
 ))({
   '& .MuiTabs-indicator': {
@@ -87,32 +86,32 @@ const Page = () => {
         value={selectedTab}
         onChange={handleTabChange}
       >
-        <StyledTab label="Tab 1" />
-        <StyledTab label="Tab 2" />
-        <StyledTab label="Tab 3" />
+        <StyledTab label="Schedule" />
+        <StyledTab label="Material" />
+        <StyledTab label="Assignments" />
       </StyledTabs>
 
     </div>
         
     <div className={styles1.pageContainer} style={{paddingTop: '90px'}}>
     <TabPanel value={selectedTab} index={0}>
-        <Typography variant="h6">Tab 1 Content</Typography>
+        <Typography variant="h6">Class Schedule</Typography>
         <Typography>
-          This is the content for Tab 1. You can replace this with your actual content.
+   
         </Typography>
       </TabPanel>
 
       <TabPanel value={selectedTab} index={1}>
-        <Typography variant="h6">Tab 2 Content</Typography>
+        <Typography variant="h6">Study Material</Typography>
         <Typography>
-          This is the content for Tab 2. You can replace this with your actual content.
+
         </Typography>
       </TabPanel>
 
       <TabPanel value={selectedTab} index={2}>
-        <Typography variant="h6">Tab 3 Content</Typography>
+        <Typography variant="h6">Assignments</Typography>
         <Typography>
-          This is the content for Tab 3. You can replace this with your actual content.
+        
         </Typography>
       </TabPanel>
 

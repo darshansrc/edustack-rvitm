@@ -26,14 +26,14 @@ const Navbar = () => {
 
         <Link href={'/student/home'} shallow={true}>
         <div className={pathname.endsWith("/home") ? styles.navItemActive : styles.navItem}>
-        <i>{pathname.endsWith("/home") ? <BiSolidHome style={{ fontSize: "23px" }} /> : <BiHome style={{ fontSize: "23px" }} />}</i>
+        <i> <BiHome style={{ fontSize: "23px" }} /></i>
         <div style={{fontFamily: 'Poppins'}}>Home</div> 
         </div>
         </Link>
     
         <Link href='/student/attendance' shallow={true}>
         <div className={pathname.endsWith("/attendance") ? styles.navItemActive : styles.navItem}>
-        <i>{pathname.endsWith("/attendance") ? <BsPersonFillCheck style={{ fontSize: "23px" }} /> : <BsPersonCheck style={{ fontSize: "23px" }} />}</i>  
+        <i><BsPersonCheck style={{ fontSize: "23px" }} /></i>  
         <div style={{fontFamily: 'Poppins'}}>Attendance</div>
         </div>
         </Link>
