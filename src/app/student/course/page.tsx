@@ -83,6 +83,7 @@ const Page = () => {
     <TopNavbar name={'Course'}/>
     <Navbar/>
     <div className={styles.courseNavbar}>
+    <div className={styles.desktopNav}>
     <StyledTabs
         value={selectedTab}
         onChange={handleTabChange}
@@ -91,7 +92,7 @@ const Page = () => {
         <StyledTab label="Material" />
         <StyledTab label="Assignments" />
       </StyledTabs>
-
+      </div>
     </div>
         
     <div className={styles1.pageContainer} style={{paddingTop: '90px'}}>

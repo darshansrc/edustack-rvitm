@@ -19,7 +19,19 @@
         box-shadow: none;
         background-color: #fafafa;
         border-bottom: none;
-        padding-top: 10px;
+        padding-top: 0px;
+        
+    }
+
+    .desktopNav{
+        top: 0;
+        border-bottom: 1px solid #00000014;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+        background-color: rgb(255, 255, 255);
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
     
 }

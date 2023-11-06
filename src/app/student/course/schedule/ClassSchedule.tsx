@@ -58,7 +58,7 @@ const initializeCurrentWeek = () => {
             {selectedDate.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
             </div>
 
-            <div onClick={handleTodayClick} className={styles.todayButton} style={{padding: '5px 10px'}}>
+            <div onClick={handleTodayClick} className={styles.todayButton} style={{padding: '5px 10px', marginRight: '15px'}}>
               Today
             </div>
 
@@ -97,7 +97,7 @@ const initializeCurrentWeek = () => {
 
 
       <div className={styles.noClassContainer}>
-        No classes scheduled for today
+        No classes scheduled for this day.
       </div>
     </div>
   );
