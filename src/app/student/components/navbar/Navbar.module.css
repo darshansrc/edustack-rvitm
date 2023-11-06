@@ -2,7 +2,7 @@
     position: fixed;
     background-color: rgb(255, 255, 255);
     display: flex;
-    z-index: 9999;
+    z-index: 1;
     box-shadow: 0 0 0 1px #00000014, 0 4px 6px rgba(0, 0, 0, 0.04);
 }
 
@@ -85,6 +85,14 @@
 }
 
 @media (max-width: 768px) {
+    
+    .pageContainer{
+        background-color: #fafafa;
+        min-height: 100vh;
+        padding-bottom: 60px;
+        padding-top: 7vh;
+    }
+
     .navLogo{
         display: none;
     }

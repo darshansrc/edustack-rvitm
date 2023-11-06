@@ -9,6 +9,11 @@
         justify-content: space-between;
         align-items: center;
         box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 99;
     }
 
 
@@ -29,12 +34,12 @@
 
 .openNavbar {
     position: fixed;
-    top: 0;
+    top: 7vh;
     left: 0;
     width: 100vw;
     height: 93vh;
     background-color: white;
-    z-index: 9999;
+    z-index: 99;
     
 
   }
@@ -49,6 +54,7 @@
     justify-content: space-between;
     align-items: center;
     transition: 1s;
+    overflow: hidden;
     
 }
 
@@ -60,6 +66,8 @@
     margin-right: 20px;
     transition: top 1s, bottom 1s; /* Add transition for top and bottom */
     scroll-behavior: smooth;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .openNavbarItem{
@@ -79,7 +87,7 @@
     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
     color: #333;
     font-weight: 400;
-    margin:20px 0;
+    margin:8px 0;
     align-items: center;
     justify-content: center;
     border-radius: 10px;

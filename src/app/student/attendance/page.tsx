@@ -11,8 +11,9 @@ const page = async () => {
   return (
     <>
     <Navbar/>
-    <div className={styles.pageContainer}>
     <TopNavbar name={'Attendance Dashboard'}/>
+    <div className={styles.pageContainer}>
+    
         <StudentAttendanceTable/>
     </div>
     </>

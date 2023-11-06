@@ -74,16 +74,6 @@ const StudentHomePage = async () => {
 }
 
 
-
-  // const handleSignOut = async () => {
-  //   signOut(auth);
-  //   const response = await fetch(`${window.location.origin}/api/signout`, {
-  //       method: "POST",
-  //     });
-  //     if (response.status === 200) {
-  //       router.push("/");
-  //     }
-  //   }
   
   return (
     <div className={styles.homePageContainer}>
