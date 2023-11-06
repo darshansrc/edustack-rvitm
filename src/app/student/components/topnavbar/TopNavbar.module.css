@@ -14,7 +14,6 @@
 
 
 
-
 .container {
     display: block; /* Initially, the container is displayed */
   
@@ -25,4 +24,84 @@
     .container {
       display: none; 
     }
+}
+
+
+.openNavbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 93vh;
+    background-color: white;
+    z-index: 9999;
+    
+
+  }
+
+  .openTopNavbar{
+    width: 100vw;
+    height: 7vh;
+    min-height: 50px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    transition: 1s;
+    
+}
+
+.openNavbarContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 20px;
+    margin-right: 20px;
+    transition: top bottom 1s;
+    
+}
+
+.openNavbarItem{
+    padding: 15px;
+    padding-left: 5px;
+    font-family: "Poppins";
+    border-bottom: 1px solid #e6e6e6;
+    color: #555;
+    font-weight: 400;
+    transition: 1s;
+}
+
+.openNavbarButton{
+    padding: 15px;
+    padding-left: 5px;
+    font-family: "Poppins";
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+    color: #333;
+    font-weight: 400;
+    margin:20px 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    text-align: center;
+    transition: 1s;
+}
+
+.themeSelector{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.themeSelectorButton{
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+    padding: 2px 15px;
+    display: flex;
+    flex-direction: row;
+    gap: 3px;
+    align-items: center;
+    justify-content: space-between;
+
 }

@@ -12,6 +12,7 @@ import { TbReportAnalytics } from 'react-icons/tb';
 import { RiThreadsLine } from 'react-icons/ri';
 import { FiEdit } from 'react-icons/fi';
 import { BiSpreadsheet } from 'react-icons/bi';
+import { Skeleton } from '@mui/material';
 
 
 const StudentHomePage = () => {
@@ -67,10 +68,18 @@ const StudentHomePage = () => {
         <div style={{marginRight: '14px'}}>
          <Image priority width={60} height={60} src='/None.jpg' alt={''} style={{margin: '0 10px',borderRadius: '50%'}}/>
         </div>
+        {dataFetched ? (
         <div>
-          <div className={styles.studentName}>Welcome, {studentDetails?.studentName}</div>
-          <div className={styles.studentDetail}>USN: {studentDetails?.studentUSN}, CLASS: {studentDetails?.className}</div>
-        </div>
+        <div className={styles.studentName}>Welcome, {studentDetails?.studentName}</div>
+        <div className={styles.studentDetail}>USN: {studentDetails?.studentUSN}, CLASS: {studentDetails?.className}</div>
+      </div>
+        ) : (
+          <div>
+          <div className={styles.studentName}><Skeleton variant="text" sx={{ fontSize: '1.4rem' }} /></div>
+          <div className={styles.studentDetail}><Skeleton variant="text" sx={{ fontSize: '1rem' }} /></div>
+        </div>          
+        )}
+
       </div>
 
       <div className={styles.welcomeCard}>
