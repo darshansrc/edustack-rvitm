@@ -16,10 +16,7 @@ async function App({ Component, pageProps }: AppProps) {
     <div className={styles.pageContainer}>
         <TopNavbar name='EduStack'/>
 
-        <StudentProvider>
-      <Component {...pageProps} />
-    </StudentProvider>
-    
+      
         <StudentProvider>
         <StudentHomePage {...pageProps}/>
         </StudentProvider>
