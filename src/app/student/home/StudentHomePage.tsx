@@ -13,43 +13,17 @@ import { RiThreadsLine } from 'react-icons/ri';
 import { FiEdit } from 'react-icons/fi';
 import { BiSpreadsheet } from 'react-icons/bi';
 import { Skeleton } from '@mui/material';
+import { StudentProvider, useStudentContext } from '@/app/context/StudentContext';
 
 
-const StudentHomePage = () => {
+const StudentHomePage = ({ Component, pageProps }: { Component: React.ComponentType; pageProps: any }) => {
 
+  const { studentDetails, classSemester, classId, dataFetched } = useStudentContext();
 
-  const [studentDetails, setStudentDetails] = useState<any>(null);
-  const [classSemester, setClassSemester] = useState('');
-  const [classId, setClassId] = useState<any>(null);
-  const [dataFetched, setDataFetched] = useState(false);
 
   const router = useRouter();
 
-  useEffect(() => {
-    async function fetchAttendanceData() {
-      try {
-        const currentServerDomain = window.location.origin;
-        const responseAPI = await fetch(`${currentServerDomain}/api/student/attendance`, {
-          method: 'GET',
-        });
-        if (responseAPI.status === 200) {
-          const responseBody = await responseAPI.json();
-          setStudentDetails(responseBody.studentDetails);        
-          setClassId(responseBody.studentDetails.className);
-          setClassSemester(responseBody.studentDetails.classSemester);
-          setDataFetched(true);
-
-         
-        } else {
-          console.log('Cannot fetch data');
-        }
-      } catch (error) {
-        console.error('An error occurred:', error);
-      }
-    }
-
-    fetchAttendanceData();
-  }, []);
+  
 
   const handleSignOut = async () => {
     signOut(auth);
@@ -63,6 +37,7 @@ const StudentHomePage = () => {
   
   return (
     <div className={styles.homePageContainer}>
+    
 
       <div className={styles.welcomeCard}>
         <div style={{marginRight: '14px'}}>
@@ -136,7 +111,7 @@ const StudentHomePage = () => {
         </div>
 
       </div>
-
+   
     </div>
   )
 }

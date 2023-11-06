@@ -6,11 +6,30 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0;
+  margin: 0;
 }
 
-
+a {
+  -webkit-tap-highlight-color: transparent;
+}
 
 body {
   background: #fafafa
 
 } 
+
+html{
+  display: block;
+}
+
+button:focus {
+  outline: none;
+  background-color: red;
+}
+
+button:active {
+  outline: none;
+  background-color: red;
+}

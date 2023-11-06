@@ -3,8 +3,10 @@ import Navbar from '../components/navbar/Navbar';
 import styles from '../components/navbar/Navbar.module.css'
 import TopNavbar from '../components/topnavbar/TopNavbar';
 import StudentHomePage from './StudentHomePage';
+import { StudentProvider } from '@/app/context/StudentContext';
+import { AppProps } from 'next/app';
 
-async function App() {
+async function App({ Component, pageProps }: AppProps) {
 
 
   return (
@@ -13,7 +15,15 @@ async function App() {
     
     <div className={styles.pageContainer}>
         <TopNavbar name='EduStack'/>
-        <StudentHomePage />
+
+        <StudentProvider>
+      <Component {...pageProps} />
+    </StudentProvider>
+    
+        <StudentProvider>
+        <StudentHomePage {...pageProps}/>
+        </StudentProvider>
+        
         <Navbar />
     </div>
     </>
