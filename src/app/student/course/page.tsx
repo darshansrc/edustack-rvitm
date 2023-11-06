@@ -1,9 +1,5 @@
 'use client';
-<<<<<<< HEAD
 import React, {  useState } from 'react'
-=======
-import React from 'react'
->>>>>>> parent of c0edff6 (Merge branch 'main' of https://github.com/darshan-sr/edustack-rvitm)
 import Navbar from '../components/navbar/Navbar'
 import styles1 from '../components/navbar/Navbar.module.css'
 import TopNavbar from '../components/topnavbar/TopNavbar'
@@ -15,15 +11,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
-<<<<<<< HEAD
 interface StyledTabProps {
   label: string;
-=======
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
->>>>>>> parent of c0edff6 (Merge branch 'main' of https://github.com/darshan-sr/edustack-rvitm)
 }
 
 interface StyledTabsProps {
@@ -81,37 +70,12 @@ const TabPanel = ({ value, index, children }) => {
 
 const page = () => {
 
-<<<<<<< HEAD
   const [selectedTab, setSelectedTab] = useState(0);
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
 
-=======
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
-  interface StyledTabProps {
-    label: string;
-  }
-  
-  interface StyledTabsProps {
-    children?: React.ReactNode;
-    value: number;
-    onChange: (event: React.SyntheticEvent, newValue: number) => void;
-  }
-  
-  const StyledTabs = styled((props: StyledTabsProps) => (
-    <Tabs
-      {...props}
-      variant="fullWidth"
-      scrollButtons="auto"
-      TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
->>>>>>> parent of c0edff6 (Merge branch 'main' of https://github.com/darshan-sr/edustack-rvitm)
 
 
   return (
