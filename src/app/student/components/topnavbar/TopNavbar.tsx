@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase-config';
 import Link from 'next/link';
 import { ModalDialog } from '@mui/joy';
-import { handleClientScriptLoad } from 'next/script';
+
 
 const TopNavbar = ({name}) => {
 
@@ -102,22 +102,19 @@ const TopNavbar = ({name}) => {
       <div className={styles.openNavbarContainer}>
 
 
-
+      <Link href='/student/home'>
       <div className={styles.openNavbarItem} >
         Home
       </div>
+      </Link>
       <div className={styles.openNavbarItem}>
         <div className={styles.themeSelector}>
         <div className={styles.themeSelectorTitle}>
             Theme
           </div>
           <div className={styles.themeSelectorButton}>
-          <FiSun/>
-            <select>
-              <option> <p style={{paddingLeft: '5px',fontFamily: 'Poppins', paddingRight: '10px'}}>Light</p> <HiSelector/></option>
-              <option><FiSun/> <p style={{paddingLeft: '5px',fontFamily: 'Poppins', paddingRight: '10px'}}>Dark</p> <HiSelector/></option>
-            </select>
-            
+          <FiSun/> <p style={{paddingLeft: '5px',fontFamily: 'Poppins', paddingRight: '10px'}}>Light</p> <HiSelector/>
+
           </div>
         </div>
       </div>
@@ -170,7 +167,7 @@ const TopNavbar = ({name}) => {
       paddingBottom: '20px',
     }}>You will be returned to the login screen.</h2>
 
-      <div className={styles.openNavbarButton} onClick={() => handleSignOut} style={{color: 'rgb(244, 41, 41)',margin: '0',padding: '10px'}}>
+      <div className={styles.openNavbarButton} onClick={() => handleSignOut()} style={{color: 'rgb(244, 41, 41)',margin: '0',padding: '10px'}}>
         Log Out
       </div>
       <div className={styles.openNavbarButton} onClick={handleClose} style={{color: 'rgb(29 78 216)', margin: '0', padding: '10px'}}>

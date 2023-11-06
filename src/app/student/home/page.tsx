@@ -1,5 +1,3 @@
-
-
 import React from 'react'
 import Navbar from '../components/navbar/Navbar';
 import styles from '../components/navbar/Navbar.module.css'
@@ -11,18 +9,12 @@ async function App() {
 
   return (
     <>
-    <StudentHomePage />
-   <Navbar />
-    <div className={styles.pageContainer}>
-        <TopNavbar name='EduStack'/>
-
-      
- 
-       
     
-        
-       
+    <TopNavbar name='EduStack'/>
+    <div className={styles.pageContainer}>    
+        <StudentHomePage />
     </div>
+    <Navbar />
     </>
   ) 
 
