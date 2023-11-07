@@ -36,13 +36,15 @@ const TopNavbar = ({name}) => {
 
   const handleSignOut = async () => {
     signOut(auth);
+    document.cookie = 'studentData=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    document.cookie = 'photoUrl=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     const response = await fetch(`${window.location.origin}/api/signout`, {
-        method: "POST",
-      });
-      if (response.status === 200) {
-        router.push("/");
-      }
+      method: "POST",
+    });
+    if (response.status === 200) {
+      router.push("/");
     }
+  }
 
   useEffect(() => {
     const fetchData = async () => {

@@ -49,22 +49,29 @@ const StudentHomePage =  () => {
 
 
   useEffect(() => {
-    // Check if studentDetails exist in localStorage
-    const storedStudentDetails = localStorage.getItem('studentDetails');
-    const storedPhotoUrl = localStorage.getItem('photoUrl');
+    // Check if the cookie 'studentDetails' exists
+    const cookies = document.cookie.split(';');
+    let storedStudentDetails;
+    let storedPhotoUrl;
+
+    for (const cookie of cookies) {
+      const [name, value] = cookie.trim().split('=');
+      if (name === 'studentDetails') {
+        storedStudentDetails = JSON.parse(decodeURIComponent(value));
+      } else if (name === 'photoUrl') {
+        storedPhotoUrl = decodeURIComponent(value);
+      }
+    }
 
     if (storedStudentDetails) {
-      // If it exists, parse and set it in state
-      const parsedStudentDetails = JSON.parse(storedStudentDetails);
-      setStudentDetails(parsedStudentDetails);
-      if(storedPhotoUrl){
+      setStudentDetails(storedStudentDetails);
+      if (storedPhotoUrl) {
         setPhotoUrl(storedPhotoUrl);
       }
 
-      
       setDataFetched(true);
     } else {
-      // Fetch the data and store it in localStorage
+      // Fetch the data and set a cookie with a 5-minute expiry
       const fetchAttendanceData = async () => {
         try {
           const currentServerDomain = window.location.origin;
@@ -77,15 +84,15 @@ const StudentHomePage =  () => {
             getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
               .then((url) => {
                 setPhotoUrl(url);
-                localStorage.setItem('photoUrl', url)
+                // Set a cookie with a 5-minute expiry
+                const expirationDate = new Date(Date.now() + 10 * 60 * 1000);
+                document.cookie = `studentDetails=${encodeURIComponent(JSON.stringify(responseBody.studentDetails))}; expires=${expirationDate.toUTCString()}`;
+                document.cookie = `photoUrl=${encodeURIComponent(url)}; expires=${expirationDate.toUTCString()}`;
               })
               .catch((error) => {
                 console.log(error);
               });
 
-            // Store studentDetails in localStorage
-            localStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
-            
             setDataFetched(true);
           } else {
             console.log('Cannot fetch data');
@@ -111,7 +118,7 @@ const StudentHomePage =  () => {
       <div className={styles.welcomeCard}>
         <div style={{marginRight: '14px'}}>
           { dataFetched ? (
-             <img   src={photoUrl} alt={''} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
+             <img   src={photoUrl ? photoUrl : '/None.jpg'} alt={''} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
           ) : (
             <Skeleton variant="circular" width={60} height={60} />
           )}
