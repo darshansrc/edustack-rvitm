@@ -6,7 +6,7 @@ import { AiOutlineEye } from 'react-icons/ai';
 import { FiDownload } from 'react-icons/fi';
 import { CgFileDocument } from 'react-icons/cg';
 
-const cgpaCalculator = () => {
+const CgpaCalculator = () => {
   const [activeTab, setActiveTab] = useState(1);
 
   const handleTabClick = (tabNumber) => {
@@ -25,4 +25,4 @@ const cgpaCalculator = () => {
   );
 };
 
-export default cgpaCalculator;
+export default CgpaCalculator;
