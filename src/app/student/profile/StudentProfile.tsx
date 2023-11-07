@@ -1,21 +1,24 @@
 'use client';
 import { Alert, Button , Skeleton, Snackbar } from '@mui/material';
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import Modal from '@mui/joy/Modal';
 import { ModalDialog } from '@mui/joy';
 import styles from './StudentProfile.module.css'
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { FiEdit } from 'react-icons/fi';
 
-const storage = getStorage(); // Initialize Firebase Storage
-const photosStorageRef = ref(storage, 'photos');
 
 
 
 
 
 const StudentProfile = () => {
+
+    const storage = getStorage(); // Initialize Firebase Storage
+    const photosStorageRef = ref(storage, 'photos');
+
 
   interface studentDetails {
     studentName: string;
@@ -44,6 +47,7 @@ const StudentProfile = () => {
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
 
   const [ photoSnackbarOpen, setPhotoSnackbarOpen ] = useState(false);
+  const [imageURL, setImageURL] = useState('');
 
   const action = (
     <React.Fragment>
@@ -72,7 +76,7 @@ const StudentProfile = () => {
 
   const handlePhotoUpload = async () => {
     if (selectedPhoto) {
-      const photoRef = ref(photosStorageRef, `${userEmail}`);
+      const photoRef = ref(photosStorageRef, `${studentDetails.studentUSN}.jpg`);
       
       try {
         await uploadBytes(photoRef, selectedPhoto);
@@ -99,6 +103,11 @@ const StudentProfile = () => {
           setClassId(responseBody.studentDetails.className);
           setClassSemester(responseBody.studentDetails.classSemester);
           setUserEmail(responseBody.decodedClaims.email);
+          getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
+          .then((url) => {setImageURL(url)})
+          .catch((error) => {
+            console.log(error)
+          });
           setDataFetched(true);
 
 
@@ -113,7 +122,7 @@ const StudentProfile = () => {
     fetchAttendanceData();
   }, []);
 
-  
+
 
 
 
@@ -121,18 +130,39 @@ const StudentProfile = () => {
   return (
     <><div className='flex flex-col items-center bg-neutral-50'>
           <div className='w-[95vw] max-w-xl flex flex-col  items-center border border-solid rounded-md bg-white border-slate-300 mt-4'>
-              <div className='flex flex-row justify-between items-center'>
-                  <img
-                      src={studentDetails ? studentDetails.studentPhoto : 'None.jpg'}
-                      alt='student'
-                      className='w-36 h-36 p-6 rounded-full' />
-                  <Button
-                      variant='outlined'
-                      color='primary'
+              <div className='relative flex flex-row justify-between items-center'>
+                {
+                    dataFetched ? ( 
+                        <img
+  src={imageURL ? imageURL : '/None.jpg'}
+  alt="Student Image"
+  style={{
+
+    objectFit: 'cover',
+    boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',
+  }}
+  className="w-28 h-28 m-6 rounded-full"
+/>
+                    ) : (
+                        <Skeleton variant="circular" sx={{ width: '7rem', height: '7rem' ,margin: '1.5rem' }}  />
+                    )
+                }
+
+                  <div
                       onClick={openModal}
+                      style={{
+                        position: 'absolute',
+                        top: '66.66%',
+                        left: '66.66%',
+                        backgroundColor: '#fff',
+                        borderRadius: '50%',
+                        padding: '5px',
+                        color: '#1d4ed8',
+                        boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)'
+                      }}
                   >
-                      Upload Photo
-                  </Button>
+                      <FiEdit/>
+                  </div>
               </div>
 
 
