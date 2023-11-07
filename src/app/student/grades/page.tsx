@@ -10,6 +10,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
+import InternalAssessment from './internal-assessment/InternalAssessment';
+import CgpaCalculator from './cgpa/CgpaCalculator';
 
 interface StyledTabProps {
   label: string;
@@ -92,14 +94,15 @@ const Page = () => {
 
     </div>
         
-    <div className={styles1.pageContainer} style={{paddingTop: '90px'}}>
+    <div className={styles1.pageContainer} style={{paddingTop: '110px'}}>
     <TabPanel value={selectedTab} index={0}>
-        
+        <InternalAssessment/>
 
       </TabPanel>
 
       <TabPanel value={selectedTab} index={1}>
-        <Typography variant="h6">Study Material</Typography>
+
+        <CgpaCalculator/> 
 
       </TabPanel>
 
