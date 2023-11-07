@@ -140,7 +140,7 @@ const StudentHomePage =  () => {
 
       <div className={styles.welcomeCard}>
         <div style={{marginRight: '15px'}}>
-         <Image priority width={60} height={60} src='/logorv.png' alt={''} style={{margin: '0 10px',borderRadius: '50%'}}/>
+         <img src='/logorv.png' alt={''} style={{width:'60px' , height:'60px', margin: '0 10px',borderRadius: '50%'}}/>
         </div>
         <div>
           <div className={styles.studentName}>RV Institute of Technology & Management</div>
