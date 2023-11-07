@@ -1,4 +1,4 @@
-
+'use client';
 import {  db } from '@/lib/firebase-config';
 import { signOut } from 'firebase/auth';
 import styles from './StudentHomePage.module.css'
@@ -15,68 +15,90 @@ import { Skeleton } from '@mui/material';
 import getUser from '@/lib/getUser';
 import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import Link from 'next/link';
+import { getDownloadURL, getStorage, ref } from 'firebase/storage';
+import { useEffect, useState } from 'react';
 
 
 
 
-const StudentHomePage = async () => {
-  
+const StudentHomePage =  () => {
 
-
-  type user = {
-    uid: string;
-    email?: string;
-    picture?: string;
-  
+  interface studentDetails {
+    studentName: string;
+    studentUSN: string;
+    className: string;
+    classSemester: string;
+    studentLabBatch: string;
+    studentPhoto: string;
   }
   
-  const user : user | null = await getUser();
-
-  let studentDetails = {
+  const [ studentDetails, setStudentDetails ] = useState<studentDetails>({
     studentName: '',
     studentUSN: '',
     className: '',
-  };
+    classSemester: '',
+    studentLabBatch: '',
+    studentPhoto: '',
+  });
+
+  const [ photoUrl, setPhotoUrl ] = useState<string>('');
+  const [ dataFetched, setDataFetched ] = useState<boolean>(false);
 
 
-  
-  const dataFetched = true;
+  const storage = getStorage();
 
 
-  if (user) {
+  useEffect(() => {
+    // Check if studentDetails exist in localStorage
+    const storedStudentDetails = localStorage.getItem('studentDetails');
+    const storedPhotoUrl = localStorage.getItem('photoUrl');
 
-    console.log(user)
+    if (storedStudentDetails) {
+      // If it exists, parse and set it in state
+      const parsedStudentDetails = JSON.parse(storedStudentDetails);
+      setStudentDetails(parsedStudentDetails);
+      if(storedPhotoUrl){
+        setPhotoUrl(storedPhotoUrl);
+      }
+
       
-    const queryPath = 'students';
-    const collectionGroupRef = collectionGroup(db, queryPath);
-    const studentQuery = query(collectionGroupRef, where('email', '==', user.email));
-    const studentSnapshot = await getDocs(studentQuery);
+      setDataFetched(true);
+    } else {
+      // Fetch the data and store it in localStorage
+      const fetchAttendanceData = async () => {
+        try {
+          const currentServerDomain = window.location.origin;
+          const responseAPI = await fetch(`${currentServerDomain}/api/student/home`, {
+            method: 'GET',
+          });
+          if (responseAPI.status === 200) {
+            const responseBody = await responseAPI.json();
+            setStudentDetails(responseBody.studentDetails);
+            getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
+              .then((url) => {
+                setPhotoUrl(url);
+                localStorage.setItem('photoUrl', url)
+              })
+              .catch((error) => {
+                console.log(error);
+              });
 
-    await Promise.all(
-      studentSnapshot.docs.map(async (studentDoc) => {
-        const className = studentDoc.ref.parent.parent?.id || '';
-        const studentID = studentDoc.ref.id;
-        const classDocRef = doc(db, 'database', className);
-        const classDocSnapshot = await getDoc(classDocRef);
-
-        if (classDocSnapshot.exists()) {
-          const classSemester = classDocSnapshot.data().currentSemester;
-          const studentLabBatch = studentDoc.data().labBatch;
-          const studentName = studentDoc.data().name;
-          const studentUSN = studentDoc.data().usn;
-          const studentEmail = studentDoc.data().email;
-          studentDetails = {
-            studentName,
-            studentUSN,
-            className,
-          };
-
-
+            // Store studentDetails in localStorage
+            localStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
+            
+            setDataFetched(true);
+          } else {
+            console.log('Cannot fetch data');
+          }
+        } catch (error) {
+          console.error('An error occurred:', error);
         }
-      })
-    );
+      }
 
-}
+      fetchAttendanceData();
+    }
+  }, []);
+
 
 
   
@@ -88,10 +110,10 @@ const StudentHomePage = async () => {
 
       <div className={styles.welcomeCard}>
         <div style={{marginRight: '14px'}}>
-          {user?.picture ? (
-             <img  width={60} height={60} src={user.picture} alt={''} style={{margin: '0 10px',borderRadius: '50%'}}/>
+          { dataFetched ? (
+             <img   src={photoUrl} alt={''} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
           ) : (
-            <Image priority width={60} height={60} src='/None.jpg' alt={''} style={{margin: '0 10px',borderRadius: '50%'}}/>
+            <Skeleton variant="circular" width={60} height={60} />
           )}
          
         </div>

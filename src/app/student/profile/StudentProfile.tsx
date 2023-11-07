@@ -49,21 +49,7 @@ const StudentProfile = () => {
   const [ photoSnackbarOpen, setPhotoSnackbarOpen ] = useState(false);
   const [imageURL, setImageURL] = useState('');
 
-  const action = (
-    <React.Fragment>
 
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={() => setPhotoSnackbarOpen(false)}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
-  // ... Your existing state and useEffect code ...
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -166,7 +152,7 @@ const StudentProfile = () => {
               </div>
 
 
-              <div className='flex flex-col  p-4 font-sans  my-4 w-11/12 border border-solid rounded-md bg-white border-slate-300 mt-2'>
+              <div className='flex flex-col  p-4 font-sans  my-4 w-11/12 border border-dashed rounded-md bg-white border-slate-300 mt-2'>
                   <p className='text-blue-700 font-bold text-xs pb-1'>Your Name</p>
                   <p className='text-sm font-medium text-neutral-700 font-[Poppins] pb-4'>{dataFetched ? studentDetails?.studentName : <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={100} />}</p>
 
