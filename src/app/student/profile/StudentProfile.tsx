@@ -120,7 +120,7 @@ const StudentProfile = () => {
     }
 
     fetchAttendanceData();
-  }, []);
+  }, [handlePhotoUpload]);
 
 
 
