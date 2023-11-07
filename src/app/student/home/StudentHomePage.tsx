@@ -17,15 +17,19 @@ import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/fi
 import Link from 'next/link';
 
 
-type user = {
-  uid: string;
-  email?: string;
-  picture?: string;
 
-}
 
 const StudentHomePage = async () => {
+  
 
+
+  type user = {
+    uid: string;
+    email?: string;
+    picture?: string;
+  
+  }
+  
   const user : user | null = await getUser();
 
   let studentDetails = {

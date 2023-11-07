@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
         studentLabBatch: string;
         classSemester: string;
         className: string;
+        studentPhoto: string;
       } = {
         studentName: '',
         studentEmail: '',
@@ -42,6 +43,7 @@ export async function GET(request: NextRequest) {
         studentLabBatch: '',
         classSemester: '',
         className: '',
+        studentPhoto: ''
       }
 
 
@@ -71,6 +73,7 @@ export async function GET(request: NextRequest) {
               const studentName = studentDoc.data().name;
               const studentUSN = studentDoc.data().usn;
               const studentEmail = studentDoc.data().email;
+              const studentPhoto = studentDoc.data().photo;
               studentDetails = {
                 studentName,
                 studentEmail,
@@ -79,6 +82,7 @@ export async function GET(request: NextRequest) {
                 studentLabBatch,
                 classSemester,
                 className,
+                studentPhoto
               };
 
 
@@ -90,5 +94,5 @@ export async function GET(request: NextRequest) {
 
   
 
-  return NextResponse.json({ isLogged: true, userUID , userType, studentDetails }, { status: 200 });
+  return NextResponse.json({ isLogged: true,decodedClaims, userUID , userType, studentDetails }, { status: 200 });
 }
