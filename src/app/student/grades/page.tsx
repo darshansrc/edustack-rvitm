@@ -69,9 +69,17 @@ const TabPanel = ({ value, index, children }) => {
 };
 
 
-const Page = () => {
+const Page =({searchParams, } : {
+  searchParams: {
+    tab: any
+  }
+}) => {
+ 
+  
+  const currentTab = parseInt(searchParams.tab)
 
-  const [selectedTab, setSelectedTab] = useState(0);
+  
+  const [selectedTab, setSelectedTab] = useState( currentTab ?  currentTab : 0);
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);

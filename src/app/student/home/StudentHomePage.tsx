@@ -14,6 +14,7 @@ import { Skeleton } from '@mui/material';
 
 import getUser from '@/lib/getUser';
 import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import Link from 'next/link';
 
 
 type user = {
@@ -115,47 +116,61 @@ const StudentHomePage = async () => {
       </div>
 
       <div className={styles.menuBox}>
+      
+      <Link href='/student/attendance'  shallow={true}>
         <div className={styles.menuItem} >
           <div className={styles.menuItemIcon}>
             <BsPersonCheck size={25} style={{margin: '0 10px', color: '#333'}}/>
           </div>
           <div className={styles.menuItemText}>Attendance</div>
         </div>
+        </Link>
 
+        <Link href='/student/course'  shallow={true}>
         <div className={styles.menuItem}>
           <div className={styles.menuItemIcon}>
           <BsClockHistory size={25} style={{margin: '0 10px' , color: '#333'}}/>
           </div>
           <div className={styles.menuItemText}>Schedule</div>
         </div>
-
+        </Link>
+      
+        <Link href={{pathname: '/student/course', query: {tab: 2}}}  shallow={true}>
         <div className={styles.menuItem} >
           <div className={styles.menuItemIcon}>
           <BiSpreadsheet size={25} style={{margin: '0 10px' , color: '#333'}}/>
           </div>
           <div className={styles.menuItemText}>Assignment</div>
         </div>
+        </Link>
 
+        <Link href='/student/grades'  shallow={true}>
         <div className={styles.menuItem} >
           <div className={styles.menuItemIcon}>
           <RxReader size={25} style={{margin: '0 10px' , color: '#333'}}/>
           </div>
           <div className={styles.menuItemText}>IA Marks</div>
         </div>
+        </Link>
 
+
+        <Link href={{pathname: '/student/grades', query: {tab: 1}}}  shallow={true}>
         <div className={styles.menuItem} >
           <div className={styles.menuItemIcon}>
           <TbReportAnalytics size={25} style={{margin: '0 10px' , color: '#333'}}/>
           </div>
           <div className={styles.menuItemText}>CGPA</div>
         </div>
+        </Link>
 
+        <Link href={{pathname: '/student/course', query: {tab: 1}}}  shallow={true}>
         <div className={styles.menuItem} >
           <div className={styles.menuItemIcon}>
           <RiThreadsLine size={25} style={{margin: '0 10px' , color: '#333'}}/>
           </div>
           <div className={styles.menuItemText}>Material</div>
         </div>
+        </Link>
 
       </div>
 
