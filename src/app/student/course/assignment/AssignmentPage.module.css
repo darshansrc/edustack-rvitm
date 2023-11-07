@@ -25,13 +25,15 @@
   padding: 10px;
   font-family: 'Poppins';
   transition: 0.2s;
-  width: 550px;
-  max-width: 95vw;
   text-align: center;
   min-height: 30vh;
   align-items: center;
   justify-content: center;
   display: flex;
+  margin-top: 70px;
+
+  width: 95vw;
+  
 
   
 }
