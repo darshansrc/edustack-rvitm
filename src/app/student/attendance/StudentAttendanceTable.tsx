@@ -143,7 +143,7 @@ function StudentAttendanceTable() {
     const subjectData = attendanceData[subjectIndex];
     if (Array.isArray(subjectData)) {
       return subjectData.reduce((total, data) => {
-        const student = data.attendance?.find((student) => student.usn === usn);
+        const student = data.attendance?.find((student) => student.usn === studentDetails.studentUSN);
         return total + (student && student.Present ? 1 : 0);
       }, 0);
     }

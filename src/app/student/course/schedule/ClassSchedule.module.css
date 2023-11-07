@@ -129,12 +129,13 @@
     align-items: center;
     justify-content: center;
     margin-top: 30px;
-    box-shadow:  0 0 0 1px #00000014 ;
+
     border-radius: 10px;
     width: 90%;
-    height: 20vh;
     background-color: white;
     max-width: 550px;
+    height: calc(100vh - 350px);
+    border: 1px dashed #00000037;
   }
 
 
