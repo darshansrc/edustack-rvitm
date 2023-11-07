@@ -1,3 +1,4 @@
+'use client';
 import React, { useState } from 'react';
 import styles from './CgpaCalculator.module.css';
 import { HiOutlineDocumentText } from 'react-icons/hi';
