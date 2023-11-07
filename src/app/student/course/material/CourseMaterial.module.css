@@ -1,0 +1,124 @@
+
+  .contentContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    
+  }  
+
+  .container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    width: 550px;
+    max-width: 95vw;
+  }
+
+
+.attendanceTable{
+  background-color: white;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04);
+  border-radius:10px;
+  padding: 10px;
+  font-family: 'Poppins';
+  align-items: center;
+  transition: 0.2s;
+  width: 550px;
+  max-width: 95vw;
+
+  
+}
+
+.tableHead{
+  text-align: center;
+  background-color: rgb(255, 255, 255);
+  font-size: 12px;
+  font-weight: 500;
+  color: #222222;
+  padding: 5px;
+  border-bottom: 1px solid #f3f3f3;
+  transition: 0.2s;
+}
+
+.tableData{
+  text-align: center;
+  padding: 5px;
+  border-bottom: 1px solid #f3f3f3;
+  font-family: 'Poppins';
+  font-size: 11px;
+  transition: 0.2s;
+}
+
+.tableSubject{
+   padding: 5px;
+   padding-left: 10px;
+   text-align: left;
+   border-bottom: 1px solid #f3f3f3;
+   font-family: 'Poppins';
+   font-size: 11px;
+   width: 40vw;
+   max-width: 40vw;
+   transition: 0.2s;
+
+}
+
+.cardContainer {
+  display: flex;
+  flex-direction: column;
+  
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.connector {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
+  width: 100%;
+  margin-left: 10px;
+  transition: 0.2s;
+}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  background-color: rgb(29, 78, 216);
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.line {
+  width: 2px;
+  min-width: 2px;
+  height: 100%;
+  background-color: rgb(29, 78, 216);
+  margin-left: 15px;
+  transition: 0.2s;
+}
+
+.dateText {
+  flex: 1;
+  margin-left: 10px;
+}
+
+
+
+.lineCard{
+  display: flex;
+  flex-direction: row;
+}
+
+
+.card{
+  margin: 10px;
+  width: 100%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+  position: relative;
+  background-color: white;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+
+

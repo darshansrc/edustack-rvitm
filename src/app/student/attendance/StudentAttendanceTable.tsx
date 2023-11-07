@@ -90,6 +90,7 @@ function StudentAttendanceTable() {
   const [classId, setClassId] = useState<any>(null);
   const [dataFetched, setDataFetched] = useState(false);
 
+
   // Function to handle tab changes
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);

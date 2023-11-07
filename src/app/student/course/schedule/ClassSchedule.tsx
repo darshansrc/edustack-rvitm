@@ -47,6 +47,11 @@ const initializeCurrentWeek = () => {
     setSelectedDate(new Date()); // Set selectedDate to the current date
   };
 
+  const todayDate = new Date();
+  const formattedDate = todayDate.toDateString();
+  const selectedDateDate = selectedDate.toDateString();
+
+
   return (
     <div className={styles.scheduleContainer}>
       <div className={styles.schedulePage}>
@@ -58,9 +63,14 @@ const initializeCurrentWeek = () => {
             {selectedDate.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
             </div>
 
-            <div onClick={handleTodayClick} className={styles.todayButton} style={{padding: '5px 10px', marginRight: '15px'}}>
-              Today
-            </div>
+            <div
+        
+  onClick={() => formattedDate === selectedDateDate ? null : handleTodayClick()} 
+  className={formattedDate === selectedDateDate ? styles.todayButtonDisabled : styles.todayButton}
+  style={{ padding: '5px 10px', marginRight: '15px' }}
+>
+  Today
+</div>
 
 
           </div>
@@ -71,6 +81,7 @@ const initializeCurrentWeek = () => {
             </div>
             {currentWeekDates.map((date, index) => {
               const isSelected = date.toDateString() === selectedDate.toDateString();
+              const todayDate = date.toDateString() === formattedDate;
 
               return (
                 <div className={styles.dateContainer} key={index}>
@@ -78,8 +89,9 @@ const initializeCurrentWeek = () => {
                     key={index}
                     onClick={() => handleDateClick(date)}
                     className={`${styles.date} ${
-                      isSelected ? styles.selectedDateDiv : ''
-                    }`}
+                      isSelected ? styles.selectedDateDiv : 
+                        todayDate ? styles.currentDateDiv : ''
+                      }`} 
                   >
                     {date.getDate()}
                     <div className={styles.day}>{date.toLocaleString('en-US', { weekday: 'short' })}</div>

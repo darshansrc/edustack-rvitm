@@ -40,6 +40,21 @@
     font-family: 'Poppins';
     background-color: rgb(29 78 216);
     font-size: 12px;
+    cursor: pointer;
+  }
+  .todayButtonDisabled{
+    background-color: #fafafa;
+    color: rgb(29 78 216);
+    border: 1px solid rgb(29 78 216);
+    padding: 3px;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    font-family: 'Poppins';
+    background-color: rgb(255, 255, 255);
+    font-size: 12px;
+    cursor: pointer;
   }
 
   .selectedDateBar {
@@ -96,6 +111,13 @@
   .selectedDateDiv{
     background-color: rgb(29 78 216);
     color: #ffffff;
+    
+  }
+
+  .currentDateDiv{
+    background-color: rgb(255, 255, 255);
+    color: rgb(29 78 216);
+    border: 1px solid rgb(29 78 216);
   }
 
   

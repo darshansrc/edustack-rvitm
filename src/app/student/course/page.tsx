@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import ClassSchedule from './schedule/ClassSchedule';
+import CourseMaterial from './material/CourseMaterial';
+import AssignmentPage from './assignment/AssignmentPage';
 
 interface StyledTabProps {
   label: string;
@@ -101,17 +103,11 @@ const Page = () => {
       </TabPanel>
 
       <TabPanel value={selectedTab} index={1}>
-        <Typography variant="h6">Study Material</Typography>
-        <Typography>
-
-        </Typography>
+        <CourseMaterial/>
       </TabPanel>
 
       <TabPanel value={selectedTab} index={2}>
-        <Typography variant="h6">Assignments</Typography>
-        <Typography>
-        
-        </Typography>
+        <AssignmentPage/>
       </TabPanel>
 
 

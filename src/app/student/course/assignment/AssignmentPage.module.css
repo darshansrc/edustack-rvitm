@@ -1,0 +1,39 @@
+
+.contentContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    
+  }  
+
+  .container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    width: 550px;
+    max-width: 95vw;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+.assignmentTable{
+  background-color: white;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04);
+  border-radius:10px;
+  padding: 10px;
+  font-family: 'Poppins';
+  transition: 0.2s;
+  width: 550px;
+  max-width: 95vw;
+  text-align: center;
+  min-height: 30vh;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+
+  
+}
+
+
