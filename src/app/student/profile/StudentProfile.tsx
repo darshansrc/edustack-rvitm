@@ -1,6 +1,6 @@
 'use client';
 import { Alert, Button , Skeleton, Snackbar } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { getStorage, ref, uploadBytes } from "firebase/storage";
 import Modal from '@mui/joy/Modal';
 import { ModalDialog } from '@mui/joy';
@@ -41,7 +41,7 @@ const StudentProfile = () => {
   const [userEmail, setUserEmail] = useState('');
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState<any>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
 
   const [ photoSnackbarOpen, setPhotoSnackbarOpen ] = useState(false);
 
@@ -178,7 +178,10 @@ const StudentProfile = () => {
                         <input
                           type='file'
                           accept='image/*'
-                          onChange={(e) => setSelectedPhoto(e.target.files[0])}
+                          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                            if (!event.target.files) return
+                            setSelectedPhoto(event.target.files[0])
+                          }}
                           className="hidden"
                           id="file-input"
                         />
@@ -205,11 +208,8 @@ const StudentProfile = () => {
           <Snackbar
         open={photoSnackbarOpen}
         autoHideDuration={6000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         onClose={() => setPhotoSnackbarOpen(false)}
-
-        
       >
               <Alert onClose={() => setPhotoSnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
       Photo uploaded successfully!
