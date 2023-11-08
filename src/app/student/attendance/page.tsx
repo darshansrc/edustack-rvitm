@@ -1,8 +1,8 @@
 import React from 'react'
 import Navbar from '../components/navbar/Navbar'
 import styles from '../components/navbar/Navbar.module.css'
-import StudentAttendanceTable from './StudentAttendanceTable'
 import TopNavbar from '../components/topnavbar/TopNavbar'
+import { FetchAttendance } from './FetchAttendance'
 
 const page = async () => {
 
@@ -14,7 +14,7 @@ const page = async () => {
     <TopNavbar name={'Attendance Dashboard'}/>
     <div className={styles.pageContainer}>
     
-        <StudentAttendanceTable/>
+        <FetchAttendance />
     </div>
     </>
   )

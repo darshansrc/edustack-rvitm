@@ -79,16 +79,17 @@ const StyledTab = styled((props: StyledTabProps) => (
 }));
 
 // Hook Definitions
-function StudentAttendanceTable() {
+function StudentAttendanceTable({studentDetails, subjectOptions, attendanceDocs}) {
   const [value, setValue] = useState(0);
-  const [subjectOptions, setSubjectOptions] = useState<SubjectOption[]>([]);
-  const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
-  const [usn, setUsn] = useState('');
-  const [studentDetails, setStudentDetails] = useState<any>(null);
-  const [classSemester, setClassSemester] = useState('');
-  const chartRef = useRef<Chart | null>(null);
-  const [classId, setClassId] = useState<any>(null);
-  const [dataFetched, setDataFetched] = useState(false);
+
+  const attendanceData = attendanceDocs;
+  const usn = studentDetails.studentUSN;
+
+  
+
+
+  const dataFetched = true;
+
 
 
   // Function to handle tab changes
@@ -110,34 +111,7 @@ function StudentAttendanceTable() {
     return 0;
   };
    
-  useEffect(() => {
-    async function fetchAttendanceData() {
-      try {
-        const currentServerDomain = window.location.origin;
-        const responseAPI = await fetch(`${currentServerDomain}/api/student/attendance`, {
-          method: 'GET',
-        });
-        if (responseAPI.status === 200) {
-          const responseBody = await responseAPI.json();
-          setStudentDetails(responseBody.studentDetails);
-          setUsn(responseBody.studentDetails.studentUSN);
-          setClassId(responseBody.studentDetails.className);
-          setClassSemester(responseBody.studentDetails.classSemester);
-          setSubjectOptions(responseBody.subjectOptions.sort(customComparator));
-          setAttendanceData(responseBody.attendanceDocs);
-          setDataFetched(true);
 
-         
-        } else {
-          console.log('Cannot fetch data');
-        }
-      } catch (error) {
-        console.error('An error occurred:', error);
-      }
-    }
-
-    fetchAttendanceData();
-  }, []);
 
   const getAttendanceCount = (subjectIndex: number): number => {
     const subjectData = attendanceData[subjectIndex];
@@ -260,7 +234,7 @@ function StudentAttendanceTable() {
                 </thead>
               
                 <tbody>
-                {subjectOptions && classSemester && classId ? (
+                {subjectOptions && studentDetails.classSemester && studentDetails.className ? (
                   subjectOptions
                     .filter((subject) => subject.subjectType === 'theory')
                     .map((theorySubject, filteredIndex) => {
@@ -317,7 +291,7 @@ function StudentAttendanceTable() {
                 </thead>
               
                 <tbody>
-                {subjectOptions && classSemester && classId ? (
+                {subjectOptions && studentDetails.classSemester && studentDetails.className ? (
                   subjectOptions
                     .filter((subject) => subject.subjectType === 'lab')
                     .map((labSubject, filteredIndex) => {
