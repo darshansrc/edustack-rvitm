@@ -152,9 +152,9 @@ export async function FetchAttendance() {
 
 
   return (
-    <Suspense fallback={<Loading/>}>
+    
           <StudentAttendanceTable studentDetails={studentDetails} attendanceDocs={attendanceDocs} subjectOptions={subjectOptions} />
-    </Suspense>
+   
    
   );
 }
