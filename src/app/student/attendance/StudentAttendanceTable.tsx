@@ -137,6 +137,10 @@ function StudentAttendanceTable() {
         setAttendanceData(responseBody.attendanceDocs);
         setDataFetched(true);
 
+        localStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
+        localStorage.setItem('subjectOptions', JSON.stringify(responseBody.subjectOptions));
+        localStorage.setItem('attendanceData', JSON.stringify(responseBody.attendanceDocs));
+
       } else {
         console.log('Cannot fetch data');
       }
