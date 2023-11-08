@@ -1,22 +1,9 @@
-import { customInitApp } from "@/lib/firebase-admin-config";
 import { collection, collectionGroup, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase-config";
 import getUser from "@/lib/getUser";
-import StudentAttendanceTable from "./StudentAttendanceTable";
-import { Suspense } from "react";
-import Loading from "./loading";
-
-customInitApp();
-
-interface user {
-    uid: string;
-    email?: string;
-    picture?: string;
-}
 
 
-
-export async function FetchAttendance() {
+export async function getAttendance() {
 
     let userType : string = '';
     let studentDetails: {
@@ -152,9 +139,6 @@ export async function FetchAttendance() {
 
 
   return (
-    <Suspense fallback={<Loading/>}>
-          <StudentAttendanceTable studentDetails={studentDetails} attendanceDocs={attendanceDocs} subjectOptions={subjectOptions} />
-    </Suspense>
-   
+    { studentDetails, attendanceDocs, subjectOptions }
   );
 }
