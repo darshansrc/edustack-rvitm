@@ -101,7 +101,6 @@ const StudentHomePage =  () => {
         
     const storedStudentDetails = localStorage.getItem('studentDetails');
     const storedPhotoUrl = localStorage.getItem('photoUrl');
-    
 
     if (storedStudentDetails) {
      
@@ -111,18 +110,15 @@ const StudentHomePage =  () => {
       if(userUidMatch){
         setStudentDetails(parsedStudentDetails);
         setDataFetched(true);
-        fetchAttendanceData();
-      
         if(storedPhotoUrl){
           setPhotoUrl(storedPhotoUrl); 
         }
       }
       
-    } else {
+    } 
 
-
-      fetchAttendanceData();
-    }
+    fetchAttendanceData();
+    
   }, [user]);
 
 

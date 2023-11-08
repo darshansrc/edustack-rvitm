@@ -180,6 +180,7 @@ function StudentAttendanceTable() {
       const parsedStudentDetails = JSON.parse(storedStudentDetails);
       const parsedSubjectOptions = JSON.parse(storedSubjectOptions);
       const parsedAttendanceData = JSON.parse(storedAttendanceData);
+
       const userUidMatch = parsedStudentDetails.uid === user?.uid;
 
       if(userUidMatch){
@@ -187,12 +188,13 @@ function StudentAttendanceTable() {
         setSubjectOptions(parsedSubjectOptions.sort(customComparator));
         setAttendanceData(parsedAttendanceData);
         setDataFetched(true);
-        fetchAttendanceData();
+       
       }
       
-    } else {
-      fetchAttendanceData();
-    }
+    } 
+    
+    fetchAttendanceData();
+    
 
   }, [user]);
 
