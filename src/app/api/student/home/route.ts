@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
         studentLabBatch: string;
         classSemester: string;
         className: string;
+        userUID: string;
       } = {
         studentName: '',
         studentEmail: '',
@@ -42,6 +43,7 @@ export async function GET(request: NextRequest) {
         studentLabBatch: '',
         classSemester: '',
         className: '',
+        userUID: ''
       }
 
 
@@ -79,6 +81,7 @@ export async function GET(request: NextRequest) {
                 studentLabBatch,
                 classSemester,
                 className,
+                userUID
               };
 
 

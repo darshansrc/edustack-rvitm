@@ -2,12 +2,12 @@ import React, { Suspense } from 'react'
 import Navbar from '../components/navbar/Navbar';
 import styles from '../components/navbar/Navbar.module.css'
 import TopNavbar from '../components/topnavbar/TopNavbar';
-import StudentHome from './StudentHome';
+import StudentHomePage from './StudentHomePage';
 
 
 
 
-function App() {
+function Page() {
   
 
 
@@ -17,7 +17,7 @@ function App() {
   
     <TopNavbar name='EduStack'/>
     <div className={styles.pageContainer}>    
-        <StudentHome/>
+        <StudentHomePage/>
     </div>
     <Navbar />
 
@@ -27,4 +27,4 @@ function App() {
 
 }
 
-export default App
+export default Page
