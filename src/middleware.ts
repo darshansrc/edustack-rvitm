@@ -6,6 +6,9 @@ import { NextRequest } from "next/server";
 export async function middleware(request : NextRequest, response : NextResponse) {
 
 
+
+
+
     const session = request.cookies.get("session");
 
     if (request.nextUrl.pathname === '/' && session) {

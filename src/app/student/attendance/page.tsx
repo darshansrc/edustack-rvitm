@@ -1,20 +1,21 @@
-import React, { Suspense } from 'react'
+import React from 'react'
 import Navbar from '../components/navbar/Navbar'
+import styles from '../components/navbar/Navbar.module.css'
+import StudentAttendanceTable from './StudentAttendanceTable'
 import TopNavbar from '../components/topnavbar/TopNavbar'
-import { FetchAttendance } from './FetchAttendance'
-
-
 
 const page = async () => {
 
 
+
   return (
     <>
-
-       <TopNavbar name={'Attendance Dashboard'}/>
-       <FetchAttendance />
-       <Navbar/>
-
+    <Navbar/>
+    <TopNavbar name={'Attendance Dashboard'}/>
+    <div className={styles.pageContainer}>
+    
+        <StudentAttendanceTable/>
+    </div>
     </>
   )
 }
