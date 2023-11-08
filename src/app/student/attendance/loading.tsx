@@ -2,11 +2,14 @@
 import { Box, Card, Skeleton, Typography } from '@mui/material';
 import styles from './StudentAttendanceTable.module.css'
 import { Tab as MyTab, Tabs as MyTabs, TabList as MyTabList, TabPanel as MyTabPanel } from 'react-tabs';
+import Navbar from '../components/navbar/Navbar';
+import TopNavbar from '../components/topnavbar/TopNavbar';
 
 export default function Loading() {
     return (
         <>
-  
+    <Navbar/>
+    <TopNavbar name={'Attendance Dashboard'}/>
         <div className={styles.contentContainer}>
   
         <div className={styles.container}>
