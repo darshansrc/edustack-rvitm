@@ -129,3 +129,26 @@
 }
 
 
+.pageContainer{
+  background-color: #fafafa;
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+@media (min-width: 768px) {
+
+
+      .pageContainer{
+          margin-left: 80px;
+      }
+    }
+
+
+    @media (max-width: 768px) {
+    
+      .pageContainer{
+          background-color: #fafafa;
+          min-height: 100vh;
+          padding-bottom: 60px;
+          padding-top: 55px;
+      } }
