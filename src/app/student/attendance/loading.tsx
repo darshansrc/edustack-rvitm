@@ -1,3 +1,4 @@
+'use client';
 import { Box, Card, Skeleton, Typography } from '@mui/material';
 import styles from './StudentAttendanceTable.module.css'
 import { Tab as MyTab, Tabs as MyTabs, TabList as MyTabList, TabPanel as MyTabPanel } from 'react-tabs';
