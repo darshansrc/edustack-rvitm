@@ -12,6 +12,7 @@ import { BiSpreadsheet } from 'react-icons/bi';
 import { Skeleton } from '@mui/material';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import Loading from './loading';
 
 
 
@@ -95,19 +96,21 @@ const StudentWelcomeCard = async () => {
   
   return (
 
-
+    <Suspense fallback={ <Loading/>}>
     <div className={styles.welcomeCard}>
 
-        <div style={{marginRight: '14px'}}>
-            <img   src={'/None.jpg'} alt={''} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
-        </div>
-     
-        <div>
-           <div className={styles.studentName}>Welcome, {FetchedStudentDetails?.studentName}</div>
-           <div className={styles.studentDetail}>USN: {FetchedStudentDetails?.studentUSN}, CLASS: {FetchedStudentDetails?.className}</div>
-        </div>
-   
-    </div>
+<div style={{marginRight: '14px'}}>
+    <img   src={'/None.jpg'} alt={''} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
+</div>
+
+<div>
+   <div className={styles.studentName}>Welcome, {FetchedStudentDetails?.studentName}</div>
+   <div className={styles.studentDetail}>USN: {FetchedStudentDetails?.studentUSN}, CLASS: {FetchedStudentDetails?.className}</div>
+</div>
+
+</div>
+    </Suspense>
+
 
 
 

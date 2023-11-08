@@ -5,9 +5,9 @@ import { TbReportAnalytics } from 'react-icons/tb';
 import { RiThreadsLine } from 'react-icons/ri';
 import { BiSpreadsheet } from 'react-icons/bi';
 import Link from 'next/link';
-import { Suspense } from 'react';
+
 import StudentWelcomeCard from './StudentWelcomeCard';
-import Loading from './loading';
+
 
 
 
@@ -19,9 +19,9 @@ const StudentHome =  () => {
 
 
 
-    <Suspense fallback={<Loading/> }>
+
       <StudentWelcomeCard/>
-    </Suspense>
+    
 
     <div className={styles.welcomeCard}>
       <div style={{marginRight: '15px'}}>
