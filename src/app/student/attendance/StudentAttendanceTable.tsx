@@ -79,6 +79,10 @@ const StyledTab = styled((props: StyledTabProps) => (
 
 // Hook Definitions
 function StudentAttendanceTable({studentDetails, subjectOptions, attendanceDocs}) {
+
+
+ 
+ 
   const [value, setValue] = useState(0);
 
   const attendanceData = attendanceDocs;
