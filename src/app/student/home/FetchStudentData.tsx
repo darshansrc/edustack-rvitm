@@ -1,7 +1,6 @@
 import {  db } from '@/lib/firebase-config';
 import getUser from '@/lib/getUser';
 import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
-import StudentHomePage from './StudentHomePage';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 
 import styles from './StudentHomePage.module.css'
@@ -114,7 +113,6 @@ const FetchStudentData = async () => {
       <div className={styles.studentName}>Welcome, {FetchedStudentDetails?.studentName}</div>
       <div className={styles.studentDetail}>USN: {FetchedStudentDetails?.studentUSN}, CLASS: {FetchedStudentDetails?.className}</div>
     </div>
-
       </Suspense>
 
     </div>

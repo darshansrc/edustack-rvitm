@@ -1,4 +1,4 @@
-'use client';
+
 import React from 'react'
 import styles from './Navbar.module.css'
 import { RiBookMarkLine } from "react-icons/ri";

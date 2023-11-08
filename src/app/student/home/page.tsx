@@ -2,7 +2,8 @@ import React from 'react'
 import Navbar from '../components/navbar/Navbar';
 import styles from '../components/navbar/Navbar.module.css'
 import TopNavbar from '../components/topnavbar/TopNavbar';
-import FetchStudentData from './FetchStudentData';
+import StudentHome from './StudentHome';
+
 
 
 function App() {
@@ -11,12 +12,14 @@ function App() {
 
   return (
     <>
-    
+  
     <TopNavbar name='EduStack'/>
     <div className={styles.pageContainer}>    
-        <FetchStudentData />
+        <StudentHome/>
     </div>
     <Navbar />
+
+
     </>
   ) 
 

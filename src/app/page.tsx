@@ -4,7 +4,7 @@ import styles from './HomePage.module.css';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const HomePage = () => {
+const HomePage = async () => {
   return (
       <main>
             <div className={styles.pageContainer}>              
