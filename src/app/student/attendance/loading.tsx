@@ -10,6 +10,7 @@ export default function Loading() {
         <>
     <Navbar/>
     <TopNavbar name={'Attendance Dashboard'}/>
+    <div className={styles.pageContainer}>
         <div className={styles.contentContainer}>
   
         <div className={styles.container}>
@@ -160,6 +161,7 @@ export default function Loading() {
               </Card>
             )}
           </div>
+        </div>
         </div>
       </>
     );
