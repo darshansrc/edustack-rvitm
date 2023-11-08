@@ -54,37 +54,25 @@ const StudentHomePage =  () => {
       console.log("Auth", currentuser);
       setUser(currentuser);
       console.log(user);
-    });
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
-
-
-  useEffect(() => {
-    // Check if studentDetails exist in localStorage
-    
-
-    
+          // Check if studentDetails exist in localStorage
     const storedStudentDetails = localStorage.getItem('studentDetails');
     const storedPhotoUrl = localStorage.getItem('photoUrl');
-    
-
+  
     if (storedStudentDetails) {
-     
       const parsedStudentDetails = JSON.parse(storedStudentDetails);
-      const userUidMatch = parsedStudentDetails.userUID === user?.uid;
-
+      const userUidMatch = parsedStudentDetails.userUID === currentuser?.uid;
+      
       if(userUidMatch){
         setStudentDetails(parsedStudentDetails);
         setDataFetched(true);
-      
-        if(storedPhotoUrl){
-          setPhotoUrl(storedPhotoUrl); 
+  
+        if (storedPhotoUrl) {
+          setPhotoUrl(storedPhotoUrl);
         }
       }
+
+
       
     } else {
       // Fetch the data and store it in localStorage
@@ -94,22 +82,24 @@ const StudentHomePage =  () => {
           const responseAPI = await fetch(`${currentServerDomain}/api/student/home`, {
             method: 'GET',
           });
+  
           if (responseAPI.status === 200) {
             const responseBody = await responseAPI.json();
             setStudentDetails(responseBody.studentDetails);
+  
             getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
               .then((url) => {
                 setPhotoUrl(url);
-                localStorage.setItem('photoUrl', url)
+                localStorage.setItem('photoUrl', url);
               })
               .catch((error) => {
                 console.log(error);
               });
-
+  
+            setDataFetched(true);
+  
             // Store studentDetails in localStorage
             localStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
-            
-            setDataFetched(true);
           } else {
             console.log('Cannot fetch data');
           }
@@ -117,9 +107,16 @@ const StudentHomePage =  () => {
           console.error('An error occurred:', error);
         }
       }
-
+  
       fetchAttendanceData();
     }
+    });
+  
+
+  
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
 
