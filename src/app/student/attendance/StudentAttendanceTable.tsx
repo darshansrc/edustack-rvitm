@@ -15,6 +15,8 @@ import Skeleton from '@mui/material/Skeleton';
 import { BsCheckCircleFill, BsXCircleFill } from 'react-icons/bs'
 import { styled } from '@mui/material/styles';
 import { BiTime } from 'react-icons/bi';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase-config';
 
 interface SubjectOption {
   value: string;
@@ -82,12 +84,13 @@ function StudentAttendanceTable() {
   const [value, setValue] = useState(0);
   const [subjectOptions, setSubjectOptions] = useState<SubjectOption[]>([]);
   const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
-  const [usn, setUsn] = useState('');
+
   const [studentDetails, setStudentDetails] = useState<any>(null);
-  const [classSemester, setClassSemester] = useState('');
-  const chartRef = useRef<Chart | null>(null);
-  const [classId, setClassId] = useState<any>(null);
+ 
+
+  
   const [dataFetched, setDataFetched] = useState(false);
+  const [user , setUser] = useState<any>(null);
 
   // Function to handle tab changes
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -107,41 +110,73 @@ function StudentAttendanceTable() {
     if (lastCharA > lastCharB) return 1;
     return 0;
   };
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
+      console.log("Auth", currentuser);
+      setUser(currentuser);
+      console.log(user);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+
+  async function fetchAttendanceData() {
+    try {
+      const responseAPI = await fetch(`${window.location.origin}/api/student/attendance`, {
+        method: 'GET',
+      });
+      if (responseAPI.status === 200) {
+        const responseBody = await responseAPI.json();
+        setStudentDetails(responseBody.studentDetails);
+        setSubjectOptions(responseBody.subjectOptions.sort(customComparator));
+        setAttendanceData(responseBody.attendanceDocs);
+        setDataFetched(true);
+
+      } else {
+        console.log('Cannot fetch data');
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  }
    
   useEffect(() => {
-    async function fetchAttendanceData() {
-      try {
-        const currentServerDomain = window.location.origin;
-        const responseAPI = await fetch(`${currentServerDomain}/api/student/attendance`, {
-          method: 'GET',
-        });
-        if (responseAPI.status === 200) {
-          const responseBody = await responseAPI.json();
-          setStudentDetails(responseBody.studentDetails);
-          setUsn(responseBody.studentDetails.studentUSN);
-          setClassId(responseBody.studentDetails.className);
-          setClassSemester(responseBody.studentDetails.classSemester);
-          setSubjectOptions(responseBody.subjectOptions.sort(customComparator));
-          setAttendanceData(responseBody.attendanceDocs);
-          setDataFetched(true);
+     
+    const storedStudentDetails = localStorage.getItem('studentDetails');
+    const storedSubjectOptions = localStorage.getItem('subjectOptions');
+    const storedAttendanceData = localStorage.getItem('attendanceData');
 
-         
-        } else {
-          console.log('Cannot fetch data');
-        }
-      } catch (error) {
-        console.error('An error occurred:', error);
+    if (storedStudentDetails && storedSubjectOptions && storedAttendanceData) {
+     
+      const parsedStudentDetails = JSON.parse(storedStudentDetails);
+      const parsedSubjectOptions = JSON.parse(storedSubjectOptions);
+      const parsedAttendanceData = JSON.parse(storedAttendanceData);
+      const userUidMatch = parsedStudentDetails.userUID === user?.uid;
+
+      if(userUidMatch){
+        setStudentDetails(parsedStudentDetails);
+        setSubjectOptions(parsedSubjectOptions.sort(customComparator));
+        setAttendanceData(parsedAttendanceData);
+        setDataFetched(true);
+        fetchAttendanceData();
       }
+      
+    } else {
+      fetchAttendanceData();
     }
 
-    fetchAttendanceData();
-  }, []);
+  }, [user]);
 
   const getAttendanceCount = (subjectIndex: number): number => {
     const subjectData = attendanceData[subjectIndex];
     if (Array.isArray(subjectData)) {
       return subjectData.reduce((total, data) => {
-        const student = data.attendance?.find((student) => student.usn === usn);
+        const student = data.attendance?.find((student) => student.usn === studentDetails.studentUSN);
         return total + (student && student.Present ? 1 : 0);
       }, 0);
     }
@@ -154,7 +189,7 @@ function StudentAttendanceTable() {
     const subjectData = attendanceData[subjectIndex];
     if (Array.isArray(subjectData)) {
       subjectData.forEach((data) => {
-        const student = data.attendance?.find((student) => student.usn === usn);
+        const student = data.attendance?.find((student) => student.usn === studentDetails.studentUSN);
         if (student) {
           count++;
         }
@@ -258,7 +293,7 @@ function StudentAttendanceTable() {
                 </thead>
               
                 <tbody>
-                {subjectOptions && classSemester && classId ? (
+                {subjectOptions && studentDetails.classSemester && studentDetails.className ? (
                   subjectOptions
                     .filter((subject) => subject.subjectType === 'theory')
                     .map((theorySubject, filteredIndex) => {
@@ -315,7 +350,7 @@ function StudentAttendanceTable() {
                 </thead>
               
                 <tbody>
-                {subjectOptions && classSemester && classId ? (
+                {subjectOptions && studentDetails.classSemester && studentDetails.className ? (
                   subjectOptions
                     .filter((subject) => subject.subjectType === 'lab')
                     .map((labSubject, filteredIndex) => {
@@ -447,7 +482,7 @@ function StudentAttendanceTable() {
                         width: '25px',
                         height: '25px',
                         borderRadius: '50%',
-                        backgroundColor: classData.attendance.find((student) => student.usn === usn)?.Present
+                        backgroundColor: classData.attendance.find((student) => student.usn === studentDetails.studentUSN)?.Present
                           ? 'green' // Set the background color to green if present
                           : 'red', // Set the background color to red if absent
                         display: 'flex',
@@ -457,7 +492,7 @@ function StudentAttendanceTable() {
                         fontFamily: 'Poppins'
                       }}
                     >
-                      {classData.attendance.find((student) => student.usn === usn)?.Present ? 'P' : 'A'}
+                      {classData.attendance.find((student) => student.usn === studentDetails.studentUSN)?.Present ? 'P' : 'A'}
                     </div>
                     <CardContent style={{ padding: '10px' }}>
                       <div
