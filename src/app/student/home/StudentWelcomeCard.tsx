@@ -11,8 +11,7 @@ import { RiThreadsLine } from 'react-icons/ri';
 import { BiSpreadsheet } from 'react-icons/bi';
 import { Skeleton } from '@mui/material';
 import Link from 'next/link';
-import { Suspense } from 'react';
-import Loading from './loading';
+import { Suspense  } from 'react';
 
 
 
@@ -96,7 +95,7 @@ const StudentWelcomeCard = async () => {
   
   return (
 
-    <Suspense fallback={ <Loading/>}>
+    
     <div className={styles.welcomeCard}>
 
 <div style={{marginRight: '14px'}}>
@@ -109,7 +108,7 @@ const StudentWelcomeCard = async () => {
 </div>
 
 </div>
-    </Suspense>
+
 
 
 

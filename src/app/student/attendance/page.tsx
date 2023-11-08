@@ -11,12 +11,13 @@ const page = async () => {
 
   return (
     <>
-    <Navbar/>
-    <TopNavbar name={'Attendance Dashboard'}/>
-
 
     <Suspense fallback={<Loading/>}>
+       
+       <TopNavbar name={'Attendance Dashboard'}/>
        <FetchAttendance />
+       <Navbar/>
+
     </Suspense>
         
 
