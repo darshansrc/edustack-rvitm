@@ -151,7 +151,7 @@ const StudentProfile = () => {
 
     fetchAttendanceData();
     
-  }, [user , handlePhotoUpload]);
+  }, [user ]);
 
 
 
