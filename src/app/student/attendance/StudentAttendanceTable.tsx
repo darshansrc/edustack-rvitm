@@ -164,6 +164,8 @@ function StudentAttendanceTable({studentDetails, subjectOptions, attendanceDocs}
   return (
    
     <>
+
+<div className={styles.pageContainer}>
   
       <div className={styles.contentContainer}>
 
@@ -501,6 +503,7 @@ function StudentAttendanceTable({studentDetails, subjectOptions, attendanceDocs}
             </Card>
           )}
         </div>
+      </div>
       </div>
     </>
   );
