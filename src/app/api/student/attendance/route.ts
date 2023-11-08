@@ -34,6 +34,7 @@ export async function GET(request: NextRequest) {
         studentLabBatch: string;
         classSemester: string;
         className: string;
+   
       } = {
         studentName: '',
         studentEmail: '',
@@ -42,6 +43,7 @@ export async function GET(request: NextRequest) {
         studentLabBatch: '',
         classSemester: '',
         className: '',
+       
       }
     let subjectOptions: { value: string; label: string; subjectType: string , subjectSemester: number}[] = [];
     let attendanceDocs;

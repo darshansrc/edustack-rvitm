@@ -49,6 +49,20 @@ const StudentHomePage =  () => {
 
   const storage = getStorage();
 
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
+      console.log("Auth", currentuser);
+      setUser(currentuser);
+      console.log(user);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+
   const fetchAttendanceData = async () => {
     try {
       const currentServerDomain = window.location.origin;
@@ -81,41 +95,35 @@ const StudentHomePage =  () => {
     }
   }
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
-      console.log("Auth", currentuser);
-      setUser(currentuser);
-      console.log(user);
 
-          // Check if studentDetails exist in localStorage
+
+  useEffect(() => {
+        
     const storedStudentDetails = localStorage.getItem('studentDetails');
     const storedPhotoUrl = localStorage.getItem('photoUrl');
-  
+    
+
     if (storedStudentDetails) {
+     
       const parsedStudentDetails = JSON.parse(storedStudentDetails);
-      const userUidMatch = parsedStudentDetails.userUID === currentuser?.uid;
-      
+      const userUidMatch = parsedStudentDetails.userUID === user?.uid;
+
       if(userUidMatch){
         setStudentDetails(parsedStudentDetails);
         setDataFetched(true);
         fetchAttendanceData();
-  
-        if (storedPhotoUrl) {
-          setPhotoUrl(storedPhotoUrl);
+      
+        if(storedPhotoUrl){
+          setPhotoUrl(storedPhotoUrl); 
         }
-
-      }  else {
-        // Fetch the data and store it in localStorage
-        fetchAttendanceData();
       }
+      
+    } else {
 
+
+      fetchAttendanceData();
     }
-    });
-  
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  }, [user]);
 
 
 
