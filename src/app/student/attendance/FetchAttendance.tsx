@@ -3,8 +3,6 @@ import { collection, collectionGroup, doc, getDoc, getDocs, query, where } from 
 import { db } from "@/lib/firebase-config";
 import getUser from "@/lib/getUser";
 import StudentAttendanceTable from "./StudentAttendanceTable";
-import { Suspense } from "react";
-import Loading from "./loading";
 
 customInitApp();
 
