@@ -17,7 +17,6 @@ import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/fi
 import Link from 'next/link';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import { useEffect, useState } from 'react';
-import { useCookies } from 'react-cookie';
 
 
 
@@ -49,9 +48,8 @@ const StudentHomePage =  () => {
 
 
   const storage = getStorage();
-  const [cookies, setCookie] = useCookies(['studentDetails', 'photoUrl']);
 
-  const fetchAttendanceData = async (currentuser) => {
+  const fetchAttendanceData = async () => {
     try {
       const currentServerDomain = window.location.origin;
       const responseAPI = await fetch(`${currentServerDomain}/api/student/home`, {
@@ -65,7 +63,7 @@ const StudentHomePage =  () => {
         getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
           .then((url) => {
             setPhotoUrl(url);
-            setCookie('photoUrl', url, { path: '/' }); // Store in cookies
+            localStorage.setItem('photoUrl', url);
           })
           .catch((error) => {
             console.log(error);
@@ -73,15 +71,15 @@ const StudentHomePage =  () => {
 
         setDataFetched(true);
 
-        // Store studentDetails in cookies
-        setCookie('studentDetails', JSON.stringify(responseBody.studentDetails), { path: '/' });
+        // Store studentDetails in localStorage
+        localStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
       } else {
         console.log('Cannot fetch data');
       }
     } catch (error) {
       console.error('An error occurred:', error);
     }
-  };
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
@@ -89,36 +87,35 @@ const StudentHomePage =  () => {
       setUser(currentuser);
       console.log(user);
 
-      // Check if studentDetails exist in cookies
-      const storedStudentDetails = cookies.studentDetails;
-      const storedPhotoUrl = cookies.photoUrl;
-
-      if (storedStudentDetails) {
-        const parsedStudentDetails = JSON.parse(storedStudentDetails);
-        const userUidMatch = parsedStudentDetails.userUID === currentuser?.uid;
-
-        if (userUidMatch) {
-          setStudentDetails(parsedStudentDetails);
-          setDataFetched(true);
-
-          fetchAttendanceData(currentuser);
-
-          if (storedPhotoUrl) {
-            setPhotoUrl(storedPhotoUrl);
-          }
-        } else {
-          // Fetch the data and store it in cookies
-          fetchAttendanceData(currentuser);
+          // Check if studentDetails exist in localStorage
+    const storedStudentDetails = localStorage.getItem('studentDetails');
+    const storedPhotoUrl = localStorage.getItem('photoUrl');
+  
+    if (storedStudentDetails) {
+      const parsedStudentDetails = JSON.parse(storedStudentDetails);
+      const userUidMatch = parsedStudentDetails.userUID === currentuser?.uid;
+      
+      if(userUidMatch){
+        setStudentDetails(parsedStudentDetails);
+        setDataFetched(true);
+        fetchAttendanceData();
+  
+        if (storedPhotoUrl) {
+          setPhotoUrl(storedPhotoUrl);
         }
-      }
-    });
 
+      }  else {
+        // Fetch the data and store it in localStorage
+        fetchAttendanceData();
+      }
+
+    }
+    });
+  
     return () => {
       unsubscribe();
     };
-  }, []);;
-
-
+  }, []);
 
 
 
