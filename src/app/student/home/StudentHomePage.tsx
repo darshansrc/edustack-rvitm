@@ -70,45 +70,46 @@ const StudentHomePage =  () => {
         if (storedPhotoUrl) {
           setPhotoUrl(storedPhotoUrl);
         }
+        
+      }  else {
+        // Fetch the data and store it in localStorage
+        const fetchAttendanceData = async () => {
+          try {
+            const currentServerDomain = window.location.origin;
+            const responseAPI = await fetch(`${currentServerDomain}/api/student/home`, {
+              method: 'GET',
+            });
+    
+            if (responseAPI.status === 200) {
+              const responseBody = await responseAPI.json();
+              setStudentDetails(responseBody.studentDetails);
+    
+              getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
+                .then((url) => {
+                  setPhotoUrl(url);
+                  localStorage.setItem('photoUrl', url);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+    
+              setDataFetched(true);
+    
+              // Store studentDetails in localStorage
+              localStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
+            } else {
+              console.log('Cannot fetch data');
+            }
+          } catch (error) {
+            console.error('An error occurred:', error);
+          }
+        }
+    
+        fetchAttendanceData();
       }
 
 
       
-    } else {
-      // Fetch the data and store it in localStorage
-      const fetchAttendanceData = async () => {
-        try {
-          const currentServerDomain = window.location.origin;
-          const responseAPI = await fetch(`${currentServerDomain}/api/student/home`, {
-            method: 'GET',
-          });
-  
-          if (responseAPI.status === 200) {
-            const responseBody = await responseAPI.json();
-            setStudentDetails(responseBody.studentDetails);
-  
-            getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
-              .then((url) => {
-                setPhotoUrl(url);
-                localStorage.setItem('photoUrl', url);
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-  
-            setDataFetched(true);
-  
-            // Store studentDetails in localStorage
-            localStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
-          } else {
-            console.log('Cannot fetch data');
-          }
-        } catch (error) {
-          console.error('An error occurred:', error);
-        }
-      }
-  
-      fetchAttendanceData();
     }
     });
   
