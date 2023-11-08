@@ -1,22 +1,14 @@
 'use client';
-import {  db } from '@/lib/firebase-config';
-import { signOut } from 'firebase/auth';
+
 import styles from './StudentHomePage.module.css'
-import Image from 'next/image';
-import { BsClockHistory, BsFiletypePdf, BsPersonCheck } from 'react-icons/bs';
+import { BsClockHistory, BsPersonCheck } from 'react-icons/bs';
 import { RxReader } from 'react-icons/rx'
-import { MdOutlineAssignment } from 'react-icons/md';
 import { TbReportAnalytics } from 'react-icons/tb';
 import { RiThreadsLine } from 'react-icons/ri';
-import { FiEdit } from 'react-icons/fi';
 import { BiSpreadsheet } from 'react-icons/bi';
 import { Skeleton } from '@mui/material';
-
-import getUser from '@/lib/getUser';
-import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import Link from 'next/link';
-import { getDownloadURL, getStorage, ref } from 'firebase/storage';
-import { useEffect, useState } from 'react';
+
 
 type StudentDetails = {
   studentName: string;
