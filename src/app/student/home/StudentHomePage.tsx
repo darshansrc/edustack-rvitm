@@ -18,93 +18,15 @@ import Link from 'next/link';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import { useEffect, useState } from 'react';
 
+type StudentDetails = {
+  studentName: string;
+  studentUSN: string;
+  className: string;
+};
+
+const StudentHomePage: React.FC<{ studentDetails: StudentDetails }> = ({ studentDetails }) => {
 
 
-
-const StudentHomePage =  () => {
-
-  interface studentDetails {
-    studentName: string;
-    studentUSN: string;
-    className: string;
-    classSemester: string;
-    studentLabBatch: string;
-    studentPhoto: string;
-  }
-  
-  const [ studentDetails, setStudentDetails ] = useState<studentDetails>({
-    studentName: '',
-    studentUSN: '',
-    className: '',
-    classSemester: '',
-    studentLabBatch: '',
-    studentPhoto: '',
-  });
-
-  const [ photoUrl, setPhotoUrl ] = useState<string>('');
-  const [ dataFetched, setDataFetched ] = useState<boolean>(false);
-
-
-  const storage = getStorage();
-
-
-  useEffect(() => {
-    // Check if the cookie 'studentDetails' exists
-    const cookies = document.cookie.split(';');
-    let storedStudentDetails;
-    let storedPhotoUrl;
-
-    for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split('=');
-      if (name === 'studentDetails') {
-        storedStudentDetails = JSON.parse(decodeURIComponent(value));
-      } else if (name === 'photoUrl') {
-        storedPhotoUrl = decodeURIComponent(value);
-      }
-    }
-
-    if (storedStudentDetails) {
-      setStudentDetails(storedStudentDetails);
-      if (storedPhotoUrl) {
-        setPhotoUrl(storedPhotoUrl);
-      }
-
-      setDataFetched(true);
-    } else {
-      // Fetch the data and set a cookie with a 5-minute expiry
-      const fetchAttendanceData = async () => {
-        try {
-          const currentServerDomain = window.location.origin;
-          const responseAPI = await fetch(`${currentServerDomain}/api/student/home`, {
-            method: 'GET',
-          });
-          if (responseAPI.status === 200) {
-            const responseBody = await responseAPI.json();
-            setStudentDetails(responseBody.studentDetails);
-            getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
-              .then((url) => {
-                setPhotoUrl(url);
-                // Set a cookie with a 5-minute expiry
-                const expirationDate = new Date(Date.now() + 10 * 60 * 1000);
-                document.cookie = `studentDetails=${encodeURIComponent(JSON.stringify(responseBody.studentDetails))}; expires=${expirationDate.toUTCString()}`;
-                document.cookie = `photoUrl=${encodeURIComponent(url)}; expires=${expirationDate.toUTCString()}`;
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-
-            setDataFetched(true);
-          } else {
-            console.log('Cannot fetch data');
-          }
-        } catch (error) {
-          console.error('An error occurred:', error);
-        }
-      }
-
-      fetchAttendanceData();
-    }
-  }, []);
 
 
 
@@ -112,19 +34,16 @@ const StudentHomePage =  () => {
   return (
     <div className={styles.homePageContainer}>
 
-
-      
-
       <div className={styles.welcomeCard}>
         <div style={{marginRight: '14px'}}>
-          { dataFetched ? (
-             <img   src={photoUrl ? photoUrl : '/None.jpg'} alt={''} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
+          { studentDetails ? (
+             <img   src={'/None.jpg'} alt={''} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
           ) : (
             <Skeleton variant="circular" width={60} height={60} />
           )}
          
         </div>
-        {dataFetched ? (
+        {studentDetails ? (
         <div>
         <div className={styles.studentName}>Welcome, {studentDetails?.studentName}</div>
         <div className={styles.studentDetail}>USN: {studentDetails?.studentUSN}, CLASS: {studentDetails?.className}</div>

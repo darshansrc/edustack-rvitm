@@ -1,24 +1,96 @@
-import getUser from '@/lib/getUser'
-import React from 'react'
+import {  db } from '@/lib/firebase-config';
+import getUser from '@/lib/getUser';
+import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import StudentHomePage from './StudentHomePage';
+import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 
-async function StudentData() {
-  const user = await getUser()
 
-  const formattedString = JSON.stringify(user, null, "\t");
 
-  return (
-    <div className='mx-auto max-w-4xl my-32 '>
-      <h1 className='text-3xl mb-8'>You are now in protected area of the app</h1>
-      <p className='mb-4 font-light text-xl'>Here is your information:</p>
-      <div className="relative bg-gray-800 p-4 rounded-md shadow-md overflow-x-auto">
-        <pre  className="text-sm text-white font-mono">
-          <code>{formattedString}</code>
-        </pre>
+const FetchStudentData = async () => {
+
+  const storage = getStorage();
+
+  type user = {
+    uid: string;
+    email?: string;
+    picture?: string;
+  }
+
+  const user : user | null = await getUser();
+
+  interface StudentDetails  {
+    studentName: string;
+    studentUSN: string;
+    className: string;
+
+  };
   
-      </div>
 
-    </div>
+  let FetchedStudentDetails : StudentDetails = {
+    studentName: '',
+    studentUSN: '',
+    className: '',
+
+  };
+
+  
+
+  const dataFetched = true;
+  if (user) {
+
+    console.log(user)
+      
+    const queryPath = 'students';
+    const collectionGroupRef = collectionGroup(db, queryPath);
+    const studentQuery = query(collectionGroupRef, where('email', '==', user.email));
+    const studentSnapshot = await getDocs(studentQuery);
+
+    await Promise.all(
+      studentSnapshot.docs.map(async (studentDoc) => {
+        const className = studentDoc.ref.parent.parent?.id || '';
+        const studentID = studentDoc.ref.id;
+        const classDocRef = doc(db, 'database', className);
+        const classDocSnapshot = await getDoc(classDocRef);
+
+        if (classDocSnapshot.exists()) {
+          const classSemester = classDocSnapshot.data().currentSemester;
+          const studentLabBatch = studentDoc.data().labBatch;
+          const studentName = studentDoc.data().name;
+          const studentUSN = studentDoc.data().usn;
+          const studentEmail = studentDoc.data().email;
+
+          // getDownloadURL(ref(storage, `photos/${studentUSN}.jpg`))
+          // .then((url) => {
+          //     const photoUrl = url
+          // })
+          // .catch((error) => {
+          //   console.log(error)
+          // });
+
+          FetchedStudentDetails   = {
+            studentName,
+            studentUSN,
+            className,
+
+          }
+
+
+
+        }
+      })
+    );
+
+}
+
+      
+
+
+
+  
+  return (
+    <StudentHomePage studentDetails={FetchedStudentDetails} />
+
   )
 }
 
-export default StudentData
+export default FetchStudentData;
