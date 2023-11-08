@@ -6,11 +6,6 @@ import { NextRequest } from "next/server";
 export async function middleware(request : NextRequest, response : NextResponse) {
 
 
-  const headersList = headers();
-  const domain = headersList.get('host') || "";
-  console.log(domain)
-
-
     const session = request.cookies.get("session");
 
     if (request.nextUrl.pathname === '/' && session) {

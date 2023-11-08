@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { Analytics } from '@vercel/analytics/react';
+
 import { StudentContextProvider } from './context/StudentContext';
 
 
@@ -29,7 +29,7 @@ export default function RootLayout({
       <StudentContextProvider>
           {children}
         </StudentContextProvider>
-        <Analytics />
+     
       </body>
     </html>
   )

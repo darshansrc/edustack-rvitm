@@ -10,7 +10,6 @@ import { Tab as MyTab, Tabs as MyTabs, TabList as MyTabList, TabPanel as MyTabPa
 import 'react-datepicker/dist/react-datepicker.css';
 import './StudentAttendanceTable.css';
 import { Box, Card, CardContent, Typography } from '@mui/material';
-import LoadingSkeleton from './LoadingSkeleton';
 import styles from './StudentAttendanceTable.module.css'
 import Skeleton from '@mui/material/Skeleton';
 import { BsCheckCircleFill, BsXCircleFill } from 'react-icons/bs'

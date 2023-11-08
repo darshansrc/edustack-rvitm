@@ -17,7 +17,6 @@
     "@mui/icons-material": "^5.14.16",
     "@mui/joy": "^5.0.0-beta.13",
     "@mui/material": "^5.14.16",
-    "@vercel/analytics": "^1.1.1",
     "chart.js": "^4.4.0",
     "chartjs": "^0.3.24",
     "firebase": "^10.5.2",

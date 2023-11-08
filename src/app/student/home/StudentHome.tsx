@@ -1,185 +1,206 @@
-'use client';
 import {  db } from '@/lib/firebase-config';
-import { signOut } from 'firebase/auth';
-import styles from './StudentHomePage.module.css'
-import Image from 'next/image';
-import { BsClockHistory, BsFiletypePdf, BsPersonCheck } from 'react-icons/bs';
-import { RxReader } from 'react-icons/rx'
-import { MdOutlineAssignment } from 'react-icons/md';
-import { TbReportAnalytics } from 'react-icons/tb';
-import { RiThreadsLine } from 'react-icons/ri';
-import { FiEdit } from 'react-icons/fi';
-import { BiSpreadsheet } from 'react-icons/bi';
-import { Skeleton } from '@mui/material';
-
 import getUser from '@/lib/getUser';
 import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
-import Link from 'next/link';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
-import { useEffect, useState } from 'react';
+
+import styles from './StudentHomePage.module.css'
+import { BsClockHistory, BsPersonCheck } from 'react-icons/bs';
+import { RxReader } from 'react-icons/rx'
+import { TbReportAnalytics } from 'react-icons/tb';
+import { RiThreadsLine } from 'react-icons/ri';
+import { BiSpreadsheet } from 'react-icons/bi';
+import { Skeleton } from '@mui/material';
+import Link from 'next/link';
+import { Suspense } from 'react';
 
 
+const storage = getStorage();
+
+const FetchStudentData = async () => {
 
 
-const StudentHome =  () => {
+  type user = {
+    uid: string;
+    email?: string;
+    picture?: string;
+  }
 
-  interface studentDetails {
+  const user : user | null = await getUser();
+
+  interface StudentDetails  {
     studentName: string;
     studentUSN: string;
     className: string;
-    classSemester: string;
-    studentLabBatch: string;
-    studentPhoto: string;
-  }
+   
+
+  };
   
-  const [ studentDetails, setStudentDetails ] = useState<studentDetails>({
+
+  let FetchedStudentDetails : StudentDetails = {
     studentName: '',
     studentUSN: '',
     className: '',
-    classSemester: '',
-    studentLabBatch: '',
-    studentPhoto: '',
-  });
 
-  const [ photoUrl, setPhotoUrl ] = useState<string>('');
-  const [ dataFetched, setDataFetched ] = useState<boolean>(false);
+  };
 
 
-  const storage = getStorage();
+
+  
+
+  const dataFetched = true;
+  if (user) {
+
+    console.log(user)
+      
+    const queryPath = 'students';
+    const collectionGroupRef = collectionGroup(db, queryPath);
+    const studentQuery = query(collectionGroupRef, where('email', '==', user.email));
+    const studentSnapshot = await getDocs(studentQuery);
+
+    await Promise.all(
+      studentSnapshot.docs.map(async (studentDoc) => {
+        const className = studentDoc.ref.parent.parent?.id || '';
+        const studentID = studentDoc.ref.id;
+        const classDocRef = doc(db, 'database', className);
+        const classDocSnapshot = await getDoc(classDocRef);
+
+        if (classDocSnapshot.exists()) {
+          const classSemester = classDocSnapshot.data().currentSemester;
+          const studentLabBatch = studentDoc.data().labBatch;
+          const studentName = studentDoc.data().name;
+          const studentUSN = studentDoc.data().usn;
+          const studentEmail = studentDoc.data().email;
+
+          console.log(studentUSN)
 
 
-  useEffect(() => {
-    async function fetchAttendanceData() {
-      try {
-        const currentServerDomain = window.location.origin;
-        const responseAPI = await fetch(`${currentServerDomain}/api/student/home`, {
-          method: 'GET',
-        });
-        if (responseAPI.status === 200) {
-          const responseBody = await responseAPI.json();
-          setStudentDetails(responseBody.studentDetails);        
-          getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
-          .then((url) => {setPhotoUrl(url)})
-          .catch((error) => {
-            console.log(error)
-          });
-          setDataFetched(true);
+     
+
+          FetchedStudentDetails   = {
+            studentName,
+            studentUSN,
+            className,
+
+          }
 
 
-        } else {
-          console.log('Cannot fetch data');
+
         }
-      } catch (error) {
-        console.error('An error occurred:', error);
-      }
-    }
-
-    fetchAttendanceData();
-  }, []);
+      })
+    );
 
 
 
+}
+
+const fetchPhotoUrl = async () => {
+  const url = await getDownloadURL(ref(storage, `photos/${FetchedStudentDetails.studentUSN}.jpg`));
+  return url;
+};
+
+let photoUrl = '';
+
+if(FetchedStudentDetails.studentUSN){
+  photoUrl = await fetchPhotoUrl();
+}
+
+
+
+      
   
   return (
     <div className={styles.homePageContainer}>
 
-
-      
-
-      <div className={styles.welcomeCard}>
-        <div style={{marginRight: '14px'}}>
-          { dataFetched ? (
-             <img   src={photoUrl} alt={''} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
-          ) : (
-            <Skeleton variant="circular" width={60} height={60} />
-          )}
-         
-        </div>
-        {dataFetched ? (
-        <div>
-        <div className={styles.studentName}>Welcome, {studentDetails?.studentName}</div>
-        <div className={styles.studentDetail}>USN: {studentDetails?.studentUSN}, CLASS: {studentDetails?.className}</div>
-      </div>
+    <div className={styles.welcomeCard}>
+      <div style={{marginRight: '14px'}}>
+        { FetchedStudentDetails ? (
+           <img   src={photoUrl ? photoUrl :'/None.jpg'} alt={''} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
         ) : (
-          <div>
-          <div className={styles.studentName}><Skeleton variant="text" sx={{ fontSize: '1.4rem',width: 100 }} /></div>
-          <div className={styles.studentDetail}><Skeleton variant="text" sx={{ fontSize: '1rem',width: 80 }} /></div>
-        </div>          
+          <Skeleton variant="circular" width={60} height={60} />
         )}
-
+       
       </div>
 
-      <div className={styles.welcomeCard}>
-        <div style={{marginRight: '15px'}}>
-         <Image priority width={60} height={60} src='/logorv.png' alt={''} style={{margin: '0 10px',borderRadius: '50%'}}/>
-        </div>
-        <div>
-          <div className={styles.studentName}>RV Institute of Technology & Management</div>
-          <div className={styles.studentDetail}>Bangalore, Karnataka</div>
-        </div>
-      </div>
-
-      <div className={styles.menuBox}>
+      <div>
+      <div className={styles.studentName}>Welcome, {FetchedStudentDetails?.studentName}</div>
+      <div className={styles.studentDetail}>USN: {FetchedStudentDetails?.studentUSN}, CLASS: {FetchedStudentDetails?.className}</div>
+    </div>
       
-      <Link href='/student/attendance'  shallow={true}>
-        <div className={styles.menuItem} >
-          <div className={styles.menuItemIcon}>
-            <BsPersonCheck size={25} style={{margin: '0 10px', color: '#333'}}/>
-          </div>
-          <div className={styles.menuItemText}>Attendance</div>
-        </div>
-        </Link>
-
-        <Link href='/student/course'  shallow={true}>
-        <div className={styles.menuItem}>
-          <div className={styles.menuItemIcon}>
-          <BsClockHistory size={25} style={{margin: '0 10px' , color: '#333'}}/>
-          </div>
-          <div className={styles.menuItemText}>Schedule</div>
-        </div>
-        </Link>
-      
-        <Link href={{pathname: '/student/course', query: {tab: 2}}}  shallow={true}>
-        <div className={styles.menuItem} >
-          <div className={styles.menuItemIcon}>
-          <BiSpreadsheet size={25} style={{margin: '0 10px' , color: '#333'}}/>
-          </div>
-          <div className={styles.menuItemText}>Assignment</div>
-        </div>
-        </Link>
-
-        <Link href='/student/grades'  shallow={true}>
-        <div className={styles.menuItem} >
-          <div className={styles.menuItemIcon}>
-          <RxReader size={25} style={{margin: '0 10px' , color: '#333'}}/>
-          </div>
-          <div className={styles.menuItemText}>IA Marks</div>
-        </div>
-        </Link>
-
-
-        <Link href={{pathname: '/student/grades', query: {tab: 1}}}  shallow={true}>
-        <div className={styles.menuItem} >
-          <div className={styles.menuItemIcon}>
-          <TbReportAnalytics size={25} style={{margin: '0 10px' , color: '#333'}}/>
-          </div>
-          <div className={styles.menuItemText}>CGPA</div>
-        </div>
-        </Link>
-
-        <Link href={{pathname: '/student/course', query: {tab: 1}}}  shallow={true}>
-        <div className={styles.menuItem} >
-          <div className={styles.menuItemIcon}>
-          <RiThreadsLine size={25} style={{margin: '0 10px' , color: '#333'}}/>
-          </div>
-          <div className={styles.menuItemText}>Material</div>
-        </div>
-        </Link>
-
-      </div>
 
     </div>
+
+    <div className={styles.welcomeCard}>
+      <div style={{marginRight: '15px'}}>
+       <img src='/logorv.png' alt={''} style={{width:'60px' , height:'60px', margin: '0 10px',borderRadius: '50%'}}/>
+      </div>
+      <div>
+        <div className={styles.studentName}>RV Institute of Technology & Management</div>
+        <div className={styles.studentDetail}>Bangalore, Karnataka</div>
+      </div>
+    </div>
+
+    <div className={styles.menuBox}>
+    
+    <Link href='/student/attendance'  shallow={true}>
+      <div className={styles.menuItem} >
+        <div className={styles.menuItemIcon}>
+          <BsPersonCheck size={25} style={{margin: '0 10px', color: '#333'}}/>
+        </div>
+        <div className={styles.menuItemText}>Attendance</div>
+      </div>
+      </Link>
+
+      <Link href='/student/course'  shallow={true}>
+      <div className={styles.menuItem}>
+        <div className={styles.menuItemIcon}>
+        <BsClockHistory size={25} style={{margin: '0 10px' , color: '#333'}}/>
+        </div>
+        <div className={styles.menuItemText}>Schedule</div>
+      </div>
+      </Link>
+    
+      <Link href={{pathname: '/student/course', query: {tab: 2}}}  shallow={true}>
+      <div className={styles.menuItem} >
+        <div className={styles.menuItemIcon}>
+        <BiSpreadsheet size={25} style={{margin: '0 10px' , color: '#333'}}/>
+        </div>
+        <div className={styles.menuItemText}>Assignment</div>
+      </div>
+      </Link>
+
+      <Link href='/student/grades'  shallow={true}>
+      <div className={styles.menuItem} >
+        <div className={styles.menuItemIcon}>
+        <RxReader size={25} style={{margin: '0 10px' , color: '#333'}}/>
+        </div>
+        <div className={styles.menuItemText}>IA Marks</div>
+      </div>
+      </Link>
+
+
+      <Link href={{pathname: '/student/grades', query: {tab: 1}}}  shallow={true}>
+      <div className={styles.menuItem} >
+        <div className={styles.menuItemIcon}>
+        <TbReportAnalytics size={25} style={{margin: '0 10px' , color: '#333'}}/>
+        </div>
+        <div className={styles.menuItemText}>CGPA</div>
+      </div>
+      </Link>
+
+      <Link href={{pathname: '/student/course', query: {tab: 1}}}  shallow={true}>
+      <div className={styles.menuItem} >
+        <div className={styles.menuItemIcon}>
+        <RiThreadsLine size={25} style={{margin: '0 10px' , color: '#333'}}/>
+        </div>
+        <div className={styles.menuItemText}>Material</div>
+      </div>
+      </Link>
+
+    </div>
+
+  </div>
+
   )
 }
 
-export default StudentHome;
+export default FetchStudentData;
