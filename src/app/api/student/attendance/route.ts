@@ -15,14 +15,16 @@ export async function GET(request: NextRequest) {
     }
   
     const decodedClaims = await auth().verifySessionCookie(session, true);
+
+    
   
     if (!decodedClaims) {
       return NextResponse.json({ isLogged: false }, { status: 401 });
     }
   
   
-    const userUID = decodedClaims.uid; // Get the user's UID
-    const getRef = doc(db, 'users', userUID);
+    const uid = decodedClaims.uid; // Get the user's UID
+    const getRef = doc(db, 'users', uid);
     const userDoc = await getDoc(getRef);
   
     let userType : string = '';
@@ -34,6 +36,7 @@ export async function GET(request: NextRequest) {
         studentLabBatch: string;
         classSemester: string;
         className: string;
+        uid: string;
    
       } = {
         studentName: '',
@@ -43,6 +46,7 @@ export async function GET(request: NextRequest) {
         studentLabBatch: '',
         classSemester: '',
         className: '',
+        uid: '',
        
       }
     let subjectOptions: { value: string; label: string; subjectType: string , subjectSemester: number}[] = [];
@@ -82,6 +86,7 @@ export async function GET(request: NextRequest) {
                 studentLabBatch,
                 classSemester,
                 className,
+                uid: uid,
               };
 
 
@@ -141,5 +146,5 @@ export async function GET(request: NextRequest) {
 
   
 
-  return NextResponse.json({ isLogged: true, userUID , userType, studentDetails, subjectOptions, attendanceDocs}, { status: 200 });
+  return NextResponse.json({ isLogged: true, uid , userType, studentDetails, subjectOptions, attendanceDocs}, { status: 200 });
 }

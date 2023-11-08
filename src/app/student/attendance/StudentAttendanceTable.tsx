@@ -43,6 +43,19 @@ interface StyledTabsProps {
   onChange: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
+
+interface studentDetails {
+  studentName: string;
+  studentEmail: string;
+  studentID: string;
+  studentUSN: string;
+  studentLabBatch: string;
+  classSemester: string;
+  className: string;
+  uid: string;
+
+} 
+
 const StyledTabs = styled((props: StyledTabsProps) => (
   <Tabs
     {...props}
@@ -82,13 +95,20 @@ const StyledTab = styled((props: StyledTabProps) => (
 // Hook Definitions
 function StudentAttendanceTable() {
   const [value, setValue] = useState(0);
+
   const [subjectOptions, setSubjectOptions] = useState<SubjectOption[]>([]);
   const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
-
-  const [studentDetails, setStudentDetails] = useState<any>(null);
- 
-
+  const [studentDetails, setStudentDetails] = useState<studentDetails>({
+    studentName: '',
+    studentEmail: '',
+    studentID: '',
+    studentUSN: '',
+    studentLabBatch: '',
+    classSemester: '',
+    className: '',
+    uid: '',
   
+  });
   const [dataFetched, setDataFetched] = useState(false);
   const [user , setUser] = useState<any>(null);
 
@@ -160,7 +180,7 @@ function StudentAttendanceTable() {
       const parsedStudentDetails = JSON.parse(storedStudentDetails);
       const parsedSubjectOptions = JSON.parse(storedSubjectOptions);
       const parsedAttendanceData = JSON.parse(storedAttendanceData);
-      const userUidMatch = parsedStudentDetails.userUID === user?.uid;
+      const userUidMatch = parsedStudentDetails.uid === user?.uid;
 
       if(userUidMatch){
         setStudentDetails(parsedStudentDetails);
