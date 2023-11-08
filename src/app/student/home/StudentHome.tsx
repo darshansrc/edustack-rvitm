@@ -94,16 +94,21 @@ const FetchStudentData = async () => {
 }
 
 const fetchPhotoUrl = async () => {
-  const url = await getDownloadURL(ref(storage, `photos/${FetchedStudentDetails.studentUSN}.jpg`));
-  return url;
+  try {
+    const url = await getDownloadURL(ref(storage, `photos/${FetchedStudentDetails.studentUSN}.jpg`));
+    return url;
+  } catch (error) {
+
+    console.error("Error fetching photo URL:", error);
+    return '/None.jpg'; 
+  }
 };
 
 let photoUrl = '';
 
-if(FetchedStudentDetails.studentUSN){
+if (FetchedStudentDetails.studentUSN) {
   photoUrl = await fetchPhotoUrl();
 }
-
 
 
       
