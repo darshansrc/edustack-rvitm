@@ -8,6 +8,8 @@ import styles from './StudentProfile.module.css'
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { FiEdit } from 'react-icons/fi';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase-config';
 
 
 
@@ -26,6 +28,7 @@ const StudentProfile = () => {
     className: string;
     classSemester: string;
     studentLabBatch: string;
+    studentEmail: string;
     studentPhoto: string;
   }
   
@@ -36,18 +39,21 @@ const StudentProfile = () => {
     classSemester: '',
     studentLabBatch: '',
     studentPhoto: '',
+    studentEmail: '',
   });
 
   const [classSemester, setClassSemester] = useState('');
   const [classId, setClassId] = useState<any>(null);
   const [dataFetched, setDataFetched] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<File | null>(null);
 
   const [ photoSnackbarOpen, setPhotoSnackbarOpen ] = useState(false);
   const [imageURL, setImageURL] = useState('');
+
+  const [user,setUser] = useState<any>(null);
 
 
 
@@ -77,37 +83,75 @@ const StudentProfile = () => {
  
 
   useEffect(() => {
-    async function fetchAttendanceData() {
-      try {
-        const currentServerDomain = window.location.origin;
-        const responseAPI = await fetch(`${currentServerDomain}/api/student/home`, {
-          method: 'GET',
-        });
-        if (responseAPI.status === 200) {
-          const responseBody = await responseAPI.json();
-          setStudentDetails(responseBody.studentDetails);        
-          setClassId(responseBody.studentDetails.className);
-          setClassSemester(responseBody.studentDetails.classSemester);
-          setUserEmail(responseBody.decodedClaims.email);
-          getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
-          .then((url) => {setImageURL(url)})
+    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
+      console.log("Auth", currentuser);
+      setUser(currentuser);
+      console.log(user);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+
+  const fetchAttendanceData = async () => {
+    try {
+      const currentServerDomain = window.location.origin;
+      const responseAPI = await fetch(`${currentServerDomain}/api/student/home`, {
+        method: 'GET',
+      });
+
+      if (responseAPI.status === 200) {
+        const responseBody = await responseAPI.json();
+        setStudentDetails(responseBody.studentDetails);
+
+        getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
+          .then((url) => {
+            setImageURL(url);
+            localStorage.setItem('photoUrl', url);
+          })
           .catch((error) => {
-            console.log(error)
+            console.log(error);
           });
-          setDataFetched(true);
 
+        setDataFetched(true);
 
-        } else {
-          console.log('Cannot fetch data');
-        }
-      } catch (error) {
-        console.error('An error occurred:', error);
+        // Store studentDetails in localStorage
+        localStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
+      } else {
+        console.log('Cannot fetch data');
       }
+    } catch (error) {
+      console.error('An error occurred:', error);
     }
+  }
+
+
+
+  useEffect(() => {
+        
+    const storedStudentDetails = localStorage.getItem('studentDetails');
+    const storedPhotoUrl = localStorage.getItem('photoUrl');
+
+    if (storedStudentDetails) {
+     
+      const parsedStudentDetails = JSON.parse(storedStudentDetails);
+      const userUidMatch = parsedStudentDetails.userUID === user?.uid;
+
+      if(userUidMatch){
+        setStudentDetails(parsedStudentDetails);
+        setDataFetched(true);
+        if(storedPhotoUrl){
+            setImageURL(storedPhotoUrl); 
+        }
+      }
+      
+    } 
 
     fetchAttendanceData();
-  }, [handlePhotoUpload]);
-
+    
+  }, [user , handlePhotoUpload]);
 
 
 
@@ -160,7 +204,7 @@ const StudentProfile = () => {
                   <p className='text-sm font-medium text-neutral-700 font-[Poppins] pb-4'>{dataFetched ? studentDetails?.studentUSN : <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={100} />}</p>
 
                   <p className='text-blue-700 font-bold text-xs pb-1'>Your Email</p>
-                  <p className='text-sm font-medium text-neutral-700 font-[Poppins] pb-4'>{dataFetched && userEmail ? userEmail : <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={100} />}</p>
+                  <p className='text-sm font-medium text-neutral-700 font-[Poppins] pb-4'>{dataFetched && studentDetails.studentEmail ? studentDetails.studentEmail : <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={100} />}</p>
 
                   <p className='text-blue-700 font-bold text-xs pb-1'>Your Class</p>
                   <p className='text-sm font-medium text-neutral-700 font-[Poppins] pb-4'>{dataFetched ? studentDetails.className + ' [' + studentDetails.classSemester + '-Semester]' : <Skeleton variant="text" sx={{ fontSize: '1rem' }} width={100} />}</p>
