@@ -116,9 +116,9 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        /* box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 -4px 6px rgba(0, 0, 0, 0.04); */
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 -4px 6px rgba(0, 0, 0, 0.04);
         background-color: #ffffff;
-        border-top: 0.5px solid rgba(0,0,0,0.08)
+    
     }
 
     .navItem{
