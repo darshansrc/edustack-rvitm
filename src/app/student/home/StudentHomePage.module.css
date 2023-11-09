@@ -75,15 +75,16 @@
     cursor: pointer;
     border-radius: 5px;
     transition: 0.2s;
-    background-color: rgb(255, 255, 255);
+ 
+
     
 }  
  
   
 .menuItemIcon{
-    border-radius: 50%;
-    background-color: #e9edff;
-    color: rgb(29 78 216);
+    border-radius: 15px;
+    background-color: #F2F5FF;
+
     min-width: 50px;
     min-height: 50px;
     max-width: 50px;
@@ -91,7 +92,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2c2c2c;
+    color: #1B4DFF;
     margin: 5px;
     transition: 0.2s;
 }
