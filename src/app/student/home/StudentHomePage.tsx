@@ -222,6 +222,11 @@ const StudentHomePage =  () => {
 
       </div>
 
+<p>innerWidth: " {window.innerWidth }</p>
+<p>innerHeight: " {window.innerHeight}</p>
+<p>outerWidth: " {window.outerWidth }</p>
+<p>outerHeight: " {window.outerHeight}</p>;
+
     </div>
   )
 }
