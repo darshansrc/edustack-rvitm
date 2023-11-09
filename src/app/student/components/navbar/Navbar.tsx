@@ -42,7 +42,7 @@ const Navbar = () => {
     
         <Link href='/student/attendance' >
         <div className={pathname.endsWith("/attendance") ? styles.navItemActive : styles.navItem}>
-        <i><BsPersonCheck style={{ fontSize: "25px" }} /></i>  
+        <i style={{fontWeight: '500'}}><BsPersonCheck style={{ fontSize: "25px" }} /></i>  
         <div className={pathname.endsWith("/attendance") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Attendance</div>
         </div>
         </Link>
