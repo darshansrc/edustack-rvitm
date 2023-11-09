@@ -167,6 +167,8 @@ const StudentProfile = () => {
                         <Image
   src={imageURL ? imageURL : '/None.jpg'}
   alt="Student Image"
+  width={112}
+  height={112}
   style={{
 
     objectFit: 'cover',
