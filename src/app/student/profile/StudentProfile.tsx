@@ -110,7 +110,7 @@ const StudentProfile = () => {
         getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
           .then((url) => {
             setImageURL(url);
-            localStorage.setItem('photoUrl', url);
+            sessionStorage.setItem('photoUrl', url);
           })
           .catch((error) => {
             console.log(error);
@@ -119,7 +119,7 @@ const StudentProfile = () => {
         setDataFetched(true);
 
         // Store studentDetails in localStorage
-        localStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
+        sessionStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
       } else {
         console.log('Cannot fetch data');
       }
@@ -132,8 +132,8 @@ const StudentProfile = () => {
 
   useEffect(() => {
         
-    const storedStudentDetails = localStorage.getItem('studentDetails');
-    const storedPhotoUrl = localStorage.getItem('photoUrl');
+    const storedStudentDetails = sessionStorage.getItem('studentDetails');
+    const storedPhotoUrl = sessionStorage.getItem('photoUrl');
 
     if (storedStudentDetails) {
      

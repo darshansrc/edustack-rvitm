@@ -157,9 +157,9 @@ function StudentAttendanceTable() {
         setAttendanceData(responseBody.attendanceDocs);
         setDataFetched(true);
 
-        localStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
-        localStorage.setItem('subjectOptions', JSON.stringify(responseBody.subjectOptions));
-        localStorage.setItem('attendanceData', JSON.stringify(responseBody.attendanceDocs));
+        sessionStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
+        sessionStorage.setItem('subjectOptions', JSON.stringify(responseBody.subjectOptions));
+        sessionStorage.setItem('attendanceData', JSON.stringify(responseBody.attendanceDocs));
 
       } else {
         console.log('Cannot fetch data');
@@ -171,9 +171,9 @@ function StudentAttendanceTable() {
    
   useEffect(() => {
      
-    const storedStudentDetails = localStorage.getItem('studentDetails');
-    const storedSubjectOptions = localStorage.getItem('subjectOptions');
-    const storedAttendanceData = localStorage.getItem('attendanceData');
+    const storedStudentDetails = sessionStorage.getItem('studentDetails');
+    const storedSubjectOptions = sessionStorage.getItem('subjectOptions');
+    const storedAttendanceData = sessionStorage.getItem('attendanceData');
 
     if (storedStudentDetails && storedSubjectOptions && storedAttendanceData) {
      

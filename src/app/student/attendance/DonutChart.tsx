@@ -35,11 +35,11 @@ const DonutChart = ({ totalAttendancePercentage }) => {
 
   let color = "#ccc"; 
 
-  if (totalAttendancePercentage >= 80) {
+  if (totalAttendancePercentage >= 75) {
     color = "green"; // Green if above 75%
   } else if (totalAttendancePercentage <= 50) {    
     color = "red"; // Red if below 50%
-  } else if (totalAttendancePercentage > 50 && totalAttendancePercentage < 80) {
+  } else if (totalAttendancePercentage > 50 && totalAttendancePercentage < 75) {
     color = "#ffc107"; // Red if below 50%
   } 
 

@@ -15,7 +15,7 @@
   background-color: rgb(255, 255, 255);
   transition: border-bottom 0.2s color 0.2s;
   font-weight: 500;
-  color: rgb(29 78 216);
+  color: #1B4DFF;
   border-radius: 10px;
 }
  
@@ -34,7 +34,7 @@
 
 
 .css-1aquho2-MuiTabs-indicator{
-  background-color: #1d4ed8;
+  background-color: #1B4DFF;
 }
 
 .MuiTabs-scrollButtons.Mui-disabled {
