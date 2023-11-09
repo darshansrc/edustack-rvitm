@@ -106,19 +106,20 @@
     /* for mobile view */
     .navBar{
         position: fixed;
-        bottom: 0;
+        bottom: 2.5vw;
         left: 0;
         justify-content: space-between;
-        width: 100vw;
+        width: 95vw;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
         padding-left: 3vw;
         padding-right: 3vw;
-        border-top-right-radius: 15px;
-        border-top-left-radius: 15px;
-       
+        border-radius: 20px;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+        background-color: #ffffff;
+        margin: 0 2.5vw;
     }
 
     .navItem{
@@ -127,34 +128,35 @@
         align-items: center;
         justify-content: center;
         font-weight: 500;
-        color: hsl(0, 0%, 45%);
-        font-size: 14px;
-        height: 6vh;
+        color: #292929;
+        font-size: 12px;
+        height: 15vw;
         width: 12.5vw;
         min-height: 40px ;
         border-radius: 50%;
-        margin: 6px 0px;
+   
         transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, width 0.3s ease-in-out;
 
     }
 
     .navItemActive {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         gap: 5px;
         font-weight: 500;
         color: #1B4DFF;
-        font-size: 14px;   
+        font-size: 12px;   
         height: 6vh;
-        width: 30vw;
+        width: 15vw;
         min-height: 40px;
-        background-color: #F2F5FF;
+        background-color: #ffffff;
         border-radius: 25px;
-        margin: 6px 0px;
+        
         transition: color 0.15s ease-in;
         transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, width 0.3s ease-in-out;
+        position: relative;
     }
     
     .loaded {
@@ -162,7 +164,7 @@
     }
 
     .navTextActive{
-        display: block;
+        display: none;
     }
 
 
