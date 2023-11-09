@@ -1,5 +1,5 @@
 'use client';
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './Navbar.module.css'
 import { RiBookMarkLine } from "react-icons/ri";
 import {BiSolidHome, BiHome } from "react-icons/bi";
@@ -11,10 +11,19 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
 const Navbar = () => {
+
+  useEffect(() => {
+    const navItemActive = document.querySelector('.navItemActive');
+    if (navItemActive) {
+      navItemActive.classList.add('loaded');
+    }
+  }, []);
+      
+
  
   const pathname : string= usePathname() || '';
 
-
+ 
 
   return (
     <nav className={styles.navBar}>
@@ -26,36 +35,36 @@ const Navbar = () => {
 
         <Link href={'/student/home'} >
         <div className={pathname.endsWith("/home") ? styles.navItemActive : styles.navItem}>
-        <i> <BiHome style={{ fontSize: "23px" }} /></i>
-        <div  className={styles.navText} style={{fontFamily: 'Poppins'}}>Home</div> 
+        <i> <BiHome style={{ fontSize: "25px" }} /></i>
+        <div  className={pathname.endsWith("/home") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Home</div> 
         </div>
         </Link>
     
         <Link href='/student/attendance' >
         <div className={pathname.endsWith("/attendance") ? styles.navItemActive : styles.navItem}>
-        <i><BsPersonCheck style={{ fontSize: "23px" }} /></i>  
-        <div className={styles.navText} style={{fontFamily: 'Poppins'}}>Attendance</div>
+        <i><BsPersonCheck style={{ fontSize: "25px" }} /></i>  
+        <div className={pathname.endsWith("/attendance") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Attendance</div>
         </div>
         </Link>
 
         <Link href='/student/course' >
         <div className={pathname.endsWith("/course") ? styles.navItemActive : styles.navItem}>
-        <i><RiBookMarkLine style={{ fontSize: "23px" }} /></i>
-        <div className={styles.navText} style={{fontFamily: 'Poppins'}}>Course</div>
+        <i><RiBookMarkLine style={{ fontSize: "25px" }} /></i>
+        <div className={pathname.endsWith("/course") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Course</div>
         </div>
         </Link>
 
         <Link href='/student/grades' >
         <div className={pathname.endsWith("/grades") ? styles.navItemActive : styles.navItem}>
-        <i><TbReport style={{ fontSize: "23px" }} /></i> 
-        <div className={styles.navText} style={{fontFamily: 'Poppins'}}>Grades</div>
+        <i><TbReport style={{ fontSize: "25px" }} /></i> 
+        <div className={pathname.endsWith("/grades") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Grades</div>
         </div>
         </Link>
 
         <Link href={'/student/profile'} >
         <div className={pathname.endsWith("/profile") ? styles.navItemActive : styles.navItem}>
-        <i><CgProfile style={{ fontSize: "23px" }} /></i>
-        <div className={styles.navText} style={{fontFamily: 'Poppins'}}>Profile</div>
+        <i><CgProfile style={{ fontSize: "25px" }} /></i>
+        <div className={pathname.endsWith("/profile") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Profile</div>
         </div>
         </Link>
 

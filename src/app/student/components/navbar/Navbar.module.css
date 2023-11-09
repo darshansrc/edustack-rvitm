@@ -3,7 +3,7 @@
     background-color: rgb(255, 255, 255);
     display: flex;
     z-index: 1;
-    box-shadow: 0 0 0 1px #00000014, 0 4px 6px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 0 0 1px #00000014, 6px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .pageContainer{
@@ -116,6 +116,8 @@
         justify-content: space-between;
         padding-left: 3vw;
         padding-right: 3vw;
+        border-top-right-radius: 15px;
+        border-top-left-radius: 15px;
        
     }
 
@@ -126,30 +128,39 @@
         justify-content: center;
         font-weight: 500;
         color: hsl(0, 0%, 45%);
-        font-size: 10px;
-        height: 60px;
-        width: 60px;
+        font-size: 12px;
+        height: 6vh;
+        width: 12.5vw;
         min-height: 40px ;
         border-radius: 50%;
-        margin: 4px 0px;
+        margin: 6px 0px;
 
     }
 
-    .navItemActive{
+    .navItemActive {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
         justify-content: center;
+        gap: 5px;
         font-weight: 500;
         color: #1B4DFF;
-        font-size: 10px;   
-        height: 60px;
-        width: 60px;
+        font-size: 12px;   
+        height: 6vh;
+        width: 30vw;
         min-height: 40px;
         background-color: #F2F5FF;
-        border-radius: 50%;
-        margin: 4px 0px;
-        transition: fade-in 0.5s;
+        border-radius: 25px;
+        margin: 6px 0px;
+        transition: color 0.15s ease-in;
+    }
+    
+    .loaded {
+        opacity: 1; /* fade-in effect when loaded class is present */
+    }
+
+    .navTextActive{
+        display: block;
     }
 
 
