@@ -176,8 +176,7 @@ function StudentAttendanceTable() {
     const storedAttendanceData = localStorage.getItem('attendanceData');
 
     if (storedStudentDetails && storedSubjectOptions && storedAttendanceData) {
-
-      setDataFetched(true);
+     
       const parsedStudentDetails = JSON.parse(storedStudentDetails);
       const parsedSubjectOptions = JSON.parse(storedSubjectOptions);
       const parsedAttendanceData = JSON.parse(storedAttendanceData);
@@ -189,15 +188,12 @@ function StudentAttendanceTable() {
         setSubjectOptions(parsedSubjectOptions.sort(customComparator));
         setAttendanceData(parsedAttendanceData);
         setDataFetched(true);
-       
-      }else{
-        setDataFetched(false);
       }
       
     } 
-    
-    fetchAttendanceData();
-    
+
+      fetchAttendanceData();
+   
 
   }, [user]);
 
