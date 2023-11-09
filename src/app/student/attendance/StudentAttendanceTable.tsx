@@ -109,7 +109,7 @@ function StudentAttendanceTable() {
     uid: '',
   
   });
-  const [dataFetched, setDataFetched] = useState(true);
+  const [dataFetched, setDataFetched] = useState(false);
   const [user , setUser] = useState<any>(null);
 
   // Function to handle tab changes
@@ -175,12 +175,9 @@ function StudentAttendanceTable() {
     const storedSubjectOptions = localStorage.getItem('subjectOptions');
     const storedAttendanceData = localStorage.getItem('attendanceData');
 
-    if (!storedStudentDetails && !storedSubjectOptions && !storedAttendanceData){
-      setDataFetched(false);
-    }
-     
     if (storedStudentDetails && storedSubjectOptions && storedAttendanceData) {
-     
+
+      setDataFetched(true);
       const parsedStudentDetails = JSON.parse(storedStudentDetails);
       const parsedSubjectOptions = JSON.parse(storedSubjectOptions);
       const parsedAttendanceData = JSON.parse(storedAttendanceData);
@@ -193,6 +190,8 @@ function StudentAttendanceTable() {
         setAttendanceData(parsedAttendanceData);
         setDataFetched(true);
        
+      }else{
+        setDataFetched(false);
       }
       
     } 
