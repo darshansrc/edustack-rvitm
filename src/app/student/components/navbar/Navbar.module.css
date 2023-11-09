@@ -122,12 +122,12 @@
         justify-content: center;
         font-weight: 500;
         color: #737373;
-        font-size: 9px;
-        height: 6vh;
+        font-size: 10px;
+        height: 7vh;
         width: 16vw;
         min-height: 50px;
-        border-radius: 8px;
-        margin: 4px;
+        border-radius: 10px;
+        margin: 4px 8px;
 
     }
 
@@ -138,13 +138,13 @@
         justify-content: center;
         font-weight: 500;
         color: #1B4DFF;
-        font-size: 9px;   
-        height: 6vh;
+        font-size: 10px;   
+        height: 7vh;
         width: 16vw;
         min-height: 40px;
         background-color: #F2F5FF;
-        border-radius: 8px;
-        margin: 4px;
+        border-radius: 10px;
+        margin: 4px 8px;
     }
 
 
