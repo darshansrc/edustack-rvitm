@@ -21,7 +21,11 @@ const Navbar = () => {
   useEffect(() => {
     // Calculate safe area insets and set the bottom padding
     const updateBottomPadding = () => {
-      const safeAreaBottom = window.visualViewport?.height - window.innerHeight ?? 0;
+      let safeAreaBottom = 0;
+      if(window.visualViewport?.height){
+        safeAreaBottom = window.visualViewport?.height - window.innerHeight ?? 0;
+      }
+      
       setBottomPadding(safeAreaBottom);
     };
 
@@ -43,7 +47,7 @@ const Navbar = () => {
  
 
   return (
-    <nav className={styles.navBar}>
+    <nav className={styles.navBar} style={navbarStyle}>
         <div className={styles.navLogo}>
             <Image src='/logo.png' alt='logo' height={30} width={30}/>
             <h2 style={{fontWeight: '500', fontFamily: 'Poppins', fontSize: '12px',color: '#555'}}>EduStack</h2>
