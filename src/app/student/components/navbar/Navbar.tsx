@@ -56,35 +56,35 @@ const Navbar = () => {
 
         <Link href={'/student/home'} >
         <div className={pathname.endsWith("/home") ? styles.navItemActive : styles.navItem}>
-        <i> <BiHomeAlt style={{ fontSize: "25px" }} /></i>
+        <i> <BiHomeAlt style={{ fontSize: "24px" }} /></i>
         <div  className={pathname.endsWith("/home") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Home</div> 
         </div>
         </Link>
     
         <Link href='/student/attendance' >
         <div className={pathname.endsWith("/attendance") ? styles.navItemActive : styles.navItem}>
-        <i style={{fontWeight: '500'}}><BsPersonCheck style={{ fontSize: "25px" }} /></i>  
+        <i style={{fontWeight: '500'}}><BsPersonCheck style={{ fontSize: "24px" }} /></i>  
         <div className={pathname.endsWith("/attendance") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Attendance</div>
         </div>
         </Link>
 
         <Link href='/student/course' >
         <div className={pathname.endsWith("/course") ? styles.navItemActive : styles.navItem}>
-        <i><RiGraduationCapLine style={{ fontSize: "25px" }} /></i>
+        <i><RiGraduationCapLine style={{ fontSize: "24px" }} /></i>
         <div className={pathname.endsWith("/course") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Course</div>
         </div>
         </Link>
 
         <Link href='/student/grades' >
         <div className={pathname.endsWith("/grades") ? styles.navItemActive : styles.navItem}>
-        <i><TbReport style={{ fontSize: "25px" }} /></i> 
+        <i><TbReport style={{ fontSize: "24px" }} /></i> 
         <div className={pathname.endsWith("/grades") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Grades</div>
         </div>
         </Link>
 
         <Link href={'/student/profile'} >
         <div className={pathname.endsWith("/profile") ? styles.navItemActive : styles.navItem}>
-        <i><CgProfile style={{ fontSize: "25px" }} /></i>
+        <i><CgProfile style={{ fontSize: "24px" }} /></i>
         <div className={pathname.endsWith("/profile") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Profile</div>
         </div>
         </Link>
