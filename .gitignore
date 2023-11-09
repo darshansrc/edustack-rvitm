@@ -42,3 +42,4 @@ next-env.d.ts
 .firebase
 
 *.map
+src/app/student/home/StudentHomePage.tsx

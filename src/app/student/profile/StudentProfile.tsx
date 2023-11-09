@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { FiEdit } from 'react-icons/fi';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase-config';
+import Image from 'next/image';
 
 
 
@@ -151,7 +152,7 @@ const StudentProfile = () => {
 
     fetchAttendanceData();
     
-  }, [user ]);
+  }, [user  ]);
 
 
 
@@ -163,7 +164,7 @@ const StudentProfile = () => {
               <div className='relative flex flex-row justify-between items-center'>
                 {
                     dataFetched ? ( 
-                        <img
+                        <Image
   src={imageURL ? imageURL : '/None.jpg'}
   alt="Student Image"
   style={{
