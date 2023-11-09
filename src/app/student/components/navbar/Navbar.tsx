@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './Navbar.module.css'
 import { RiGraduationCapLine } from "react-icons/ri";
 import {BiHomeAlt } from "react-icons/bi";
@@ -12,17 +12,34 @@ import Link from 'next/link';
 
 const Navbar = () => {
 
-  useEffect(() => {
-    const navItemActive = document.querySelector('.navItemActive');
-    if (navItemActive) {
-      navItemActive.classList.add('loaded');
-    }
-  }, []);
-      
 
- 
   const pathname : string= usePathname() || '';
 
+
+  const [bottomPadding, setBottomPadding] = useState(0);
+
+  useEffect(() => {
+    // Calculate safe area insets and set the bottom padding
+    const updateBottomPadding = () => {
+      const safeAreaBottom = window.visualViewport?.height - window.innerHeight ?? 0;
+      setBottomPadding(safeAreaBottom);
+    };
+
+    // Initial calculation
+    updateBottomPadding();
+
+    // Listen for resize events
+    window.addEventListener('resize', updateBottomPadding);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', updateBottomPadding);
+    };
+  }, []);
+
+  const navbarStyle = {
+    paddingBottom: `${bottomPadding}px`,
+  };
  
 
   return (
