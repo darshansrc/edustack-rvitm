@@ -133,7 +133,7 @@ const StudentHomePage =  () => {
       <div className={styles.welcomeCard}>
         <div style={{marginRight: '14px'}}>
           { dataFetched ? (
-             <Image   src={photoUrl} alt={''} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
+             <Image   src={photoUrl} alt={''} height={60} width={60} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
           ) : (
             <Skeleton variant="circular" width={60} height={60} />
           )}
