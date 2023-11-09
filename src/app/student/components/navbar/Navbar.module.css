@@ -3,7 +3,7 @@
     background-color: rgb(255, 255, 255);
     display: flex;
     z-index: 1;
-    box-shadow: 0 0 0 1px #00000014, 6px 4px 6px rgba(0, 0, 0, 0.1);
+    
 }
 
 .pageContainer{
@@ -48,6 +48,7 @@
             height: 100vh;
             width: 80px;
             box-shadow: 4px 0 5px rgba(232, 232, 232, 0.1);
+
         }
     
         .pageContainer{
@@ -100,26 +101,24 @@
     }
 
     .navText{
-        display: none;
+        display: block;
+     
     }
 
     /* for mobile view */
     .navBar{
         position: fixed;
-        bottom: 2.5vw;
+        bottom: 0;
         left: 0;
         justify-content: space-between;
-        width: 95vw;
+        width: 100vw;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        padding-left: 3vw;
-        padding-right: 3vw;
-        border-radius: 20px;
-        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+        /* box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 -4px 6px rgba(0, 0, 0, 0.04); */
         background-color: #ffffff;
-        margin: 0 2.5vw;
+        border-top: 0.5px solid rgba(0,0,0,0.08)
     }
 
     .navItem{
@@ -127,16 +126,11 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-weight: 500;
-        color: #292929;
-        font-size: 12px;
-        height: 15vw;
-        width: 12.5vw;
-        min-height: 40px ;
-        border-radius: 50%;
-   
-        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, width 0.3s ease-in-out;
-
+        color: #64748b;
+        font-size: 10px;
+        height: 7vh;
+        min-width: 20vw;
+        min-height: 50px ;
     }
 
     .navItemActive {
@@ -144,27 +138,17 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 5px;
-        font-weight: 500;
         color: #1B4DFF;
-        font-size: 12px;   
-        height: 6vh;
-        width: 15vw;
-        min-height: 40px;
-        background-color: #ffffff;
-        border-radius: 25px;
-        
-        transition: color 0.15s ease-in;
-        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, width 0.3s ease-in-out;
-        position: relative;
+        font-size: 10px;   
+        height: 7vh;
+        min-width: 20vw;
+        min-height: 50px;
     }
     
-    .loaded {
-        opacity: 1; /* fade-in effect when loaded class is present */
-    }
-
+  
     .navTextActive{
-        display: none;
+        display: block;
+
     }
 
 

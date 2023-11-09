@@ -1,11 +1,11 @@
 'use client';
 import React, { useEffect } from 'react'
 import styles from './Navbar.module.css'
-import { RiBookMarkLine } from "react-icons/ri";
-import {BiSolidHome, BiHome } from "react-icons/bi";
+import { RiGraduationCapLine } from "react-icons/ri";
+import {BiHomeAlt } from "react-icons/bi";
 import { TbReport } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
-import { BsPersonFillCheck,  BsPersonCheck } from "react-icons/bs";
+import { BsPersonCheck } from "react-icons/bs";
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -35,7 +35,7 @@ const Navbar = () => {
 
         <Link href={'/student/home'} >
         <div className={pathname.endsWith("/home") ? styles.navItemActive : styles.navItem}>
-        <i> <BiHome style={{ fontSize: "25px" }} /></i>
+        <i> <BiHomeAlt style={{ fontSize: "25px" }} /></i>
         <div  className={pathname.endsWith("/home") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Home</div> 
         </div>
         </Link>
@@ -49,7 +49,7 @@ const Navbar = () => {
 
         <Link href='/student/course' >
         <div className={pathname.endsWith("/course") ? styles.navItemActive : styles.navItem}>
-        <i><RiBookMarkLine style={{ fontSize: "25px" }} /></i>
+        <i><RiGraduationCapLine style={{ fontSize: "25px" }} /></i>
         <div className={pathname.endsWith("/course") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Course</div>
         </div>
         </Link>
