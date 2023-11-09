@@ -99,6 +99,10 @@
         display: none;
     }
 
+    .navText{
+        display: none;
+    }
+
     /* for mobile view */
     .navBar{
         position: fixed;
@@ -121,13 +125,13 @@
         align-items: center;
         justify-content: center;
         font-weight: 500;
-        color: #737373;
+        color: hsl(0, 0%, 45%);
         font-size: 10px;
-        height: 7vh;
-        width: 16vw;
-        min-height: 50px;
-        border-radius: 10px;
-        margin: 4px 8px;
+        height: 60px;
+        width: 60px;
+        min-height: 40px ;
+        border-radius: 50%;
+        margin: 4px 0px;
 
     }
 
@@ -139,12 +143,13 @@
         font-weight: 500;
         color: #1B4DFF;
         font-size: 10px;   
-        height: 7vh;
-        width: 16vw;
+        height: 60px;
+        width: 60px;
         min-height: 40px;
         background-color: #F2F5FF;
-        border-radius: 10px;
-        margin: 4px 8px;
+        border-radius: 50%;
+        margin: 4px 0px;
+        transition: fade-in 0.5s;
     }
 
 
