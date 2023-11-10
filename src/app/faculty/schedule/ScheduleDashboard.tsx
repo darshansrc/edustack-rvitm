@@ -118,45 +118,37 @@ const ScheduleDashboard = () => {
     fetchData();
   }, []);
 
-  const formatTime = (timeString) => {
-    const time = new Date(timeString);
-    return time.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-  };
-  
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
-  
   const renderScheduleTimeline = () => {
     // Filter events for the selected date
-    const selectedDateEvents = scheduleData?.queryResult
-        .filter((event) => new Date(event.date).toDateString() === selectedDate.toDateString())
-        .sort((a, b) => new Date(`${a.date}T${a.startTime}`).getTime() - new Date(`${b.date}T${b.startTime}`).getTime())
-  
+    const selectedDateEvents = scheduleData?.queryResult.filter(
+      (event) => new Date(event.date).toDateString() === selectedDate.toDateString()
+    );
+
     if (!selectedDateEvents || selectedDateEvents.length === 0) {
       return <div className={styles.noClassContainer}>No classes scheduled for this day.</div>;
     }
-  
+
     return (
-      <div className="space-y-4">
+        <div className="flex flex-col items-center space-y-4 mt-8">
         {selectedDateEvents.map((event, index) => (
-          <div key={index} className="bg-white p-4 rounded-lg shadow-md">
-            <div className="flex items-center mb-2">
-              <div className="text-blue-500 font-bold mr-2">{formatTime(event.startTime)} {' - '} </div>
-              <div className="text-gray-500">{formatTime(event.endTime)}</div>
+          <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md p-4 w-full md:w-2/3">
+            <div className="flex justify-between mb-2">
+              <div className="text-xl font-bold">{event.subjectName}</div>
+              <div className="text-gray-500">{event.startTime} - {event.endTime}</div>
             </div>
-            <div className="text-lg font-semibold mb-2">{event.subjectName}</div>
-            <div className="text-gray-700 mb-2">{event.selectedClassName}</div>
-            <div className="text-gray-500">
-              {formatDate(event.date)} | {event.faculty.join(', ')}
-            </div>
+            <div className="text-gray-600 mb-2">{event.selectedClassName}</div>
             {/* Add more details as needed */}
+            <div className="flex justify-end">
+              <button className="bg-blue-500 text-white px-4 py-2 rounded-full">
+                Edit
+              </button>
+            </div>
           </div>
         ))}
       </div>
     );
   };
+
 
   
 
@@ -214,7 +206,7 @@ const ScheduleDashboard = () => {
     </div>
 
 
-
+    
 
     <NewScheduleModal />
     </> 
