@@ -1,7 +1,7 @@
 'use client';
 import {  auth, db } from '@/lib/firebase-config';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import styles from './StudentHomePage.module.css'
+import styles from './FacultyHomePage.module.css'
 import Image from 'next/image';
 import { BsClockHistory, BsPersonCheck } from 'react-icons/bs';
 import { RxReader } from 'react-icons/rx'

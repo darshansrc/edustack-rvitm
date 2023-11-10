@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
           // Perform a null check before accessing parent.parent
           if (facultyDoc.ref.parent && facultyDoc.ref.parent.parent) {
             const className = facultyDoc.ref.parent.parent.id;
-            const classDocRef = doc(db, 'database', className); // Update with your class collection name
+            const classDocRef = doc(db, 'database', className); 
             const classDocSnapshot = await getDoc(classDocRef);
     
             if (classDocSnapshot.exists()) {
@@ -88,5 +88,5 @@ export async function GET(request: NextRequest) {
 }
 
 
-  return NextResponse.json({ isLogged: true,decodedClaims, userUID , userType, classSubjectPairsList }, { status: 200 });
+  return NextResponse.json({ decodedClaims, userUID , userType, classSubjectPairsList }, { status: 200 });
 }

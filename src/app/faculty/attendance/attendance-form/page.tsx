@@ -1,8 +1,14 @@
+'use client';
 import React from 'react'
+import AttendanceForm from './AttendanceForm';
+import BottomNavbar from '../../components/bottomNavbar/BottomNavbar';
 
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+      <BottomNavbar/>
+     <AttendanceForm/>
+    </div>
   )
 }
 
