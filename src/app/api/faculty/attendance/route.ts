@@ -2,7 +2,7 @@ import { auth } from "firebase-admin";
 import { customInitApp } from "@/lib/firebase-admin-config";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { collection, collectionGroup, doc, getDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, collectionGroup, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { db } from "@/lib/firebase-config";
 
 customInitApp();
@@ -72,21 +72,45 @@ export async function GET(request: NextRequest) {
               const subjectName = facultyDoc.data().name;
               const subjectType = facultyDoc.data().theoryLab;
               const subSemester = facultyDoc.data().semester.toString();
-              console.log(classSemester, subSemester);
+  
     
               if (subSemester === classSemester) {
-                console.log("yes");
+         
                 classSubjectPairsList.push({ className, code, subjectName, subjectType, subSemester, classSemester, ...classData });
               }
             }
           }
         }));
     
-        console.log(classSubjectPairsList);
+       
     
 
 }
 
 
   return NextResponse.json({ decodedClaims, userUID , userType, classSubjectPairsList }, { status: 200 });
+}
+
+
+
+
+export async function POST(request: NextRequest, response: NextResponse) {
+  const res = await request.json();
+  console.log(res);
+
+
+  await setDoc(doc(
+    db,
+    'database',
+    res.selectedClassName,
+    'classSchedule',
+    res.date+'-'+res.startTime+'-'+res.endTime
+  ),res)
+  
+
+
+  return NextResponse.json({}, { status: 200 });
+
+
+
 }

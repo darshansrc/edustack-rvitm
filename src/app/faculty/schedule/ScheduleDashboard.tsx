@@ -21,6 +21,23 @@ interface ClassSubjectPair {
   
   interface ClassSubjectPairsList extends Array<ClassSubjectPair> {}
 
+
+  interface ScheduleEvent {
+    selectedSubject: string;
+    isLabSubject: boolean;
+    subjectType: string;
+    date: string;
+    selectedClassName: string;
+    subjectName: string;
+    faculty: string[];
+    startTime: string;
+    endTime: string;
+  }
+  
+  interface ScheduleData {
+    queryResult: ScheduleEvent[];
+  }
+
 const ScheduleDashboard = () => {
 
 
@@ -85,8 +102,61 @@ const ScheduleDashboard = () => {
     )
   }
 
+  const [scheduleData, setScheduleData] = useState<ScheduleData | null>(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${window.location.origin}/api/faculty/schedule`);
+        const data: ScheduleData = await response.json();
+        setScheduleData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
+    fetchData();
+  }, []);
+
+  const formatTime = (timeString) => {
+    const time = new Date(timeString);
+    return time.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+  };
+  
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+  };
+  
+  const renderScheduleTimeline = () => {
+    // Filter events for the selected date
+    const selectedDateEvents = scheduleData?.queryResult
+        .filter((event) => new Date(event.date).toDateString() === selectedDate.toDateString())
+        .sort((a, b) => new Date(`${a.date}T${a.startTime}`).getTime() - new Date(`${b.date}T${b.startTime}`).getTime())
+  
+    if (!selectedDateEvents || selectedDateEvents.length === 0) {
+      return <div className={styles.noClassContainer}>No classes scheduled for this day.</div>;
+    }
+  
+    return (
+      <div className="space-y-4">
+        {selectedDateEvents.map((event, index) => (
+          <div key={index} className="bg-white p-4 rounded-lg shadow-md">
+            <div className="flex items-center mb-2">
+              <div className="text-blue-500 font-bold mr-2">{formatTime(event.startTime)} {' - '} </div>
+              <div className="text-gray-500">{formatTime(event.endTime)}</div>
+            </div>
+            <div className="text-lg font-semibold mb-2">{event.subjectName}</div>
+            <div className="text-gray-700 mb-2">{event.selectedClassName}</div>
+            <div className="text-gray-500">
+              {formatDate(event.date)} | {event.faculty.join(', ')}
+            </div>
+            {/* Add more details as needed */}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   
 
@@ -140,10 +210,11 @@ const ScheduleDashboard = () => {
           </div>
         </div>
       </div>
-      <div className={styles.noClassContainer}>
-        No classes scheduled for this day.
-      </div>
+     {renderScheduleTimeline()}
     </div>
+
+
+
 
     <NewScheduleModal />
     </> 

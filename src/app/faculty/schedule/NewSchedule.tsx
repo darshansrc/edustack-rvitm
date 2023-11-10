@@ -7,12 +7,16 @@ import {
   Select,
   TextField,
   Button,
+  Alert,
+  Snackbar,
 } from '@mui/material';
 
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase-config';
 
 interface ClassSubjectPair {
   branch: string;
@@ -30,6 +34,12 @@ interface ClassSubjectPair {
 
 interface ClassSubjectPairsList extends Array<ClassSubjectPair> {}
 
+interface TimeOption {
+    value: string;
+    label: string;
+  }
+  
+
 const NewSchedule = () => {
   const [classSubjectPairsList, setClassSubjectPairList] = useState<ClassSubjectPairsList>([]);
   const [selectedSubject, setSelectedSubject] = useState<string>('');
@@ -43,12 +53,31 @@ const NewSchedule = () => {
   const [endTime, setEndTime] = useState<any>(null);
   const [isRepeating, setIsRepeating] = useState<boolean>(false);
   const [date, setDate] = useState<any>('');
+  const [subjectName, setSubjectName] = useState<string>('');
 
   const [error, setError] = useState<string>('');
+  const [user, setUser] = useState<any>(null);
+
+  const [scheduleSuccessful, setScheduleSuccessful] = useState<boolean>(false);
 
   useEffect(() => {
      console.log(date)
   }, [date]);
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
+      console.log("Auth", currentuser);
+      setUser(currentuser);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+
+
 
 
 
@@ -60,6 +89,7 @@ const NewSchedule = () => {
     const selectedSubjectPair = classSubjectPairsList.find(pair => pair.code === selectedSubjectCode);
     if (selectedSubjectPair) {
       setSubjectType(selectedSubjectPair.subjectType);
+    setSubjectName(selectedSubjectPair.subjectName)
     }
   };
 
@@ -72,28 +102,94 @@ const NewSchedule = () => {
   };
 
 
+  const submitForm = async (formData) => {
+    try {
+      const res = await fetch(`${window.location.origin}/api/faculty/attendance`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+
+
+      if (!res.ok) {
+        throw new Error('Failed to submit form data');
+      }
+
+      setScheduleSuccessful(true)
+
+    } catch (error) {
+      // Handle errors, e.g., show an error message
+      console.error('Error submitting form data:', error);
+    }
+  };
+
 
   const handleSubmit = () => {
     // Validation checks
-    if (!selectedClassName || !selectedSubject || isLabSubject && !selectedBatch || !selectedDate || !startTime || !endTime) {
+    if (
+      !selectedClassName ||
+      !selectedSubject ||
+      (isLabSubject && !selectedBatch) ||
+      !selectedDate ||
+      !startTime ||
+      !endTime
+    ) {
       // If any field is empty or falsy, set an error message and prevent submission
       setError('Please fill in all fields');
       return;
     }
+
+
+  
+    // Convert startTime and endTime strings to Date objects
+    const parseTime = (time) => {
+      const [hours, minutes] = time.split(':');
+      return { hours: parseInt(hours, 10), minutes: parseInt(minutes, 10) };
+    };
+  
+    const startParsedTime = parseTime(startTime);
+    const endParsedTime = parseTime(endTime);
+  
+    const startDate = new Date(selectedDate.format('YYYY-MM-DD'));
+    startDate.setHours(startParsedTime.hours, startParsedTime.minutes, 0, 0);
+  
+    const endDate = new Date(selectedDate.format('YYYY-MM-DD'));
+    endDate.setHours(endParsedTime.hours, endParsedTime.minutes, 0, 0);
   
     // Your logic for form submission
-    console.log('Form submitted:', {
+    const scheduleData = {
       selectedClassName,
       selectedSubject,
       isLabSubject,
-      selectedBatch,
       subjectType,
-      sessionType,
-      selectedDate,
-      startTime,
-      endTime,
-    });
+      subjectName,
+      date: startDate.toISOString(),
+      startTime: startDate.toISOString(),
+      endTime: endDate.toISOString(),
+      faculty: user.email,
+    };
+  
+    // Call the submitForm function to send data to the API
+    submitForm(scheduleData);
   };
+  
+
+  const generateTimeOptions = (): TimeOption[] => {
+    const timeOptions: TimeOption[] = [];
+    for (let hour = 9; hour <= 16; hour++) {
+      for (let minute = 0; minute < 60; minute += 10) {
+        const time = `${hour < 10 ? '0' + hour : hour}:${minute === 0 ? '00' : minute}`;
+        const amPm = hour < 12 ? 'AM' : 'PM';
+        timeOptions.push({ value: time, label: `${hour % 12 || 12}:${minute === 0 ? '00' : minute} ${amPm}` });
+      }
+    }
+    return timeOptions;
+  };
+  const timeOptions = generateTimeOptions();
+
 
   const batchOptions = [
     { value: '1', label: 'Batch 1' },
@@ -218,19 +314,41 @@ const NewSchedule = () => {
 
        <div className='flex flex-row justify-between mt-5 mb-4 w-full' >
 
-        <div className='flex flex-col pr-1 relative'>
-            <p className='absolute top-1 translate-y-[-70%] text-neutral-600 left-2 bg-white pl-1 z-10 text-xs px-[5px]'>Start time</p>
-       <DatePicker timePicker={setStartTime} >
-      <DatePicker.Time />
-       </DatePicker>
-       </div>
+       <FormControl style={{ width: '95%' ,marginRight: '5%'}}>
+       <InputLabel>Start Time</InputLabel>
+            <Select
+              value={startTime}
+              onChange={(event) => setStartTime(event.target.value)}
+              displayEmpty
+              variant="outlined"
+              label="Start time"
+            
+            >
+              {timeOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-       <div className='flex flex-col pl-1 relative'>
-            <p className='absolute top-1 translate-y-[-70%] text-neutral-600 left-2 bg-white pl-1 z-10 text-xs px-[5px]'>End time</p>
-       <DatePicker timePicker={setEndTime}>
-      <DatePicker.Time />
-       </DatePicker>
-       </div>
+          <FormControl style={{ width: '95%' ,marginLeft: '5%'}}>
+          <InputLabel>End Time</InputLabel>
+            <Select
+              value={endTime}
+              onChange={(event) => setEndTime(event.target.value)}
+              displayEmpty
+              variant="outlined"
+              label="End time"
+              
+            >
+              {timeOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
        </div>
 
        {error && (
@@ -245,10 +363,22 @@ const NewSchedule = () => {
 
         <button
           onClick={handleSubmit}
-          className='bg-blue-500 w-full text-white rounded-lg mx-4 mt-4 mb-4 font-[Poppins] p-2 hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-300'
+          className='bg-blue-500 w-full text-white rounded-lg mx-4 mt-4 mb-4 font-[Poppins] p-2 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'
         >
           Submit
         </button>
+
+
+        <Snackbar
+        open={scheduleSuccessful}
+        autoHideDuration={6000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        onClose={() => setScheduleSuccessful(false) }
+      >
+              <Alert onClose={() => setScheduleSuccessful(false)} severity="success" sx={{ width: '100%' }}>
+      Class Scheduled successfully!
+      </Alert>
+      </Snackbar>
       </div>
     </div>
   );
