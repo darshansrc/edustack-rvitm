@@ -1,5 +1,7 @@
 import getUser from '@/lib/getUser'
 import React from 'react'
+import BottomNavbar from '../components/bottomNavbar/BottomNavbar';
+import TopNavbar from '@/app/student/components/topnavbar/TopNavbar';
 
 async function App() {
   const user = await getUser()
@@ -7,17 +9,23 @@ async function App() {
   const formattedString = JSON.stringify(user, null, "\t");
 
   return (
-    <div className='mx-auto max-w-4xl my-32 '>
+    <>
+      <TopNavbar name='EduStack' />
+      <BottomNavbar />
+      
+      <div className='mx-auto max-w-4xl my-32 '>
       <h1 className='text-3xl mb-8'>You are now in faculty protected area of the app</h1>
       <p className='mb-4 font-light text-xl'>Here is your information:</p>
       <div className="relative bg-gray-800 p-4 rounded-md shadow-md overflow-x-auto">
-        <pre  className="text-sm text-white font-mono">
+        <pre className="text-sm text-white font-mono">
           <code>{formattedString}</code>
         </pre>
-  
+
       </div>
 
     </div>
+    
+    </>
   )
 }
 

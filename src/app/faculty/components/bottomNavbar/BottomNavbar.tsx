@@ -1,16 +1,16 @@
 'use client';
 import React, { useEffect, useState } from 'react'
-import styles from './Navbar.module.css'
-import { RiGraduationCapLine } from "react-icons/ri";
+import styles from './BottomNavBar.module.css'
+import { RxCalendar } from "react-icons/rx";
 import {BiHomeAlt } from "react-icons/bi";
 import { TbReport } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
-import { BsPersonCheck } from "react-icons/bs";
+import { BsPeople } from "react-icons/bs";
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
-const Navbar = () => {
+const BottomNavbar = () => {
 
 
   const pathname : string= usePathname() || '';
@@ -54,35 +54,35 @@ const Navbar = () => {
         </div>
 
 
-        <Link href={'/student/home'} >
+        <Link href={'/faculty/home'} >
         <div className={pathname.endsWith("/home") ? styles.navItemActive : styles.navItem}>
         <i> <BiHomeAlt style={{ fontSize: "25px" }} /></i>
         <div  className={pathname.endsWith("/home") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Home</div> 
         </div>
         </Link>
     
-        <Link href='/student/attendance' >
-        <div className={pathname.endsWith("/attendance") ? styles.navItemActive : styles.navItem}>
-        <i style={{fontWeight: '500'}}><BsPersonCheck style={{ fontSize: "25px" }} /></i>  
+        <Link href='/faculty/attendance' >
+        <div className={pathname.endsWith("/attendance") || pathname.endsWith("/attendance-form") ? styles.navItemActive : styles.navItem}>
+        <i style={{fontWeight: '500'}}><BsPeople style={{ fontSize: "25px" }} /></i>  
         <div className={pathname.endsWith("/attendance") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Attendance</div>
         </div>
         </Link>
 
-        <Link href='/student/course' >
-        <div className={pathname.endsWith("/course") ? styles.navItemActive : styles.navItem}>
-        <i><RiGraduationCapLine style={{ fontSize: "25px" }} /></i>
-        <div className={pathname.endsWith("/course") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Course</div>
+        <Link href='/faculty/schedule' >
+        <div className={pathname.endsWith("/schedule") ? styles.navItemActive : styles.navItem}>
+        <i><RxCalendar style={{ fontSize: "25px" }} /></i>
+        <div className={pathname.endsWith("/schedule") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Schedule</div>
         </div>
         </Link>
 
-        <Link href='/student/grades' >
+        <Link href='/faculty/marks' >
         <div className={pathname.endsWith("/grades") ? styles.navItemActive : styles.navItem}>
         <i><TbReport style={{ fontSize: "25px" }} /></i> 
-        <div className={pathname.endsWith("/grades") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Grades</div>
+        <div className={pathname.endsWith("/grades") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Marks Entry</div>
         </div>
         </Link>
 
-        <Link href={'/student/profile'} >
+        <Link href={'/faculty/profile'} >
         <div className={pathname.endsWith("/profile") ? styles.navItemActive : styles.navItem}>
         <i><CgProfile style={{ fontSize: "25px" }} /></i>
         <div className={pathname.endsWith("/profile") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Profile</div>
@@ -94,4 +94,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default BottomNavbar
