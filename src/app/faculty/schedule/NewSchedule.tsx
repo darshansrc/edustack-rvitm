@@ -44,6 +44,7 @@ const NewSchedule = () => {
   const [isRepeating, setIsRepeating] = useState<boolean>(false);
   const [date, setDate] = useState<any>('');
 
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
      console.log(date)
@@ -70,24 +71,17 @@ const NewSchedule = () => {
     setSelectedDate(date);
   };
 
-  const handleStartTimeChange = (event) => {
-    setStartTime(event.target.value);
-  };
 
-  const handleEndTimeChange = (event) => {
-    setEndTime(event.target.value);
-  };
-
-  const handleSessionTypeChange = (event) => {
-    setSessionType(event.target.value);
-  };
-
-  const handleRepeatingChange = (event) => {
-    setIsRepeating(event.target.checked);
-  };
 
   const handleSubmit = () => {
-    // Add your logic to handle the form submission
+    // Validation checks
+    if (!selectedClassName || !selectedSubject || isLabSubject && !selectedBatch || !selectedDate || !startTime || !endTime) {
+      // If any field is empty or falsy, set an error message and prevent submission
+      setError('Please fill in all fields');
+      return;
+    }
+  
+    // Your logic for form submission
     console.log('Form submitted:', {
       selectedClassName,
       selectedSubject,
@@ -98,7 +92,6 @@ const NewSchedule = () => {
       selectedDate,
       startTime,
       endTime,
-      isRepeating,
     });
   };
 
@@ -134,9 +127,18 @@ const NewSchedule = () => {
     fetchClassSubjectPairs();
   }, []);
 
+
+  useEffect(() => {
+    setTimeout(() => {
+        if(error){
+            setError('');
+        }
+    }, 1000)
+  }, [error])
+
   return (
     <div className="flex items-center flex-col">
-      <h2 className="text-center font-[Poppins] text-slate-800 text-lg p-2"> Schedule New Class</h2>
+      <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600"> Schedule New Class</h2>
       <div className="flex flex-col items-center">
       <FormControl className='flex items-center' >
           <InputLabel>Select Class</InputLabel>
@@ -214,32 +216,36 @@ const NewSchedule = () => {
     </LocalizationProvider> 
       
 
-       <div className='flex flex-row justify-between mt-5 w-full' >
+       <div className='flex flex-row justify-between mt-5 mb-4 w-full' >
 
-        <div className='flex flex-col pr-1'>
-            <p className='pl-1'>Start time</p>
+        <div className='flex flex-col pr-1 relative'>
+            <p className='absolute top-1 translate-y-[-70%] text-neutral-600 left-2 bg-white pl-1 z-10 text-xs px-[5px]'>Start time</p>
        <DatePicker timePicker={setStartTime} >
       <DatePicker.Time />
        </DatePicker>
        </div>
 
-       <div className='flex flex-col pl-1'>
-            <p className='pl-1'>End time</p>
+       <div className='flex flex-col pl-1 relative'>
+            <p className='absolute top-1 translate-y-[-70%] text-neutral-600 left-2 bg-white pl-1 z-10 text-xs px-[5px]'>End time</p>
        <DatePicker timePicker={setEndTime}>
       <DatePicker.Time />
        </DatePicker>
        </div>
        </div>
 
-
+       {error && (
+        <div
+        className='bg-red-100 w-full text-red-500 rounded-lg mx-4  mb-2 font-[Poppins] p-2 '
+      >
+        {error}
+      </div>
+       )}
 
  
 
         <button
-
-          color="primary"
           onClick={handleSubmit}
-          className='bg-blue-500 w-full text-white rounded-lg mx-4 mt-8 mb-4 font-[Poppins] p-2 hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-300'
+          className='bg-blue-500 w-full text-white rounded-lg mx-4 mt-4 mb-4 font-[Poppins] p-2 hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-300'
         >
           Submit
         </button>
