@@ -2,7 +2,7 @@ import { auth } from "firebase-admin";
 import { customInitApp } from "@/lib/firebase-admin-config";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { collection, collectionGroup, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
+import { collection, collectionGroup, deleteDoc, doc, getDoc, getDocs, query, setDoc, where } from "firebase/firestore";
 import { db } from "@/lib/firebase-config";
 
 customInitApp();
@@ -45,22 +45,31 @@ export async function GET(request: NextRequest) {
 
 
 export async function POST(request: NextRequest, response: NextResponse) {
-  const res = await request.json();
-  console.log(res);
-
-
-  await setDoc(doc(
-    db,
-    'database',
-    res.selectedClassName,
-    'classSchedule',
-    res.date
-  ),res)
+    try {
+      const requestBody = await request.json();
   
+      // Check if the request body contains a flag for deletion
+      if (requestBody.deleteSession) {
+        // Delete the document using the specified parameters
+        console.log('deleting...');
+        console.log(requestBody.date)
+        await deleteDoc(doc(db, 'database', requestBody.selectedClassName, 'classSchedule', requestBody.date));
 
-
-  return NextResponse.json({}, { status: 200 });
-
-
-
-}
+        console.log('deleted')
+        
+        return NextResponse.json({ message: 'Session deleted successfully' }, { status: 200 });
+      }
+  
+      else if (!requestBody.deleteSession) {
+      await setDoc(
+        doc(db, 'database', requestBody.selectedClassName, 'classSchedule', requestBody.startTime),
+        requestBody
+      );
+  
+      return NextResponse.json({ message: 'Data updated successfully' }, { status: 200 });
+      }
+    } catch (error) {
+      console.error('Error processing request:', error);
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
+  }

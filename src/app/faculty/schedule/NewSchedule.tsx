@@ -5,8 +5,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  TextField,
-  Button,
   Alert,
   Snackbar,
 } from '@mui/material';
@@ -38,6 +36,17 @@ interface TimeOption {
     value: string;
     label: string;
   }
+
+
+const convertTo12HourFormat = (timeString: string) => {
+    const [hours, minutes] = timeString.split(':');
+    const hour = parseInt(hours, 10);
+    const period = hour >= 12 ? 'pm' : 'am';
+    const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+
+    return `${formattedHour}:${minutes}${period}`;
+  };
+
   
 
 const NewSchedule = () => {
@@ -64,6 +73,21 @@ const NewSchedule = () => {
      console.log(date)
   }, [date]);
 
+  const clearState = () => {
+    setSelectedSubject('');
+    setSelectedClassName('');
+    setIsLabSubject(false);
+    setSelectedBatch('');
+    setSubjectType('theory');
+    setSessionType('single');
+    setSelectedDate(dayjs());
+    setStartTime(null);
+    setEndTime(null);
+    setIsRepeating(false);
+    setDate('');
+    setSubjectName('');
+    setScheduleSuccessful(false);
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
@@ -120,6 +144,9 @@ const NewSchedule = () => {
 
       setScheduleSuccessful(true)
 
+      
+
+
     } catch (error) {
       // Handle errors, e.g., show an error message
       console.error('Error submitting form data:', error);
@@ -170,6 +197,7 @@ const NewSchedule = () => {
       startTime: startDate.toISOString(),
       endTime: endDate.toISOString(),
       faculty: user.email,
+      selectedBatch
     };
   
     // Call the submitForm function to send data to the API
@@ -233,154 +261,178 @@ const NewSchedule = () => {
   }, [error])
 
   return (
-    <div className="flex items-center flex-col">
-      <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600"> Schedule New Class</h2>
-      <div className="flex flex-col items-center">
-      <FormControl className='flex items-center' >
-          <InputLabel>Select Class</InputLabel>
-          <Select
-            value={selectedClassName}
-            onChange={(event) => {
-              setSelectedClassName(event.target.value);
-              setSelectedSubject('');
-              setIsLabSubject(false);
-              setSelectedBatch('');
-            }}
-            displayEmpty
-            variant="outlined"
-            label="Select Class"
-            style={{ width: '70vw', maxWidth: '450px', overflow: 'hidden', textOverflow: 'ellipsis' }}
-            sx={{ '&:focus': { borderColor: 'green' } }}
-          >
-            {Object.keys(uniqueClassOptions).map((className, index) => (
-              <MenuItem key={index} value={className}>
-                {uniqueClassOptions[className][0].classSemester}SEM {className}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+    <>
 
-        {selectedClassName && (
-          <FormControl style={{ width: '70vw', maxWidth: '450px', marginTop: '20px', textOverflow: 'ellipsis' }}>
-            <InputLabel>Select Subject</InputLabel>
+    { !scheduleSuccessful ? (
+        <div className="flex items-center flex-col ">
+        <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600"> Schedule New Class</h2>
+        <div className="flex flex-col items-center">
+        <FormControl className='flex items-center' >
+            <InputLabel>Select Class</InputLabel>
             <Select
-              value={selectedSubject}
-              onChange={handleSubjectChange}
+              value={selectedClassName}
+              onChange={(event) => {
+                setSelectedClassName(event.target.value);
+                setSelectedSubject('');
+                setIsLabSubject(false);
+                setSelectedBatch('');
+              }}
               displayEmpty
-              label="Select Subject"
               variant="outlined"
+              label="Select Class"
               style={{ width: '70vw', maxWidth: '450px', overflow: 'hidden', textOverflow: 'ellipsis' }}
+              sx={{ '&:focus': { borderColor: 'green' } }}
             >
-              {uniqueClassOptions[selectedClassName].map((pair, index) => (
-                <MenuItem key={index} value={pair.code}>
-                  {pair.subjectName} ({pair.code})
+              {Object.keys(uniqueClassOptions).map((className, index) => (
+                <MenuItem key={index} value={className}>
+                  {uniqueClassOptions[className][0].classSemester}SEM {className}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
-        )}
-
-        {isLabSubject && (
-          <FormControl style={{ width: '70vw', maxWidth: '450px', marginTop: '20px', textOverflow: 'ellipsis' }}>
-            <InputLabel>Lab Batch</InputLabel>
-            <Select
-              value={selectedBatch}
-              onChange={handleBatchChange}
-              displayEmpty
-              variant="outlined"
-              label="Lab Batch"
-              style={{ width: '70vw', maxWidth: '450px', textOverflow: 'ellipsis' }}
-            >
-              {batchOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
-
-
-
-
-
-
-   <LocalizationProvider dateAdapter={AdapterDayjs}>
-       <FormControl   style={{ width: '100%', maxWidth: '100%',marginTop: '20px', textOverflow: 'ellipsis' }}>
-    <MobileDatePicker defaultValue={dayjs()} label="Select Date" format='ddd, MMM D' onChange={handleDateChange} value={selectedDate}/>
-    </FormControl>
-    </LocalizationProvider> 
-      
-
-       <div className='flex flex-row justify-between mt-5 mb-4 w-full' >
-
-       <FormControl style={{ width: '95%' ,marginRight: '5%'}}>
-       <InputLabel>Start Time</InputLabel>
-            <Select
-              value={startTime}
-              onChange={(event) => setStartTime(event.target.value)}
-              displayEmpty
-              variant="outlined"
-              label="Start time"
-            
-            >
-              {timeOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl style={{ width: '95%' ,marginLeft: '5%'}}>
-          <InputLabel>End Time</InputLabel>
-            <Select
-              value={endTime}
-              onChange={(event) => setEndTime(event.target.value)}
-              displayEmpty
-              variant="outlined"
-              label="End time"
+  
+          {selectedClassName && (
+            <FormControl style={{ width: '70vw', maxWidth: '450px', marginTop: '20px', textOverflow: 'ellipsis' }}>
+              <InputLabel>Select Subject</InputLabel>
+              <Select
+                value={selectedSubject}
+                onChange={handleSubjectChange}
+                displayEmpty
+                label="Select Subject"
+                variant="outlined"
+                style={{ width: '70vw', maxWidth: '450px', overflow: 'hidden', textOverflow: 'ellipsis' }}
+              >
+                {uniqueClassOptions[selectedClassName].map((pair, index) => (
+                  <MenuItem key={index} value={pair.code}>
+                    {pair.subjectName} ({pair.code})
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+  
+          {isLabSubject && (
+            <FormControl style={{ width: '70vw', maxWidth: '450px', marginTop: '20px', textOverflow: 'ellipsis' }}>
+              <InputLabel>Lab Batch</InputLabel>
+              <Select
+                value={selectedBatch}
+                onChange={handleBatchChange}
+                displayEmpty
+                variant="outlined"
+                label="Lab Batch"
+                style={{ width: '70vw', maxWidth: '450px', textOverflow: 'ellipsis' }}
+              >
+                {batchOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+  
+  
+  
+  
+  
+  
+     <LocalizationProvider dateAdapter={AdapterDayjs}>
+         <FormControl   style={{ width: '100%', maxWidth: '100%',marginTop: '20px', textOverflow: 'ellipsis' }}>
+      <MobileDatePicker defaultValue={dayjs()} label="Select Date" format='ddd, MMM D' onChange={handleDateChange} value={selectedDate}/>
+      </FormControl>
+      </LocalizationProvider> 
+        
+  
+         <div className='flex flex-row justify-between mt-5 mb-4 w-full' >
+  
+         <FormControl style={{ width: '95%' ,marginRight: '5%'}}>
+         <InputLabel>Start Time</InputLabel>
+              <Select
+                value={startTime}
+                onChange={(event) => setStartTime(event.target.value)}
+                displayEmpty
+                variant="outlined"
+                label="Start time"
               
-            >
-              {timeOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-       </div>
-
-       {error && (
-        <div
-        className='bg-red-100 w-full text-red-500 rounded-lg mx-4  mb-2 font-[Poppins] p-2 '
-      >
-        {error}
-      </div>
-       )}
-
- 
-
-        <button
-          onClick={handleSubmit}
-          className='bg-blue-500 w-full text-white rounded-lg mx-4 mt-4 mb-4 font-[Poppins] p-2 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'
+              >
+                {timeOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+  
+            <FormControl style={{ width: '95%' ,marginLeft: '5%'}}>
+            <InputLabel>End Time</InputLabel>
+              <Select
+                value={endTime}
+                onChange={(event) => setEndTime(event.target.value)}
+                displayEmpty
+                variant="outlined"
+                label="End time"
+                
+              >
+                {timeOptions.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+         </div>
+  
+         {error && (
+          <div
+          className='bg-red-100 w-full text-red-500 rounded-lg mx-4  mb-2 font-[Poppins] p-2 '
         >
-          Submit
-        </button>
+          {error}
+        </div>
+         )}
+  
+   
+  
+          <button
+            onClick={handleSubmit}
+            className='bg-blue-500 w-full text-white rounded-lg mx-4 mt-4 mb-4 font-[Poppins] p-2 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'
+          >
+            Submit
+          </button>
 
 
-        <Snackbar
-        open={scheduleSuccessful}
-        autoHideDuration={6000}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        onClose={() => setScheduleSuccessful(false) }
-      >
-              <Alert onClose={() => setScheduleSuccessful(false)} severity="success" sx={{ width: '100%' }}>
-      Class Scheduled successfully!
-      </Alert>
-      </Snackbar>
       </div>
     </div>
+  
+    ) : (
+
+    <div className='w-full mt-4'>
+
+
+        <div className='flex flex-col border border-dashed border-slate-400 rounded my-2'>
+
+        <p className='text-green-500 p-2 borderd w-full  my-2 text-center'>
+            Class Scheduled Successfully!
+        </p>
+
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'>Class: {selectedClassName}</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'>Subject: {subjectName+'('+selectedSubject+')'}</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'>Date: {selectedDate.format('DD MMM, YYYY')}</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px] pb-4'>time: {convertTo12HourFormat(startTime)+'-'+convertTo12HourFormat(endTime)}</p>
+        </div>
+
+        <div>
+            <button
+            onClick={clearState}
+            className='bg-blue-500 w-full text-white rounded-lg  mt-4 mb-4 font-[Poppins] p-2 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'
+          >
+            Schedule Another Class
+          </button>
+        </div>
+    </div>
+  
+    )}
+
+</>
   );
 };
 
