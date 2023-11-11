@@ -3,6 +3,8 @@ import styles from './ScheduleDashboard.module.css';
 import { IoChevronBackSharp, IoChevronForwardSharp } from 'react-icons/io5';
 import { Modal, ModalClose, ModalDialog } from '@mui/joy';
 import NewSchedule from './NewSchedule';
+import { Timeline } from "keep-react";
+import { ArrowRight, CalendarBlank } from "phosphor-react";
 
 
 interface ClassSubjectPair {
@@ -128,22 +130,42 @@ const ScheduleDashboard = () => {
       return <div className={styles.noClassContainer}>No classes scheduled for this day.</div>;
     }
 
+
+    
+    const formatTime = (date) => {
+      date = new Date(date);
+      return date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      });
+    };
+    
+
+
     return (
-        <div className="flex flex-col items-center space-y-4 mt-8">
+        <div className="flex flex-col w-[95vw] max-w-[550px] my-8 px-6">
         {selectedDateEvents.map((event, index) => (
-          <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md p-4 w-full md:w-2/3">
-            <div className="flex justify-between mb-2">
-              <div className="text-xl font-bold">{event.subjectName}</div>
-              <div className="text-gray-500">{event.startTime} - {event.endTime}</div>
-            </div>
-            <div className="text-gray-600 mb-2">{event.selectedClassName}</div>
-            {/* Add more details as needed */}
-            <div className="flex justify-end">
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-full">
-                Edit
-              </button>
-            </div>
-          </div>
+
+            <><Timeline  key={index} timelineBarType="dashed" gradientPoint={true}>
+                <Timeline.Item>
+                    <Timeline.Point icon={<CalendarBlank  size={16} />} />
+                    <Timeline.Content>
+                        <Timeline.Time>{formatTime(event.startTime)} - {formatTime(event.endTime)}</Timeline.Time>
+
+                        <div className='border border-dashed border-slate-600 rounded bg-white flex flex-col justify-center'>
+                        <div>{event.subjectName}</div>
+                        <div>
+                        {event.selectedClassName}
+                        </div>
+                        </div>
+
+
+                    </Timeline.Content>
+                </Timeline.Item>
+            </Timeline>
+            
+         </>
         ))}
       </div>
     );
