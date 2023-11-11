@@ -9,7 +9,7 @@ const page = () => {
     <>
     <TopNavbar name='Attendance Dashboard'/>
         <div style={{marginTop: '150px'}}>
-        <Link href='faculty/attendance/attendance-form'  shallow={true}>
+        <Link href='/faculty/attendance/attendance-form'  shallow={true}>
             Mark Attendance
         </Link>
     </div>
