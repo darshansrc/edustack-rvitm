@@ -152,7 +152,7 @@ const AttendanceForm = () => {
     const stepOne = () => {
         return (
             <div className='flex items-center justify-center flex-col w-[100vw] min-h-[100vh] '>
-            <div className="flex items-center flex-col bg-white rounded-xl border-solid border border-slate-300 p-4">
+            <div className="flex items-center flex-col bg-white rounded-xl border-solid border w-[90vw] max-w-[500px] border-slate-300 p-4">
             <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600"> Mark Attendance</h2>
             <div className="flex flex-col items-center">
             <FormControl  className='flex items-center' >
@@ -168,7 +168,7 @@ const AttendanceForm = () => {
                   displayEmpty
                   variant="outlined"
                   label="Select Class"
-                  style={{ width: '70vw', maxWidth: '450px', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                  className="w-[80vw] max-w-[450px] text-[#374151] font-[Poppins] font-[400] text-sm"
                   sx={{ '&:focus': { borderColor: 'green' } }}
                 >
                   {Object.keys(uniqueClassOptions).map((ClassId, index) => (
@@ -181,7 +181,7 @@ const AttendanceForm = () => {
 
 
               {classId && (
-            <FormControl  style={{ width: '70vw', maxWidth: '450px', marginTop: '20px', textOverflow: 'ellipsis' }}>
+            <FormControl className="w-[80vw] max-w-[450px] mt-4 text-[#374151] font-[Poppins] font-[400] text-sm">
               <InputLabel>Select Subject</InputLabel>
               <Select
                 value={subjectCode}
@@ -189,7 +189,7 @@ const AttendanceForm = () => {
                 displayEmpty
                 label="Select Subject"
                 variant="outlined"
-                style={{ width: '70vw', maxWidth: '450px', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                className="w-[80vw] max-w-[450px] text-[#374151] font-[Poppins] font-[400] text-sm"
               >
                 {uniqueClassOptions[classId].map((pair, index) => (
                   <MenuItem key={index} value={pair.code}>
@@ -201,7 +201,7 @@ const AttendanceForm = () => {
           )}
 
            {isLabSubject && (
-            <FormControl  style={{ width: '70vw', maxWidth: '450px', marginTop: '20px', textOverflow: 'ellipsis' }}>
+            <FormControl    className="w-[80vw] max-w-[450px] mt-4 text-[#374151] font-[Poppins] font-[400] text-sm">
               <InputLabel>Lab Batch</InputLabel>
               <Select
                 value={labBatch}
@@ -209,7 +209,7 @@ const AttendanceForm = () => {
                 displayEmpty
                 variant="outlined"
                 label="Lab Batch"
-                style={{ width: '70vw', maxWidth: '450px', textOverflow: 'ellipsis' }}
+              
               >
                 {batchOptions.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
@@ -220,16 +220,16 @@ const AttendanceForm = () => {
             </FormControl>
           )}
 
-        <LocalizationProvider dateAdapter={AdapterDayjs} >
-         <FormControl    style={{ width: '100%', maxWidth: '100%',marginTop: '20px', textOverflow: 'ellipsis' ,}}>
-      <MobileDatePicker  defaultValue={dayjs()} label="Select Date" format='ddd, MMM D' onChange={(date) => setClassDate(date)} value={classDate}/>
+        <LocalizationProvider dateAdapter={AdapterDayjs} className='text-[#374151] font-[Poppins] font-[400] text-sm'>
+         <FormControl  className="w-[80vw] max-w-[450px] mt-4 text-[#374151] font-[Poppins] font-[400] text-sm">
+      <MobileDatePicker className='text-[#374151] font-[Poppins] font-[400] text-sm'  defaultValue={dayjs()} label="Select Date" format='ddd, MMM D' onChange={(date) => setClassDate(date)} value={classDate}/>
       </FormControl>
       </LocalizationProvider> 
         
   
-         <div className='flex flex-row justify-between mt-5 mb-4 w-full' >
+         <div className=' w-[80vw] max-w-[450px] mt-4 flex flex-row justify-between mb-4' >
   
-         <FormControl  style={{ width: '95%' ,marginRight: '5%'}}>
+         <FormControl className="mr-2 w-full text-[#374151] font-[Poppins] font-[400] text-sm">
          <InputLabel>Start Time</InputLabel>
               <Select
                 value={classStartTime}
@@ -237,6 +237,7 @@ const AttendanceForm = () => {
                 displayEmpty
                 variant="outlined"
                 label="Start time"
+                className='text-[#374151] font-[Poppins] font-[400] text-sm'
               
               >
                 {timeOptions.map((option) => (
@@ -247,7 +248,7 @@ const AttendanceForm = () => {
               </Select>
             </FormControl>
   
-            <FormControl  style={{ width: '95%' ,marginLeft: '5%'}}>
+            <FormControl  className="ml-2 w-full text-[#374151] font-[Poppins] font-[400] text-sm">
             <InputLabel>End Time</InputLabel>
               <Select
                 value={classEndTime}
@@ -255,6 +256,7 @@ const AttendanceForm = () => {
                 displayEmpty
                 variant="outlined"
                 label="End time"
+                className='text-[#374151] font-[Poppins] font-[400] text-sm'
                 
               >
                 {timeOptions.map((option) => (
