@@ -1,9 +1,12 @@
 'use client'
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel,  } from '@mui/material';
 import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react'
+
+import { DatePicker, Space, Select } from 'antd';
+
 
 
 interface attendanceFormData {
@@ -114,9 +117,8 @@ const AttendanceForm = () => {
         return acc;
       }, {});
 
-    const handleSubjectChange = (event: any) => {
-        const subjectCode = event.target.value;
-        setSubjectCode(subjectCode);
+    const handleSubjectChange = (value) => {
+        setSubjectCode(value);
         setLabBatch('');
     
         const selectedSubjectPair = classSubjectPairList.find(pair => pair.code === subjectCode);
@@ -155,117 +157,98 @@ const AttendanceForm = () => {
             <div className="flex items-center flex-col bg-white rounded-xl border-solid border w-[90vw] max-w-[500px] border-slate-300 p-4">
             <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600"> Mark Attendance</h2>
             <div className="flex flex-col items-center">
-            <FormControl  className='flex items-center' >
-                <InputLabel>Select Class</InputLabel>
+         
                 <Select
-                  value={classId}
-                  onChange={(event) => {
-                    setClassId(event.target.value);
+                  value={classId || undefined}
+                  onChange={(value) => {
+                    setClassId(value);
                     setSubjectCode('');
                     setIsLabSubject(false);
                     setLabBatch('');
                   }}
-                  displayEmpty
-                  variant="outlined"
-                  label="Select Class"
-                  className="w-[80vw] max-w-[450px] text-[#374151] font-[Poppins] font-[400] text-sm"
-                  sx={{ '&:focus': { borderColor: 'green' } }}
+                  placeholder="Select Class"
+                 
+                  className="w-[80vw] max-w-[450px] h-[50px] mt-5 "
+               
                 >
                   {Object.keys(uniqueClassOptions).map((ClassId, index) => (
-                    <MenuItem key={index} value={ClassId}>
+                    <Select.Option key={index} value={ClassId}>
                       {uniqueClassOptions[ClassId][0].classSemester}SEM {ClassId}
-                    </MenuItem>
+                    </Select.Option>
                   ))}
                 </Select>
-              </FormControl>
+    
 
 
               {classId && (
-            <FormControl className="w-[80vw] max-w-[450px] mt-4 text-[#374151] font-[Poppins] font-[400] text-sm">
-              <InputLabel>Select Subject</InputLabel>
+         
               <Select
-                value={subjectCode}
+                value={subjectCode || undefined}
                 onChange={handleSubjectChange}
-                displayEmpty
-                label="Select Subject"
-                variant="outlined"
-                className="w-[80vw] max-w-[450px] text-[#374151] font-[Poppins] font-[400] text-sm"
+                className="w-[80vw] max-w-[450px] h-[50px] mt-5 "
+                placeholder="Select Subject"
               >
                 {uniqueClassOptions[classId].map((pair, index) => (
-                  <MenuItem key={index} value={pair.code}>
+                  <Select.Option key={index} value={pair.code}>
                     {pair.subjectName} ({pair.code})
-                  </MenuItem>
+                  </Select.Option>
                 ))}
               </Select>
-            </FormControl>
+       
           )}
 
            {isLabSubject && (
-            <FormControl    className="w-[80vw] max-w-[450px] mt-4 text-[#374151] font-[Poppins] font-[400] text-sm">
-              <InputLabel>Lab Batch</InputLabel>
+           
               <Select
-                value={labBatch}
-                onChange={(event) => setLabBatch(event.target.value)}
-                displayEmpty
-                variant="outlined"
-                label="Lab Batch"
-              
+                value={labBatch || undefined}
+                onChange={(value) => setLabBatch(value)}
+                placeholder="Select Lab Batch"
+                className='w-[80vw] max-w-[450px] h-[50px] mt-5 '
+               
               >
                 {batchOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
+                  <Select.Option key={option.value} value={option.value}>
                     {option.label}
-                  </MenuItem>
+                  </Select.Option>
                 ))}
               </Select>
-            </FormControl>
+      
           )}
 
-        <LocalizationProvider dateAdapter={AdapterDayjs} className='text-[#374151] font-[Poppins] font-[400] text-sm'>
-         <FormControl  className="w-[80vw] max-w-[450px] mt-4 text-[#374151] font-[Poppins] font-[400] text-sm">
-      <MobileDatePicker className='text-[#374151] font-[Poppins] font-[400] text-sm'  defaultValue={dayjs()} label="Select Date" format='ddd, MMM D' onChange={(date) => setClassDate(date)} value={classDate}/>
-      </FormControl>
-      </LocalizationProvider> 
-        
+
+         <DatePicker  format={'ddd, MMM D'} value={classDate} className='w-[80vw] max-w-[450px] h-[50px] mt-5 '/>
+
+
   
-         <div className=' w-[80vw] max-w-[450px] mt-4 flex flex-row justify-between mb-4' >
+         <div className=' w-[80vw] max-w-[450px] flex flex-row justify-between mb-4' >
   
-         <FormControl className="mr-2 w-full text-[#374151] font-[Poppins] font-[400] text-sm">
-         <InputLabel>Start Time</InputLabel>
               <Select
-                value={classStartTime}
-                onChange={(event) => setClassStartTime(event.target.value)}
-                displayEmpty
-                variant="outlined"
-                label="Start time"
-                className='text-[#374151] font-[Poppins] font-[400] text-sm'
-              
+                value={classStartTime || undefined}
+                onChange={(value) => setClassStartTime(value)}
+                className="w-full h-[50px] mt-5  mr-2 text-black"
+                placeholder="Select Start Time"
               >
                 {timeOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
+                  <Select.Option key={option.value} value={option.value}>
                     {option.label}
-                  </MenuItem>
+                  </Select.Option>
                 ))}
               </Select>
-            </FormControl>
   
-            <FormControl  className="ml-2 w-full text-[#374151] font-[Poppins] font-[400] text-sm">
-            <InputLabel>End Time</InputLabel>
               <Select
-                value={classEndTime}
-                onChange={(event) => setClassEndTime(event.target.value)}
-                displayEmpty
-                variant="outlined"
-                label="End time"
-                className='text-[#374151] font-[Poppins] font-[400] text-sm'
+                value={classEndTime || undefined}
+                onChange={(value) => setClassEndTime(value)}
+                placeholder="Select End Time"
+                className="w-full h-[50px] mt-5  ml-2"
                 
               >
                 {timeOptions.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
+                  <Select.Option key={option.value} value={option.value}>
                     {option.label}
-                  </MenuItem>
+                  </Select.Option>
                 ))}
               </Select>
-            </FormControl>
+          
          </div>
 
 
