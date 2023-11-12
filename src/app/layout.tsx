@@ -8,7 +8,9 @@ export const metadata: Metadata = {
   title: 'EduStack',
   description: '',
   manifest: '/manifest.json',
-  icons: {apple: '/logo.png'}
+  icons: {apple: '/logo.png'},
+  viewport: 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0',
+  
 }
 
 export default function RootLayout({

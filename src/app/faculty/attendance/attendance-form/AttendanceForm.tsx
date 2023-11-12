@@ -157,6 +157,9 @@ const AttendanceForm = () => {
             <div className="flex items-center flex-col bg-white rounded-xl border-solid border w-[90vw] max-w-[500px] border-slate-300 p-4">
             <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600"> Mark Attendance</h2>
             <div className="flex flex-col items-center">
+
+
+              
          
                 <Select
                   value={classId || undefined}
@@ -216,7 +219,7 @@ const AttendanceForm = () => {
           )}
 
 
-         <DatePicker  format={'ddd, MMM D'} value={classDate} className='w-[80vw] max-w-[450px] h-[50px] mt-5 '/>
+         <DatePicker  format={'ddd, MMM D'} value={classDate} onChange={setClassDate} className='w-[80vw] max-w-[450px] h-[50px] mt-5 '/>
 
 
   
