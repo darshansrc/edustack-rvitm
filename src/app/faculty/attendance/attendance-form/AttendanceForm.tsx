@@ -201,7 +201,7 @@ const AttendanceForm = () => {
     setLabBatch('');
   }}
   placeholder="Select Class"
-  className="w-[80vw] max-w-[450px] h-[50px] mt-5"
+  className="w-[80vw] max-w-[450px]  mt-5"
   options={Object.keys(uniqueClassOptions).map((ClassId, index) => ({
     value: ClassId,
     label: `${uniqueClassOptions[ClassId][0].classSemester}SEM ${ClassId}`,
@@ -217,7 +217,7 @@ const AttendanceForm = () => {
               size='large'
                 value={subjectCode || undefined}
                 onChange={handleSubjectChange}
-                className="w-[80vw] max-w-[450px] h-[50px] mt-5 text-[16px]"
+                className="w-[80vw] max-w-[450px]  mt-5 text-[16px]"
                 placeholder="Select Subject"
                 options={uniqueClassOptions[classId].map((pair, index) => ({
                   value: pair.code,
@@ -234,7 +234,7 @@ const AttendanceForm = () => {
                 value={labBatch || undefined}
                 onChange={(value) => setLabBatch(value)}
                 placeholder="Select Lab Batch"
-                className='w-[80vw] max-w-[450px] h-[50px] mt-5 text-[16px]'
+                className='w-[80vw] max-w-[450px]  mt-5 text-[16px]'
                
               >
                 {batchOptions.map((option) => (
@@ -247,7 +247,7 @@ const AttendanceForm = () => {
           )}
 
 
-         <DatePicker  size='large' format={'ddd, MMM D'} value={classDate} onChange={setClassDate} className='w-[80vw] max-w-[450px] h-[50px] mt-5 text-[16px]'/>
+         <DatePicker inputReadOnly  size='large' format={'ddd, MMM D'} value={classDate} onChange={setClassDate} className='w-[80vw] max-w-[450px]  mt-5 text-[16px]'/>
 
 
   
@@ -257,7 +257,7 @@ const AttendanceForm = () => {
               size='large'
                 value={classStartTime || undefined}
                 onChange={(value) => setClassStartTime(value)}
-                className="w-full h-[50px] mt-5  mr-2 text-black text-[16px]"
+                className="w-full  mt-5  mr-2 text-black text-[16px]"
                 placeholder="Select Start Time"
               >
                 {timeOptions.map((option) => (
@@ -272,7 +272,7 @@ const AttendanceForm = () => {
                 value={classEndTime || undefined}
                 onChange={(value) => setClassEndTime(value)}
                 placeholder="Select End Time"
-                className="w-full h-[50px] mt-5  ml-2 text-[16px]"
+                className="w-full  mt-5  ml-2 text-[16px]"
                 
               >
                 {timeOptions.map((option) => (
