@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react'
 
 import { DatePicker, Space, Select } from 'antd';
+import TopNavbar from '@/app/student/components/topnavbar/TopNavbar';
 
 
 
@@ -104,6 +105,7 @@ const AttendanceForm = () => {
     // form required data states
     const [ classSubjectPairList , setClassSubjectPairList ] = useState<any[]>([]);
     const [ subjectType, setSubjectType] = useState<string>('theory');
+    const [ step1Error, setStep1Error] = useState<string>('');
 
 
     
@@ -117,22 +119,50 @@ const AttendanceForm = () => {
         return acc;
       }, {});
 
-    const handleSubjectChange = (value) => {
-        setSubjectCode(value);
+    const handleSubjectChange = (value: any) => {
+        const selectedSubjectCode = value;
+
+        setSubjectCode(selectedSubjectCode);
         setLabBatch('');
     
-        const selectedSubjectPair = classSubjectPairList.find(pair => pair.code === subjectCode);
+        const selectedSubjectPair = classSubjectPairList.find(pair => pair.code === selectedSubjectCode);
         if (selectedSubjectPair) {
           setSubjectType(selectedSubjectPair.subjectType);
+          console.log(subjectType , subjectCode)
+
+          setIsLabSubject(selectedSubjectPair.subjectType === 'lab');
         }
       };
+
+
+      const handleStep1Submit = () => {
+        if(!classId || !subjectCode || !classDate || !classStartTime || !classEndTime || isLabSubject && !labBatch)  {
+          setStep1Error('Please fill all the fields');
+        }
+        else {
+          setFormStep(2);
+          console.log({
+            classId,
+            subjectCode,
+            classDate,
+            classStartTime,
+            classEndTime,
+            isLabSubject,
+            labBatch,
+          
+          })
+          
+        }
+      }
+
+
+      setTimeout(() => {
+        setStep1Error('');
+      }, 6000 );
       
 
 
 
-    useEffect(() => {
-        setIsLabSubject(subjectType === 'lab');
-      }, [subjectType]);
 
     useEffect(() => {
         const fetchClassSubjectPairs = async () => {
@@ -161,52 +191,50 @@ const AttendanceForm = () => {
 
               
          
-                <Select
-                  value={classId || undefined}
-                  onChange={(value) => {
-                    setClassId(value);
-                    setSubjectCode('');
-                    setIsLabSubject(false);
-                    setLabBatch('');
-                  }}
-                  placeholder="Select Class"
-                 
-                  className="w-[80vw] max-w-[450px] h-[50px] mt-5 "
-               
-                >
-                  {Object.keys(uniqueClassOptions).map((ClassId, index) => (
-                    <Select.Option key={index} value={ClassId}>
-                      {uniqueClassOptions[ClassId][0].classSemester}SEM {ClassId}
-                    </Select.Option>
-                  ))}
-                </Select>
+            <Select
+            size='large'
+  value={classId || undefined}
+  onChange={(value) => {
+    setClassId(value);
+    setSubjectCode('');
+    setIsLabSubject(false);
+    setLabBatch('');
+  }}
+  placeholder="Select Class"
+  className="w-[80vw] max-w-[450px] h-[50px] mt-5"
+  options={Object.keys(uniqueClassOptions).map((ClassId, index) => ({
+    value: ClassId,
+    label: `${uniqueClassOptions[ClassId][0].classSemester}SEM ${ClassId}`,
+  }))}
+/>
+      
     
 
 
               {classId && (
          
               <Select
+              size='large'
                 value={subjectCode || undefined}
                 onChange={handleSubjectChange}
-                className="w-[80vw] max-w-[450px] h-[50px] mt-5 "
+                className="w-[80vw] max-w-[450px] h-[50px] mt-5 text-[16px]"
                 placeholder="Select Subject"
-              >
-                {uniqueClassOptions[classId].map((pair, index) => (
-                  <Select.Option key={index} value={pair.code}>
-                    {pair.subjectName} ({pair.code})
-                  </Select.Option>
-                ))}
-              </Select>
+                options={uniqueClassOptions[classId].map((pair, index) => ({
+                  value: pair.code,
+                  label: pair.subjectName,
+                }))}
+              />
        
           )}
 
            {isLabSubject && (
            
               <Select
+              size='large'
                 value={labBatch || undefined}
                 onChange={(value) => setLabBatch(value)}
                 placeholder="Select Lab Batch"
-                className='w-[80vw] max-w-[450px] h-[50px] mt-5 '
+                className='w-[80vw] max-w-[450px] h-[50px] mt-5 text-[16px]'
                
               >
                 {batchOptions.map((option) => (
@@ -219,16 +247,17 @@ const AttendanceForm = () => {
           )}
 
 
-         <DatePicker  format={'ddd, MMM D'} value={classDate} onChange={setClassDate} className='w-[80vw] max-w-[450px] h-[50px] mt-5 '/>
+         <DatePicker  size='large' format={'ddd, MMM D'} value={classDate} onChange={setClassDate} className='w-[80vw] max-w-[450px] h-[50px] mt-5 text-[16px]'/>
 
 
   
-         <div className=' w-[80vw] max-w-[450px] flex flex-row justify-between mb-4' >
+         <div className=' w-[80vw] max-w-[450px] flex flex-row justify-between mb-4 text-[16px]' >
   
               <Select
+              size='large'
                 value={classStartTime || undefined}
                 onChange={(value) => setClassStartTime(value)}
-                className="w-full h-[50px] mt-5  mr-2 text-black"
+                className="w-full h-[50px] mt-5  mr-2 text-black text-[16px]"
                 placeholder="Select Start Time"
               >
                 {timeOptions.map((option) => (
@@ -239,10 +268,11 @@ const AttendanceForm = () => {
               </Select>
   
               <Select
+              size='large'
                 value={classEndTime || undefined}
                 onChange={(value) => setClassEndTime(value)}
                 placeholder="Select End Time"
-                className="w-full h-[50px] mt-5  ml-2"
+                className="w-full h-[50px] mt-5  ml-2 text-[16px]"
                 
               >
                 {timeOptions.map((option) => (
@@ -254,9 +284,13 @@ const AttendanceForm = () => {
           
          </div>
 
+         {step1Error && (
+          <p className='bg-red-100 w-full text-red-500 rounded-lg mx-4  mb-2 font-[Poppins] p-2 '>{step1Error}</p>
+         )}
+
 
                 <button
-            onClick={() => setFormStep(2)}
+            onClick={handleStep1Submit}
             className='bg-blue-500 w-full text-white rounded-lg mx-4 mt-4 mb-4 font-[Poppins] p-2 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'
           >
             Submit
@@ -289,6 +323,7 @@ const AttendanceForm = () => {
   return (
 
         <div>
+            <TopNavbar name='Mark Attendance'/>
         {formStep === 1 && stepOne()}
         {formStep === 2 && stepTwo()}
         {formStep === 3 && stepThree()}
