@@ -153,7 +153,7 @@ const AttendanceForm = () => {
 
     const stepOne = () => {
         return (
-            <div className='flex items-center justify-center flex-col w-[100vw] min-h-[100vh] '>
+            <div className='fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex items-center justify-center flex-col w-[100vw] min-h-[100vh] '>
             <div className="flex items-center flex-col bg-white rounded-xl border-solid border w-[90vw] max-w-[500px] border-slate-300 p-4">
             <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600"> Mark Attendance</h2>
             <div className="flex flex-col items-center">
