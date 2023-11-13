@@ -347,7 +347,7 @@ const batchFilteredStudentCards = (batch) =>
           Cancel
         </AntButton>,
         <AntButton
-        className='bg-blue-600 text-white border-white border-solid border-[1px] hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'
+        className='bg-blue-600 text-white border-white border-solid border-[1px]'
         >
           Submit
         </AntButton>,
@@ -365,21 +365,18 @@ const batchFilteredStudentCards = (batch) =>
             {labBatch && (<p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Lab Batch:  </span>B-{labBatch}</p>)}
             <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Present:  </span>{presentCount}</p>
             <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Absent:  </span>{absentCount}</p>
-            <span className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[14px]'>Absent Students:</span>
+            {/* <span className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[14px]'>Absent Students:</span>
 
     
             <div className="container max-h-[40vh] overflow-y-scroll">
-  <p>
-   
-  </p>
   <div className='font-[Poppins] text-[12px] overflow-auto'>
     {absentStudents.map(student => (
       <p key={student.usn} className='px-0'>
         <span className='text-[12px] font-[Poppins] font-semibold '>{student.usn}:</span> {student.name}
       </p>
     ))}
-  </div>
-</div>
+  </div> */}
+{/* </div> */}
        
      
  
@@ -399,7 +396,7 @@ const batchFilteredStudentCards = (batch) =>
       <>
       <TopNavbar name='Mark Attendance' /> 
       <div className='flex items-center justify-center flex-col w-[100vw] min-h-[100vh] '>
-        <div className='flex items-center flex-col bg-white rounded-xl border-solid border w-[90vw] max-w-[500px] border-slate-300 p-4'>
+        <div className='flex items-center flex-col bg-white rounded-xl  w-[90vw] max-w-[500px]  p-4' style={{boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 -4px 6px rgba(0,0,0,.04)'}}>
           <h2 className='text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600'> Mark Attendance</h2>
           <div className='flex flex-col items-center'>
             <p className='text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full'>Class</p>
