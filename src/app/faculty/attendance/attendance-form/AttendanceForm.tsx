@@ -371,7 +371,7 @@ const batchFilteredStudentCards = (batch) =>
             <div className="container max-h-[40vh] overflow-y-scroll">
   <div className='font-[Poppins] text-[12px] overflow-auto'>
 
-{absentStudents.length > 0 && (
+{absentStudents && (
   <div>
     <span className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[14px]'>Absent Students:</span>
     {absentStudents.map(student => (
