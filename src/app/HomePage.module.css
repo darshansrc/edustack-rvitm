@@ -1,74 +1,44 @@
-.pageContainer{
-    margin-top: 20vh;
-    align-items: center;
-    text-align: center;
-    justify-content: center;
-  }
-  
-  
-  .buttonContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  
-  .primaryButton {
-    display: inline-block;
-    width: 100%; /* Use 100% to ensure the button spans the entire container width */
-    height: 3rem;
-    background-color: #2150fa;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 0.8rem;
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
-    margin-top: 2rem;
-    transition: background-color 0.3s, color 0.3s; /* Apply the transition to color change */
-    font-family: 'Poppins';
-    max-width: 350px;
-    font-weight: 600;
-    text-align: center; /* Center the text horizontally */
-    line-height: 3rem; /* Vertically center the text within the button */
-    text-decoration: none; /* Remove underline from links */
-  
-    /* Add some box shadow for depth and elevation */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  
-    /* Add a smooth transition for box shadow changes */
-    transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
-  }
-  
-  .primaryButton:hover {
-    background-color: #0008ff;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Slightly elevate the button on hover */
-  }
-  
-  .secondaryButton {
-    display: inline-block;
-    width: 100%;
-    height: 3rem;
-    background-color: #eee;
-    color: #4a71ff;
-    cursor: pointer;
-    border-radius: 0.8rem;
-    font-size: 0.9rem;
-    font-family: 'Poppins';
-    max-width: 350px;
-    margin-bottom: 2rem;
-    font-weight: 600;
-    text-align: center;
-    line-height: 3rem;
-    text-decoration: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  
-    /* Apply a smooth transition to the border */
-    transition: border 0.3s, color 0.3s;
-  }
-  
-  .secondaryButton:hover {
-    border: 2px solid #0008ff; 
-    color: #0008ff;
-  }
-  
+.pill1 {
+  bottom: 0;
+  left: -40px;
+  position: absolute;
+  width: 80px;
+  height: 200px;
+  background: linear-gradient(#9fafff, #5c77ff, #284172);
+  border-radius: 40px;
+  transform: rotate(-45deg);
+}
+
+.pill2 {
+  top: -100px;
+  left: -80px;
+  position: absolute;
+  height: 450px;
+  width: 220px;
+  background: linear-gradient(#9fafff, #5c77ff, #284172);
+  border-radius: 200px;
+  border: 30px solid #d2d5e6;
+  transform: rotate(-45deg);
+}
+
+.pill3 {
+  top: -100px;
+  left: 160px;
+  position: absolute;
+  height: 200px;
+  width: 100px;
+  background: linear-gradient(#9fafff, #5c77ff, #284172);
+  border-radius: 70px;
+  transform: rotate(-45deg);
+}
+
+.pill4 {
+  bottom: -180px;
+  left: 220px;
+  position: absolute;
+  height: 300px;
+  width: 120px;
+  background: linear-gradient(#9fafff, #5c77ff, #284172);
+  border-radius: 70px;
+  transform: rotate(-45deg);
+}
