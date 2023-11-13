@@ -9,8 +9,6 @@ export const metadata: Metadata = {
   description: '',
   manifest: '/manifest.json',
   icons: {apple: '/logo.png'},
-  viewport: "width=device-width, height=device-height,  initial-scale=1.0, user-scalable=no, user-scalable=0,  maximum-scale=1",
-  
 }
 
 export default function RootLayout({
