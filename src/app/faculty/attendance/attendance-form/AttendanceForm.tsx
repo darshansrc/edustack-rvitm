@@ -7,6 +7,9 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase-config';
 import styles from './AttendanceForm.module.css'
 import { IoChevronBackSharp } from 'react-icons/io5';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem } from '@mui/material';
+
+import {Button as AntButton, Modal as AntModal } from 'antd';
 
 interface AttendanceFormData {
   classId: string;
@@ -52,6 +55,15 @@ const batchOptions = [
   { value: '2', label: 'Batch 2' },
   { value: '3', label: 'Batch 3' },
 ];
+
+const convertTo12HourFormat = (timeString: string) => {
+  const [hours, minutes] = timeString.split(':');
+  const hour = parseInt(hours, 10);
+  const period = hour >= 12 ? 'pm' : 'am';
+  const formattedHour = hour % 12 === 0 ? 12 : hour % 12;
+
+  return `${formattedHour}:${minutes}${period}`;
+};
 
 
 
@@ -112,6 +124,9 @@ const AttendanceForm = () => {
   // step 2 states
 
   const [attendance, setAttendance] = useState<any>([]); 
+  const [subjectName, setSubjectName] = useState<string>('');
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState<boolean>(false);
+  const [presentCount, setPresentCount] = useState(0);
   
 
   const uniqueClassOptions = classSubjectPairList.reduce((acc, pair) => {
@@ -181,11 +196,11 @@ const AttendanceForm = () => {
         if(querySnapshot?.data()){
           const subjectType = querySnapshot.data()?.theoryLab;
           const subjectSemester = querySnapshot.data()?.semester;
-
+          const subjectName = querySnapshot.data()?.name;
           const subjectElective = querySnapshot.data()?.compulsoryElective;
 
           const electiveStudents = querySnapshot.data()?.electiveStudents;
-       
+          setSubjectName(subjectName);
           setSubjectType(subjectType); 
           setSubjectSemester(subjectSemester);
           setIsSubjectElective(subjectElective);
@@ -302,6 +317,82 @@ const batchFilteredStudentCards = (batch) =>
     }
     return null;
   });
+
+  function ConfirmationModal({ isOpen, onClose, absentStudents}) {
+    let presentCount = 0;
+    let absentCount = 0;
+    labBatch
+      ? attendance
+          .filter((student) => student.labBatch === labBatch)
+          .forEach((student) => {
+            if (student.Present) {
+              presentCount++;
+            } else {
+              absentCount++;
+            }
+          })
+      : attendance.forEach((student) => {
+          if (student.Present) {
+            presentCount++;
+          } else {
+            absentCount++;
+          }
+        });
+
+      presentCount = isSubjectElective === "compulsory" ? presentCount : electiveStudentUSN.length
+  
+    return (
+      <><AntModal centered title="Confirm Submission?" open={isOpen} onOk={onClose} onCancel={onClose}        footer={[
+        <AntButton key="back" onClick={onClose}>
+          Cancel
+        </AntButton>,
+        <AntButton
+        className='bg-blue-600 text-white border-white border-solid border-[1px] hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'
+        >
+          Submit
+        </AntButton>,
+      ]}>
+
+       
+       
+
+
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'><span className='font-[500] text-blue-600 '> Class: </span> {classId} {subjectSemester}-SEM</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Subject: </span>{subjectName} ({subjectCode}) </p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Date:  </span>{classDate.format('DD MMM, YYYY')}</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> time:  </span>{convertTo12HourFormat(classStartTime) + '-' + convertTo12HourFormat(classEndTime)}</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Subject Type:  </span>{subjectType}</p>
+            {labBatch && (<p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Lab Batch:  </span>B-{labBatch}</p>)}
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Present:  </span>{presentCount}</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Absent:  </span>{absentCount}</p>
+            <span className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[14px]'>Absent Students:</span>
+
+    
+            <div className="container max-h-[40vh] overflow-y-scroll">
+  <p>
+   
+  </p>
+  <div className='font-[Poppins] text-[12px] overflow-auto'>
+    {absentStudents.map(student => (
+      <p key={student.usn} className='px-0'>
+        <span className='text-[12px] font-[Poppins] font-semibold '>{student.usn}:</span> {student.name}
+      </p>
+    ))}
+  </div>
+</div>
+       
+     
+ 
+
+      </AntModal>
+      </>
+    );
+  }
+
+
+  const handleStep2Submit = async () => {
+    setIsConfirmationModalOpen(true);
+  }
 
   const stepOne = () => {
     return (
@@ -432,43 +523,76 @@ const batchFilteredStudentCards = (batch) =>
 
   const stepTwo = () => {
     return (
-      <div
-      className={styles.cardContainer}
-  
-    >
+      <><div
+        className={styles.cardContainer}
 
-      <div className={styles.cardTopBar}>
-        <button onClick={() => setFormStep(1)} className='absolute left-0 p-2 m-4 bg-slate-50 rounded-[20px]'>
-        <IoChevronBackSharp/>
-        </button>
-        
-       <h4 className='font-[Poppins] text-slate-800 font-[500]  my-4'>Mark Attendance</h4> 
-        
-      </div>
+      >
 
-      <div className='py-[150px]'>
-    {!labBatch && filteredStudentCards}
-    {labBatch && batchFilteredStudentCards(labBatch)}
-      </div>
+        <div className={styles.cardTopBar}>
+          <button onClick={() => setFormStep(1)} className='absolute left-0 p-2 m-4 bg-slate-50 rounded-[20px]'>
+            <IoChevronBackSharp />
+          </button>
 
-        <div className={styles.submitButtonContainer} >
-        <button
-              onClick={() => setFormStep(1)}
-              className='bg-slate-100 w-[40vw]  max-w-[180px] text-blue-500 rounded-[15px] mx-2 mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-slate-200 focus:outline-none focus:ring focus:ring-blue-300'
-            >
-              BACK
-        </button>
-        <button
-              onClick={handleStep1Submit} 
-              className='bg-blue-500 w-[40vw] max-w-[180px] text-white rounded-[15px] mx-2  mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'
-            >
-              SUBMIT
-         </button>
+          <h4 className='font-[Poppins] text-slate-800 font-[500]  my-4'>Mark Attendance</h4>
 
         </div>
 
 
-      </div>
+
+        <div className='py-[70px] '>
+
+          <div className='flex flex-col border border-solid border-slate-200 rounded my-2 w-[95vw] p-[10px] max-w-[450px]'>
+            <h4 className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[16px] pb-1'>Class Details</h4>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'><span className='font-[500]'> Class: </span> {classId} {subjectSemester}-SEM</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> Subject: </span>{subjectName} ({subjectCode}) </p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> Date:  </span>{classDate.format('DD MMM, YYYY')}</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> time:  </span>{convertTo12HourFormat(classStartTime) + '-' + convertTo12HourFormat(classEndTime)}</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> Subject Type:  </span>{subjectType}</p>
+            {labBatch && (<p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> Lab Batch:  </span>B-{labBatch}</p>)}
+          </div>
+
+          <div className='flex flex-col rounded my-2 w-[95vw] max-w-[450px]'>
+            <h6
+              className='text-center font-[Poppins] font-[500] text-[12px] mt-5 text-slate-600'
+            >
+              By Default All the Students are Marked as Present, Please tap on the
+              cards to make changes, confirm the Absentees and submit the form.{" "}
+            </h6>
+            <h6 className='text-center font-[Poppins] font-[500] text-[12px] mt-2 mb-2 text-slate-600'>
+              [&nbsp;<span className="bg-[green] text-white rounded-[50%] min-w-[20px] min-h-[20px]"> P </span>&nbsp;-
+              Present,&nbsp;&nbsp;<span className="text-absent"> A </span>&nbsp;-
+              Absent&nbsp;]{" "}
+            </h6>
+
+
+          </div>
+
+          {!labBatch && filteredStudentCards}
+          {labBatch && batchFilteredStudentCards(labBatch)}
+        </div>
+
+        <div className={styles.submitButtonContainer}>
+          <button
+            onClick={() => setFormStep(1)}
+            className='bg-slate-100 w-[40vw]  max-w-[180px] text-blue-500 rounded-[15px] mx-2 mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-slate-200 focus:outline-none focus:ring focus:ring-blue-300'
+          >
+            Back
+          </button>
+          <button
+            onClick={handleStep2Submit}
+            className='bg-blue-500 w-[40vw] max-w-[180px] text-white rounded-[15px] mx-2  mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'
+          >
+            Submit
+          </button>
+
+        </div>
+
+
+      </div><ConfirmationModal
+          isOpen={isConfirmationModalOpen}
+          onClose={() => setIsConfirmationModalOpen(false)}
+    
+          absentStudents={attendance.filter((student) => !student.Present)} /></>
      
     );
   };
