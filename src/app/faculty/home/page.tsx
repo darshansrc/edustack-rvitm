@@ -1,23 +1,27 @@
-import getUser from '@/lib/getUser'
-import React from 'react'
-import BottomNavbar from '../components/bottomNavbar/BottomNavbar';
-import TopNavbar from '@/app/student/components/topnavbar/TopNavbar';
-import FacultyHomePage from './FacultyHomePage';
+"use client";
+import React from "react";
+import styles from "./HomePage.module.css";
+import LeftSideOfPage from "./HomePageComponents/LeftSideOfPage/LeftSideOfPage";
+import RightSideOfPage from "./HomePageComponents/RightSideOfPage/RightSideOfPage";
 
-async function App() {
-  const user = await getUser()
-
-  const formattedString = JSON.stringify(user, null, "\t");
-
+const HomePage = () => {
   return (
     <>
-      <TopNavbar name='EduStack' />
-      <FacultyHomePage />
-      <BottomNavbar />
-
-    
+      <div
+        className="h-screen flex justify-center items-center relative overflow-hidden"
+        style={{ backgroundColor: "white" }}
+      >
+        <div className={styles.pill1}></div>
+        <div className={styles.pill2}></div>
+        <div className={styles.pill3}></div>
+        <div className={styles.pill4}></div>
+        <div className=" h-3/5 w-3/4 relative flex justify-center items-center max-md:h-2/3 shadow-2xl rounded-xl max-sm:h-screen max-sm:w-screen max-sm:flex-col">
+          <LeftSideOfPage />
+          <RightSideOfPage />
+        </div>
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default HomePage;

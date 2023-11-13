@@ -1,0 +1,73 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 95%;
+}
+
+.primaryButton {
+  display: inline-block;
+  width: 100%; /* Use 100% to ensure the button spans the entire container width */
+  height: 3rem;
+  background-color: #2150fa;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.8rem;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
+  transition: background-color 0.3s, color 0.3s; /* Apply the transition to color change */
+  font-family: "Poppins";
+  max-width: 350px;
+  font-weight: 600;
+  text-align: center; /* Center the text horizontally */
+  line-height: 3rem; /* Vertically center the text within the button */
+  text-decoration: none; /* Remove underline from links */
+
+  /* Add some box shadow for depth and elevation */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  /* Add a smooth transition for box shadow changes */
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+.primaryButton:hover {
+  background-color: #0008ff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Slightly elevate the button on hover */
+}
+
+.secondaryButton {
+  display: inline-block;
+  width: 100%;
+  height: 3rem;
+  background-color: #eee;
+  color: #4a71ff;
+  cursor: pointer;
+  border-radius: 0.8rem;
+  font-size: 0.9rem;
+  font-family: "Poppins";
+  max-width: 350px;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 3rem;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  /* Apply a smooth transition to the border */
+  transition: border 0.3s, color 0.3s;
+}
+
+.secondaryButton:hover {
+  border: 2px solid #0008ff;
+  color: #0008ff;
+}
