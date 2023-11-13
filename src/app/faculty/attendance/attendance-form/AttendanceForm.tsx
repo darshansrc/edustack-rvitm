@@ -318,77 +318,77 @@ const batchFilteredStudentCards = (batch) =>
     return null;
   });
 
-  function ConfirmationModal({ isOpen, onClose, absentStudents}) {
-    let presentCount = 0;
-    let absentCount = 0;
-    labBatch
-      ? attendance
-          .filter((student) => student.labBatch === labBatch)
-          .forEach((student) => {
-            if (student.Present) {
-              presentCount++;
-            } else {
-              absentCount++;
-            }
-          })
-      : attendance.forEach((student) => {
-          if (student.Present) {
-            presentCount++;
-          } else {
-            absentCount++;
-          }
-        });
+//   function ConfirmationModal({ isOpen, onClose, absentStudents}) {
+//     let presentCount = 0;
+//     let absentCount = 0;
+//     labBatch
+//       ? attendance
+//           .filter((student) => student.labBatch === labBatch)
+//           .forEach((student) => {
+//             if (student.Present) {
+//               presentCount++;
+//             } else {
+//               absentCount++;
+//             }
+//           })
+//       : attendance.forEach((student) => {
+//           if (student.Present) {
+//             presentCount++;
+//           } else {
+//             absentCount++;
+//           }
+//         });
 
-      presentCount = isSubjectElective === "compulsory" ? presentCount : electiveStudentUSN.length
+//       presentCount = isSubjectElective === "compulsory" ? presentCount : electiveStudentUSN.length
   
-    return (
-      <><AntModal centered title="Confirm Submission?" open={isOpen} onOk={onClose} onCancel={onClose}        footer={[
-        <AntButton key="back" onClick={onClose}>
-          Cancel
-        </AntButton>,
-        <AntButton
-        className='bg-blue-600 text-white border-white border-solid border-[1px]'
-        >
-          Submit
-        </AntButton>,
-      ]}>
+//     return (
+//       <><AntModal centered title="Confirm Submission?" open={isOpen} onOk={onClose} onCancel={onClose}        footer={[
+//         <AntButton key="back" onClick={onClose}>
+//           Cancel
+//         </AntButton>,
+//         <AntButton
+//         className='bg-blue-600 text-white border-white border-solid border-[1px]'
+//         >
+//           Submit
+//         </AntButton>,
+//       ]}>
 
        
        
 
 
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'><span className='font-[500] text-blue-600 '> Class: </span> {classId} {subjectSemester}-SEM</p>
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Subject: </span>{subjectName} ({subjectCode}) </p>
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Date:  </span>{classDate.format('DD MMM, YYYY')}</p>
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> time:  </span>{convertTo12HourFormat(classStartTime) + '-' + convertTo12HourFormat(classEndTime)}</p>
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Subject Type:  </span>{subjectType}</p>
-            {labBatch && (<p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Lab Batch:  </span>B-{labBatch}</p>)}
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Present:  </span>{presentCount}</p>
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Absent:  </span>{absentCount}</p>
-            <span className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[14px]'>Absent Students:</span>
+//             <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'><span className='font-[500] text-blue-600 '> Class: </span> {classId} {subjectSemester}-SEM</p>
+//             <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Subject: </span>{subjectName} ({subjectCode}) </p>
+//             <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Date:  </span>{classDate.format('DD MMM, YYYY')}</p>
+//             <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> time:  </span>{convertTo12HourFormat(classStartTime) + '-' + convertTo12HourFormat(classEndTime)}</p>
+//             <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Subject Type:  </span>{subjectType}</p>
+//             {labBatch && (<p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Lab Batch:  </span>B-{labBatch}</p>)}
+//             <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Present:  </span>{presentCount}</p>
+//             <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Absent:  </span>{absentCount}</p>
+//             <span className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[14px]'>Absent Students:</span>
 
     
-            <div className="container max-h-[40vh] overflow-y-scroll">
-  <div className='font-[Poppins] text-[12px] overflow-auto'>
-    {absentStudents.map(student => (
-      <p key={student.usn} className='px-0'>
-        <span className='text-[12px] font-[Poppins] font-semibold '>{student.usn}:</span> {student.name}
-      </p>
-    ))}
-  </div>
-</div>
+//             <div className="container max-h-[40vh] overflow-y-scroll">
+//   <div className='font-[Poppins] text-[12px] overflow-auto'>
+//     {absentStudents.map(student => (
+//       <p key={student.usn} className='px-0'>
+//         <span className='text-[12px] font-[Poppins] font-semibold '>{student.usn}:</span> {student.name}
+//       </p>
+//     ))}
+//   </div>
+// </div>
        
      
  
 
-      </AntModal>
-      </>
-    );
-  }
+//       </AntModal>
+//       </>
+//     );
+//   }
 
 
   const handleStep2Submit = async () => {
-    setIsConfirmationModalOpen(true);
+    // setIsConfirmationModalOpen(true);
   }
 
   const stepOne = () => {
