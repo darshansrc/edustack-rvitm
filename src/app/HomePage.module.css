@@ -27,7 +27,7 @@
   position: absolute;
   height: 200px;
   width: 100px;
-  background: linear-gradient(#9fafff, #5c77ff, #284172);
+  background: linear-gradient(#9fafff, #5c77ff);
   border-radius: 70px;
   transform: rotate(-45deg);
 }
