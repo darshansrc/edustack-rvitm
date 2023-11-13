@@ -13,16 +13,14 @@
   flex-direction: column-reverse;
 }
 
-/* Design 1 */
-/* 
 .LogoShapeLayer1 {
   height: 150px;
   width: 150px;
   border-radius: 38px;
   rotate: 45deg;
-  margin-bottom: -115px;
-  background-color: #2563eb;
-  mix-blend-mode: color-burn;
+  background-color: #5c77ff;
+  box-shadow: 0px 0px 10px #5c77ff;
+  border: 5px solid white;
 }
 
 .LogoShapeLayer2 {
@@ -31,8 +29,9 @@
   border-radius: 38px;
   rotate: 45deg;
   margin-bottom: -115px;
-  background-color: rgba(37, 99, 235, 0.5);
-  mix-blend-mode: color-burn;
+  background-color: #9fafff;
+  border: 5px solid white;
+  box-shadow: 0px 0px 2px #9fafff;
 }
 
 .LogoShapeLayer3 {
@@ -40,44 +39,8 @@
   width: 150px;
   border-radius: 38px;
   rotate: 45deg;
-  background-color: rgba(37, 99, 235, 0.25);
-  mix-blend-mode: color-burn;
-} */
-
-/* Design 2 */
-
-.LogoShape2Layer1 {
-  height: 150px;
-  width: 150px;
-  border-radius: 38px;
-  rotate: 45deg;
-  background-color: #5c77ff;
-  box-shadow: 0px 0px 10px #5c77ff;
-  /* mix-blend-mode: hue; */
-  border: 5px solid white;
-}
-
-.LogoShape2Layer2 {
-  height: 150px;
-  width: 150px;
-  border-radius: 38px;
-  rotate: 45deg;
-  margin-bottom: -115px;
-  background-color: #9fafff;
-  /* mix-blend-mode: hue; */
-  border: 5px solid white;
-  box-shadow: 0px 0px 2px #9fafff;
-}
-
-.LogoShape2Layer3 {
-  height: 150px;
-  width: 150px;
-  border-radius: 38px;
-  rotate: 45deg;
   margin-bottom: -115px;
   background-color: #284172;
-
-  /* mix-blend-mode: hue; */
   border: 5px solid white;
   box-shadow: 0px 0px 2px #284172;
 }
