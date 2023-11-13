@@ -342,7 +342,17 @@ const batchFilteredStudentCards = (batch) =>
       presentCount = isSubjectElective === "compulsory" ? presentCount : electiveStudentUSN.length
   
     return (
-      <><AntModal centered title="Confirm Submission?" open={isOpen} onOk={onClose} onCancel={onClose}     >
+      <><AntModal centered title="Confirm Submission?" open={isOpen} onOk={onClose} onCancel={onClose}      footer={[
+        <AntButton key="back" onClick={onClose}>
+          Cancel
+        </AntButton>,
+        <AntButton
+          key="submit"
+          className='bg-blue-600 text-white border-white border-solid border-[1px]'
+        >
+          Submit
+        </AntButton>,
+      ]} >
 
        
        
