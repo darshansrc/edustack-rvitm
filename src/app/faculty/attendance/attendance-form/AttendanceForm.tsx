@@ -7,7 +7,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase-config';
 import styles from './AttendanceForm.module.css'
 import { IoChevronBackSharp } from 'react-icons/io5';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, SvgIcon } from '@mui/material';
 
 import {Button as AntButton, Modal as AntModal } from 'antd';
 
@@ -127,6 +127,32 @@ const AttendanceForm = () => {
   const [subjectName, setSubjectName] = useState<string>('');
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState<boolean>(false);
   const [presentCount, setPresentCount] = useState(0);
+  const [absentCount, setAbsentCount] = useState(0);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [isDataRecorded, setIsDataRecorded] = useState(false);
+
+  const clearAllStateVariables = () => {
+    setClassDate(dayjs());
+    setClassStartTime('');
+    setClassEndTime('');
+    setClassId('');
+    setSubjectCode('');
+    setIsLabSubject(false);
+    setLabBatch('');
+    setClassSubjectPairList([]);
+    setSubjectType('theory');
+    setStep1Error('');
+    setIsSubjectElective('');
+    setSubjectSemester('');
+    setElectiveStudentUSN([]);
+    setAttendance([]);
+    setSubjectName('');
+    setIsConfirmationModalOpen(false);
+    setPresentCount(0);
+    setAbsentCount(0);
+    setConfirmLoading(false);
+    setIsDataRecorded(false);
+  }
   
 
   const uniqueClassOptions = classSubjectPairList.reduce((acc, pair) => {
@@ -301,6 +327,88 @@ const AttendanceForm = () => {
     />
   ));
 
+
+
+  const handleSubmitAttendanceForm = async () => {
+    setConfirmLoading(true);
+    const absentStudents = attendance.filter((student) => !student.Present);
+    const presentStudents = attendance.filter((student) => student.Present);
+
+    setPresentCount(presentStudents.length);
+    setAbsentCount(absentStudents.length);
+
+
+    const parseTime = (time) => {
+      const [hours, minutes] = time.split(':');
+      return { hours: parseInt(hours, 10), minutes: parseInt(minutes, 10) };
+    };
+  
+    const startParsedTime = parseTime(classStartTime);
+    const endParsedTime = parseTime(classEndTime);
+  
+    const startTime = new Date(classDate.format('YYYY-MM-DD'));
+    startTime.setHours(startParsedTime.hours, startParsedTime.minutes, 0, 0);
+  
+    const endTime = new Date(classDate.format('YYYY-MM-DD'));
+    endTime.setHours(endParsedTime.hours, endParsedTime.minutes, 0, 0);
+
+    const attendanceFormData: AttendanceFormData = {
+      classId,
+      subjectCode,
+      subjectSemester,
+      classDate: classDate.toISOString(),
+      classStartTime: startTime.toISOString(),
+      classEndTime: endTime.toISOString(),
+      students: attendance,
+      presentCount: presentStudents.length,
+      absentCount: absentStudents.length,
+      recordedTime: dayjs().toISOString(),
+      updatedTime: dayjs().toISOString(),
+      recordedByEmail: '',
+      recordedByName: '',
+      classTopic: '',
+      classDescription: ''
+    }
+
+    setAttendanceFormData(attendanceFormData);
+
+  console.log(attendanceFormData)
+
+
+    try {
+      const res = await fetch(`${window.location.origin}/api/faculty/attendance/submit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(attendanceFormData),
+      });
+
+
+
+      if (!res.ok) {
+        throw new Error('Failed to submit form data');
+      }
+
+
+      if(res.ok){
+        setIsDataRecorded(true);
+        console.log('Form data submitted successfully');
+        setConfirmLoading(false);
+        setFormStep(3);
+      }
+
+    
+
+      
+    } catch (error) {
+      // Handle errors, e.g., show an error message
+      console.error('Error submitting form data:', error);
+      setConfirmLoading(false);
+    }
+  
+  } 
+
 const batchFilteredStudentCards = (batch) =>
   attendance.map((student) => {
     if (labBatch === null || student.labBatch === batch) {
@@ -318,83 +426,12 @@ const batchFilteredStudentCards = (batch) =>
     return null;
   });
 
-  function ConfirmationModal({ isOpen, onClose, absentStudents}) {
-    let presentCount = 0;
-    let absentCount = 0;
-    labBatch
-      ? attendance
-          .filter((student) => student.labBatch === labBatch)
-          .forEach((student) => {
-            if (student.Present) {
-              presentCount++;
-            } else {
-              absentCount++;
-            }
-          })
-      : attendance.forEach((student) => {
-          if (student.Present) {
-            presentCount++;
-          } else {
-            absentCount++;
-          }
-        });
 
-      presentCount = isSubjectElective === "compulsory" ? presentCount : electiveStudentUSN.length
-  
-    return (
-      <><AntModal centered title="Confirm Submission?" open={isOpen} onOk={onClose} onCancel={onClose}      footer={[
-        <AntButton key="back" onClick={onClose}>
-          Cancel
-        </AntButton>,
-        <AntButton
-          key="submit"
-          className='bg-blue-600 text-white border-white border-solid border-[1px]'
-        >
-          Submit
-        </AntButton>,
-      ]} >
-
-       
-       
-
-
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'><span className='font-[500] text-blue-600 '> Class: </span> {classId} {subjectSemester}-SEM</p>
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Subject: </span>{subjectName} ({subjectCode}) </p>
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Date:  </span>{classDate.format('DD MMM, YYYY')}</p>
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> time:  </span>{convertTo12HourFormat(classStartTime) + '-' + convertTo12HourFormat(classEndTime)}</p>
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Subject Type:  </span>{subjectType}</p>
-            {labBatch && (<p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Lab Batch:  </span>B-{labBatch}</p>)}
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Present:  </span>{presentCount}</p>
-            <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Absent:  </span>{absentCount}</p>
-            
-
-    
-            <div className="container max-h-[40vh] overflow-y-scroll">
-  <div className='font-[Poppins] text-[12px] overflow-auto'>
-
-{absentStudents && (
-  <div>
-    <span className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[14px]'>Absent Students:</span>
-    {absentStudents.map(student => (
-      <p key={student.usn} className='px-0'>
-        <span className='text-[12px] font-[Poppins] font-semibold '>{student.usn}:</span> {student.name}
-      </p>
-    ))}
-  </div>
-)}
-  </div>
-</div>
-     
- 
-
-      </AntModal>
-      </>
-    );
-  }
 
 
   const handleStep2Submit = async () => {
     setIsConfirmationModalOpen(true);
+
   }
 
   const stepOne = () => {
@@ -525,6 +562,32 @@ const batchFilteredStudentCards = (batch) =>
   };
 
   const stepTwo = () => {
+
+  
+      let presentCount = 0;
+      let absentCount = 0;
+      labBatch
+        ? attendance
+            .filter((student) => student.labBatch === labBatch)
+            .forEach((student) => {
+              if (student.Present) {
+                presentCount++;
+              } else {
+                absentCount++;
+              }
+            })
+        : attendance.forEach((student) => {
+            if (student.Present) {
+              presentCount++;
+            } else {
+              absentCount++;
+            }
+          });
+  
+        presentCount = isSubjectElective === "compulsory" ? presentCount : electiveStudentUSN.length
+
+      
+
     return (
       <><div
         className={styles.cardContainer}
@@ -592,24 +655,100 @@ const batchFilteredStudentCards = (batch) =>
 
 
       </div>
+  
+<AntModal centered title="Confirm Submission?" open={isConfirmationModalOpen}  onCancel={() => setIsConfirmationModalOpen(false)}    footer={[
+          <AntButton key="back" onClick={() => setIsConfirmationModalOpen(false)} >
+            Cancel
+          </AntButton>,
+          <AntButton
+            key="submit"
+            className='bg-blue-600 text-white border-white border-solid border-[1px]'
+            onClick={handleSubmitAttendanceForm}
+          >
+            {confirmLoading ? 'Submitting...' : 'Submit'}
+          </AntButton>,
+        ]} >
+  
+         
+         
+  
+  
+              <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'><span className='font-[500] text-blue-600 '> Class: </span> {classId} {subjectSemester}-SEM</p>
+              <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Subject: </span>{subjectName} ({subjectCode}) </p>
+              <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Date:  </span>{classDate.format('DD MMM, YYYY')}</p>
+              <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> time:  </span>{convertTo12HourFormat(classStartTime) + '-' + convertTo12HourFormat(classEndTime)}</p>
+              <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Subject Type:  </span>{subjectType}</p>
+              {labBatch && (<p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Lab Batch:  </span>B-{labBatch}</p>)}
+              <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Present:  </span>{presentCount}</p>
+              <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Absent:  </span>{absentCount}</p>
+              
+  
       
-      <ConfirmationModal
-          isOpen={isConfirmationModalOpen}
-          onClose={() => setIsConfirmationModalOpen(false)}
-    
-          absentStudents={attendance.filter((student) => !student.Present)} />
+              <div className="container max-h-[40vh] overflow-y-scroll">
+    <div className='font-[Poppins] text-[12px] overflow-auto'>
+  
+  {attendance.filter((student) => !student.Present) && (
+    <div>
+      <span className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[14px]'>Absent Students:</span>
+      {attendance.filter((student) => !student.Present).map(student => (
+        <p key={student.usn} className='px-0'>
+          <span className='text-[12px] font-[Poppins] font-semibold '>{student.usn}:</span> {student.name}
+        </p>
+      ))}
+    </div>
+  )}
+    </div>
+  </div>
+       
+   
+  
+        </AntModal>
           
           </>
      
     );
   };
 
+  const handleEditAttendance = () => {
+    setFormStep(2);
+    setIsConfirmationModalOpen(false);
+  }
+
   const stepThree = () => {
     return (
-      <div>
-        <h1>Step Three</h1>
-        <button onClick={() => setFormStep(1)}>Back to Home</button>
-      </div>
+      <><TopNavbar name='Mark Attendance' />
+      <div className='flex items-center justify-center flex-col w-[100vw] min-h-[100vh] '>
+        <div className='flex items-center flex-col bg-white rounded-xl  w-[90vw] max-w-[500px]  p-4' style={{ boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 -4px 6px rgba(0,0,0,.04)' }}>
+        <img src='/attendance.svg' className='w-[100px] h-[100px] max-h-[100px]  rounded-[50%] align-left' alt="StudentImage" />
+          <h2 className='text-center  font-[Poppins] font-[500] text-[16px] p-2 text-slate-800'> Attendance Recorded Successfully</h2>
+          <div className='flex flex-col border border-solid border-slate-200 rounded my-2 w-[85vw] max-w-[450px] p-[10px] '>
+            <h4 className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[12px] pb-1'>Attendance Information</h4>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'><span className='font-[500]'> Class: </span> {classId} {subjectSemester}-SEM</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> Subject: </span>{subjectName} ({subjectCode}) </p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> Date:  </span>{classDate.format('DD MMM, YYYY')}</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> time:  </span>{convertTo12HourFormat(classStartTime) + '-' + convertTo12HourFormat(classEndTime)}</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> Subject Type:  </span>{subjectType}</p>
+            {labBatch && (<p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> Lab Batch:  </span>B-{labBatch}</p>)}
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> Students Present:  </span>{presentCount}</p>
+            <p className='pl-1 text-slate-700 font-[Poppins] text-[12px]'> <span className='font-[500]'> Students Absent:  </span>{absentCount}</p>
+          </div>
+
+          <button
+            onClick={handleEditAttendance}
+            className='bg-slate-100 w-[85vw]  max-w-[450px] text-blue-500 rounded-[10px] mx-2 mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-slate-200 focus:outline-none focus:ring focus:ring-blue-300'
+          >
+            Edit Attendance
+          </button>
+          <button
+            onClick={clearAllStateVariables}
+            className='bg-blue-500 w-[85vw] max-w-[450px] text-white rounded-[10px] mx-2  mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'
+          >
+            Back to Home
+          </button>
+        </div>
+
+
+      </div></>
     );
   };
 

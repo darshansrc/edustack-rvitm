@@ -13,29 +13,22 @@ import Link from 'next/link';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import { useEffect, useState } from 'react';
 
-
+interface facultyDetails {
+  facultyType: string;
+  facultyName: string;
+  facultyDepartment: string;
+}
 
 const FacultyHomePage =  () => {
 
-  interface studentDetails {
-    studentName: string;
-    studentUSN: string;
-    className: string;
-    classSemester: string;
-    studentLabBatch: string;
-    studentPhoto: string;
-    userUID: string;
-  }
+
   
-  const [ studentDetails, setStudentDetails ] = useState<studentDetails>({
-    studentName: '',
-    studentUSN: '',
-    className: '',
-    classSemester: '',
-    studentLabBatch: '',
-    studentPhoto: '',
-    userUID: '',
+  const [facultyDetails, setFacultyDetails] = useState<facultyDetails>({
+    facultyType: '',
+    facultyName: '',
+    facultyDepartment: '',
   });
+  
 
   const [ photoUrl, setPhotoUrl ] = useState<string>('');
   const [ dataFetched, setDataFetched ] = useState<boolean>(false);
@@ -61,15 +54,15 @@ const FacultyHomePage =  () => {
   const fetchAttendanceData = async () => {
     try {
       const currentServerDomain = window.location.origin;
-      const responseAPI = await fetch(`${currentServerDomain}/api/student/home`, {
+      const responseAPI = await fetch(`${currentServerDomain}/api/faculty/home`, {
         method: 'GET',
       });
 
       if (responseAPI.status === 200) {
         const responseBody = await responseAPI.json();
-        setStudentDetails(responseBody.studentDetails);
+        setFacultyDetails(responseBody.facultyDetails);
 
-        getDownloadURL(ref(storage, `photos/${responseBody.studentDetails.studentUSN}.jpg`))
+        getDownloadURL(ref(storage, `photos/${user.email}.jpg`))
           .then((url) => {
             setPhotoUrl(url);
             sessionStorage.setItem('photoUrl', url);
@@ -81,7 +74,7 @@ const FacultyHomePage =  () => {
         setDataFetched(true);
 
         // Store studentDetails in localStorage
-        sessionStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
+        sessionStorage.setItem('facultyDetails', JSON.stringify(responseBody.facultyDetails));
       } else {
         console.log('Cannot fetch data');
       }
@@ -94,16 +87,16 @@ const FacultyHomePage =  () => {
 
   useEffect(() => {
         
-    const storedStudentDetails = sessionStorage.getItem('studentDetails');
+    const storedFacultyDetails = sessionStorage.getItem('facultyDetails');
     const storedPhotoUrl = sessionStorage.getItem('photoUrl');
 
-    if (storedStudentDetails) {
+    if (storedFacultyDetails) {
      
-      const parsedStudentDetails = JSON.parse(storedStudentDetails);
-      const userUidMatch = parsedStudentDetails.userUID === user?.uid;
+      const parsedFacultyDetails = JSON.parse(storedFacultyDetails);
+      const userUidMatch = parsedFacultyDetails.userUID === user?.uid;
 
       if(userUidMatch){
-        setStudentDetails(parsedStudentDetails);
+        setFacultyDetails(parsedFacultyDetails);
         setDataFetched(true);
         if(storedPhotoUrl){
           setPhotoUrl(storedPhotoUrl); 
@@ -128,7 +121,7 @@ const FacultyHomePage =  () => {
       <div className={styles.welcomeCard}>
         <div style={{marginRight: '14px'}}>
           { dataFetched ? (
-             <Image   src={photoUrl} alt={''} height={60} width={60} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
+             <Image   src={photoUrl ? photoUrl : '/None.jpg'} alt={''} height={60} width={60} style={{width:'60px' , height:'60px', margin: '0 10px', objectFit: 'cover',borderRadius: '50%', boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)',}}/>
           ) : (
             <Skeleton variant="circular" width={60} height={60} />
           )}
@@ -136,8 +129,8 @@ const FacultyHomePage =  () => {
         </div>
         {dataFetched ? (
         <div>
-        <div className={styles.studentName}>Welcome, {studentDetails?.studentName}</div>
-        <div className={styles.studentDetail}>USN: {studentDetails?.studentUSN}, CLASS: {studentDetails?.className}</div>
+        <div className={styles.studentName}>Welcome, {facultyDetails?.facultyName}</div>
+        <div className={styles.studentDetail}> {facultyDetails?.facultyType}, Dept. of {facultyDetails?.facultyDepartment}</div>
       </div>
         ) : (
           <div>
