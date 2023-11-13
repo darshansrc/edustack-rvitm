@@ -365,7 +365,7 @@ const batchFilteredStudentCards = (batch) =>
             {labBatch && (<p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'> Lab Batch:  </span>B-{labBatch}</p>)}
             <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Present:  </span>{presentCount}</p>
             <p className='pl-1 text-slate-700 font-[Poppins] text-[14px]'> <span className='font-[500] text-blue-600'>Students Absent:  </span>{absentCount}</p>
-            {/* <span className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[14px]'>Absent Students:</span>
+            <span className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[14px]'>Absent Students:</span>
 
     
             <div className="container max-h-[40vh] overflow-y-scroll">
@@ -375,8 +375,8 @@ const batchFilteredStudentCards = (batch) =>
         <span className='text-[12px] font-[Poppins] font-semibold '>{student.usn}:</span> {student.name}
       </p>
     ))}
-  </div> */}
-{/* </div> */}
+  </div>
+</div>
        
      
  
@@ -585,11 +585,15 @@ const batchFilteredStudentCards = (batch) =>
         </div>
 
 
-      </div><ConfirmationModal
+      </div>
+      
+      {/* <ConfirmationModal
           isOpen={isConfirmationModalOpen}
           onClose={() => setIsConfirmationModalOpen(false)}
     
-          absentStudents={attendance.filter((student) => !student.Present)} /></>
+          absentStudents={attendance.filter((student) => !student.Present)} /> */}
+          
+          </>
      
     );
   };
