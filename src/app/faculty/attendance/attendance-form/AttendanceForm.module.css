@@ -1,0 +1,47 @@
+.cardContainer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    max-width: 100vw;
+    min-height: 100vh;
+    z-index: 9999;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.submitButtonContainer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    max-width: 100vw;
+    background-color: white;
+    z-index: 9999;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 -4px 6px rgba(0,0,0,.04);
+
+}
+
+.cardTopBar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    max-width: 100vw;
+    background-color: white;
+    color: #555;
+    z-index: 9999;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04);
+}
