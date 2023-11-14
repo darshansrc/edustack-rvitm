@@ -1,64 +1,43 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 import styles from "./RightSideOfPage.module.css";
 
 const RightSideOfPage = () => {
   return (
     <>
-      <div
-        className=" h-full w-1/2 flex justify-center items-center rounded-r-xl  max-sm:w-full p-3 max-sm:rounded-xl"
-        // style={{ backgroundColor: "#fafafa" }}
-      >
+      <div className="h-full w-1/2 flex justify-center items-center max-sm:w-full p-3">
         <div className={styles.pageContainer}>
-          {/* <div className="sm:hidden flex items-center justify-center">
-            <Image
-              priority
-              width={60}
-              height={60}
-              src="/logo.png"
-              style={{
-                maxWidth: "60px",
-                maxHeight: "60px",
-                alignItems: "center",
-              }}
-              alt={""}
-            />
-            <h1 style={{ fontSize: "25px", padding: "10px" }} className="m-3">
-              |
-            </h1>
-            <Image
-              priority
-              width={60}
-              height={60}
-              src="/logorv.png"
-              style={{
-                maxWidth: "60px",
-                maxHeight: "60px",
-                alignItems: "center",
-              }}
-              alt={""}
-            />
-          </div> */}
           <h1
             style={{
               fontSize: "30px",
               fontWeight: "bolder",
               margin: "20px",
-              fontFamily: "golos text",
+              fontFamily: "poppins",
               fontVariant: "600",
             }}
           >
             Welcome to EduStack for RVITM
           </h1>
-          <p className="text-gray-500 font-sans font-medium text-base max-sm:mb-8">
+          <p
+            className="text-gray-500 font-medium text-base max-sm:mb-8"
+            style={{
+              fontFamily: "poppins",
+            }}
+          >
             A Platform Built to Simplify Attendance Tracking & Academics{" "}
           </p>
           <div className={styles.buttonContainer}>
-            <Link href="/auth/signin" shallow={true} style={{ width: "95%" }}>
+            <Link
+              href="/auth/signin"
+              shallow={true}
+              style={{ width: "95%", fontFamily: "poppins" }}
+            >
               <button className={styles.primaryButton}>Sign In </button>
             </Link>
-            <button className={styles.secondaryButton} style={{ width: "95%" }}>
+            <button
+              className={styles.secondaryButton}
+              style={{ width: "95%", fontFamily: "poppins" }}
+            >
               Activate your Account
             </button>
           </div>
