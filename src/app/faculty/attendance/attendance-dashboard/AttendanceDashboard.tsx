@@ -372,7 +372,8 @@ const AttendanceDashboard = () => {
           Class Average Attendance Percentage: {((previousAttendanceSessions.reduce((total, session) => total + session.data.presentCount, 0) / previousAttendanceSessions.reduce((total, session) => total + session.data.presentCount + session.data.absentCount, 0)) * 100).toFixed(2)}%
         </Typography>
     </Card>
-
+    
+    <div className='flex flex-col w-[95vw] max-w-[550px] my-8 px-6 relative'>
     {previousAttendanceSessions.length === 0 ? (
   <ListItem>
     <Typography variant="subtitle1">No data available.</Typography>
@@ -382,7 +383,7 @@ const AttendanceDashboard = () => {
     .slice()
     .reverse()
     .map((sessionObj, index) => (
-       <div className='flex flex-col w-[95vw] max-w-[550px] my-8 px-6 relative'>
+      
         <Timeline key={index} timelineBarType="dashed" gradientPoint={true}>
         <Timeline.Item>
           <Timeline.Point icon={(
@@ -448,10 +449,10 @@ const AttendanceDashboard = () => {
       <ListItem key={index}>
    
       </ListItem>
-      </div>
+     
     ))
 )}
-
+ </div>
         </div>
     </div>
   
