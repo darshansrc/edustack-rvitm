@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import {
   DesktopOutlined,
   FileOutlined,
@@ -7,7 +7,7 @@ import {
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, theme } from 'antd';
+import { Divider, Layout, Menu } from 'antd';
 import Link from 'next/link';
 import { BiHomeAlt } from 'react-icons/bi';
 import { BsPeople, BsStack } from 'react-icons/bs';
@@ -61,85 +61,78 @@ const items: MenuItem[] = [
 ];
 
 const DesktopNavbar: React.FC = () => {
-    const [collapsed, setCollapsed] = useState(true);
+    const [collapsed, setCollapsed] = useState(false);
+    const [color, setColor] = useState('text-[#fafafa]');
 
     useEffect(() => {
         const isCollapsed = localStorage.getItem('collapsed') === 'true' || false;
         setCollapsed(isCollapsed);
+        setColor('')
     }, [])
 
     useEffect(() => {
         localStorage.setItem('collapsed', String(collapsed));
     }, [collapsed]);
 
-    const {
-      token: { colorBgContainer },
-    } = theme.useToken();
-
     const pathname = usePathname() || '';
   
     return (
+  
       <Layout style={{ minHeight: '100vh' }}>
-        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}  >
+        <Sider  collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}  >
           <div className="demo-logo-vertical" />
-          <Menu theme="dark" defaultSelectedKeys={['none']} mode="inline" style={{
-          overflow: 'auto',
-          height: '100vh',
-          position: 'fixed',
-          left: 0,
-          top: 0,
-          bottom: 0,
-         
-        }} className={collapsed? 'max-w-[80px]' : 'max-w-[200px]'}>
+          <Menu  theme="dark"  mode="vertical"   className={color}>
             
             <div className='min-h-[15px]'></div>
   
-            <Menu.Item key="icon" icon={(<BsStack style={{ fontSize: "20px" }}/>)}>
-                <p className='font-[Poppins] text-[20px] font-[500]'>EduStack</p>
+            <Menu.Item key="icon" icon={(<BsStack style={{ fontSize: "20px" }}/>)} className='flex w-full items-center justify-center font-[Poppins] text-[20px] font-[500]'>
+           EduStack
             </Menu.Item>
   
-            <div className='min-h-[15px] mb-4 border-b border-solid border-slate-800'></div>
+            <div className={!color ? 'min-h-[15px] mb-4  border-b border-slate-800' : ''}></div>
+            
   
 
-            <Menu.Item key="home" icon={<BiHomeAlt />} className={pathname.endsWith("/home") ? 'bg-blue-600  text-white': 'active: bg-transparent'}>
+            <Menu.Item key="home" icon={<BiHomeAlt />} className={pathname.endsWith("/home") ? 'bg-blue-600  text-white': ''}>
               <Link href="/faculty/home">Home</Link>
             </Menu.Item>
   
 
             <Menu.SubMenu key="sub1" icon={<BsPeople />} title="Attendance">
-              <Menu.Item key="view" className={pathname.endsWith("/attendance") ? 'bg-blue-600  text-white': 'active: bg-transparent'}>
+              <Menu.Item key="view" className={pathname.endsWith("/attendance") ? 'bg-blue-600  text-white': ''}>
                 <Link href="/faculty/attendance">View Attendance</Link>
               </Menu.Item>
-              <Menu.Item key="mark" className={pathname.endsWith("/attendance-form") ? 'bg-blue-600  text-white': 'active: bg-transparent'}>
+              <Menu.Item key="mark" className={pathname.endsWith("/attendance-form") ? 'bg-blue-600  text-white': ''}>
                 <Link href="/faculty/attendance/attendance-form">Mark Attendance</Link>
               </Menu.Item>
-              <Menu.Item key="export" className={pathname.endsWith("/home") ? 'bg-blue-600  text-white': 'active: bg-transparent'}>
+              <Menu.Item key="export" className={pathname.endsWith("/home") ? 'bg-blue-600  text-white': ''}>
                 <Link href="/faculty/attendance/export">Export Attendance</Link>
               </Menu.Item>
             </Menu.SubMenu>
 
 
-            <Menu.Item key="home" icon={<RxCalendar />} className={pathname.endsWith("/schedule") ? 'bg-blue-600  text-white': 'active: bg-transparent'}>
-              <Link href="/faculty/home">Schedule</Link>
+            <Menu.Item key="schedule" icon={<RxCalendar />} >
+            Schedule
             </Menu.Item>
 
-            <Menu.Item key="home" icon={<TbReport />} className={pathname.endsWith("/marks-entry") ? 'bg-blue-600  text-white': 'active: bg-transparent'}>
+            <Menu.Item key="marks" icon={<TbReport />} className={pathname.endsWith("/marks-entry") ? 'bg-blue-600  text-white': ''}>
               <Link href="/faculty/home" >Marks Entry</Link >
             </Menu.Item>
 
-            <Menu.Item key="home" icon={<CgProfile />} className={pathname.endsWith("/profile") ? 'bg-blue-600  text-white': 'active: bg-transparent'}>
+            <Menu.Item key="profile" icon={<CgProfile />} className={pathname.endsWith("/profile") ? 'bg-blue-600  text-white': ''}>
               <Link href="/faculty/home">Profile</Link>
             </Menu.Item>
 
 
   
-            <Menu.Item key="home" icon={<MdLogout />}>
+            <Menu.Item key="logout" icon={<MdLogout />}>
               <Link href="/faculty/home">Logout</Link>
             </Menu.Item>
   
           </Menu>
         </Sider>
       </Layout>
+   
     );
   };
   
