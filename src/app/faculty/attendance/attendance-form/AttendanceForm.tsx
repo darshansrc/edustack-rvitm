@@ -152,6 +152,7 @@ const AttendanceForm = () => {
     setAbsentCount(0);
     setConfirmLoading(false);
     setIsDataRecorded(false);
+    setFormStep(1);
   }
   
 
@@ -349,11 +350,32 @@ attendance.map((student) => {
 
   const handleSubmitAttendanceForm = async () => {
     setConfirmLoading(true);
-    const absentStudents = attendance.filter((student) => !student.Present);
-    const presentStudents = attendance.filter((student) => student.Present);
 
-    setPresentCount(presentStudents.length);
-    setAbsentCount(absentStudents.length);
+
+    let presentCount = 0;
+    let absentCount = 0;
+
+
+    labBatch
+    ? attendance
+        .filter((student) => student.labBatch === labBatch)
+        .forEach((student) => {
+          if (student.Present) {
+            presentCount++;
+          } else {
+            absentCount++;
+          }
+        })
+    : attendance.filter((student) => isSubjectElective === 'compulsory' || electiveStudentUSN.includes(student.usn)).forEach((student) => {
+        if (student.Present) {
+          presentCount++;
+        } else {
+          absentCount++;
+        }
+      });
+
+    setPresentCount(presentCount);
+    setAbsentCount(absentCount);
 
 
     const parseTime = (time) => {
@@ -390,8 +412,8 @@ attendance.map((student) => {
           usn: student.usn,
           Present: student.Present,
         })),
-      presentCount: presentStudents.length,
-      absentCount: absentStudents.length,
+      presentCount: presentCount,
+      absentCount: absentCount,
       recordedTime: dayjs().toISOString(),
       updatedTime: dayjs().toISOString(),
       recordedByEmail: '',
