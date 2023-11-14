@@ -7,7 +7,6 @@ import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase-config';
 import styles from './AttendanceForm.module.css'
 import { IoChevronBackSharp } from 'react-icons/io5';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, SvgIcon } from '@mui/material';
 
 import {Button as AntButton, Modal as AntModal } from 'antd';
 
@@ -204,7 +203,7 @@ const AttendanceForm = () => {
       try {
         const res = await fetch(`${window.location.origin}/api/faculty/attendance`, {});
         const fetchedData = await res.json();
-        setClassSubjectPairList(fetchedData?.classSubjectPairsList || []);
+        setClassSubjectPairList(fetchedData?.classSubjectPairList || []);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -474,7 +473,7 @@ attendance.map((student) => {
     return (
       <>
       <TopNavbar name='Mark Attendance' /> 
-      <div className='flex items-center justify-center flex-col w-[100vw] min-h-[100vh] '>
+      <div className='flex items-center justify-center flex-col w-full min-h-[100vh] '>
         <div className='flex items-center flex-col bg-white rounded-xl  w-[90vw] max-w-[500px]  p-4' style={{boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 -4px 6px rgba(0,0,0,.04)'}}>
           <h2 className='text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600'> Mark Attendance</h2>
           <div className='flex flex-col items-center'>
@@ -753,7 +752,7 @@ attendance.map((student) => {
   const stepThree = () => {
     return (
       <><TopNavbar name='Mark Attendance' />
-      <div className='flex items-center justify-center flex-col w-[100vw] min-h-[100vh] '>
+      <div className='flex items-center justify-center flex-col w-full min-h-[100vh] '>
         <div className='flex items-center flex-col bg-white rounded-xl  w-[90vw] max-w-[500px]  p-4' style={{ boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 -4px 6px rgba(0,0,0,.04)' }}>
         <img src='/attendance.svg' className='w-[100px] h-[100px] max-h-[100px]  rounded-[50%] align-left' alt="StudentImage" />
           <h2 className='text-center  font-[Poppins] font-[500] text-[16px] p-2 text-slate-800'> Attendance Recorded Successfully</h2>

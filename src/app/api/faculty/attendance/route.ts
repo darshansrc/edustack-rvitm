@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
         userUID: ''
       }
 
-      const classSubjectPairsList: any[] = [];
+      const classSubjectPairList: any[] = [];
 
 
   
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
     
               if (subSemester === classSemester) {
          
-                classSubjectPairsList.push({ className, code, subjectName, subjectType, subSemester, classSemester, ...classData });
+                classSubjectPairList.push({ className, code, subjectName, subjectType, subSemester, classSemester, ...classData });
               }
             }
           }
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
 }
 
 
-  return NextResponse.json({ decodedClaims, userUID , userType, classSubjectPairsList }, { status: 200 });
+  return NextResponse.json({ decodedClaims, userUID , userType, classSubjectPairList }, { status: 200 });
 }
 
 
