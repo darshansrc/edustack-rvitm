@@ -384,71 +384,69 @@ const AttendanceDashboard = () => {
     .reverse()
     .map((sessionObj, index) => (
       
-        <Timeline key={index} timelineBarType="dashed" gradientPoint={true}>
-        <Timeline.Item>
-          <Timeline.Point icon={(
-            <div className='font-[Poppins] text-[12px] text-slate-800'>
-               { previousAttendanceSessions.length - index }
-            </div>
-          )} />
-          <Timeline.Content>
-            <Timeline.Time>{new Date(sessionObj.data.classDate).toLocaleDateString(
-                    'en-US',
-                    {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    }
-                  )}</Timeline.Time>
-            <div className='border border-dashed border-slate-600 rounded bg-white flex flex-col justify-center p-[12px] mt-2 pr-[30px]'>
- 
-        
-            <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-                    <span className='text-blue-500 font-[Poppins] text-[12px]'>Time: </span>{formatTime(sessionObj.data.classStartTime)+'-'+formatTime(sessionObj.data.classEndTime)}
-            </div>
+        <><Timeline key={index} timelineBarType="dashed" gradientPoint={true}>
+            <Timeline.Item>
+                <Timeline.Point icon={(
+                    <div className='font-[Poppins] text-[12px] text-slate-800'>
+                        {previousAttendanceSessions.length - index}
+                    </div>
+                )} />
+                <Timeline.Content>
+                    <Timeline.Time>{new Date(sessionObj.data.classDate).toLocaleDateString(
+                        'en-US',
+                        {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                        }
+                    )}</Timeline.Time>
+                    <div className='border border-dashed border-slate-600 rounded bg-white flex flex-col justify-center p-[12px] mt-2 pr-[30px]'>
 
 
-            <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-                    <span className='text-blue-500 font-[Poppins] text-[12px]'>Attendance: </span>{sessionObj.data.presentCount} out of{' '}
-              {sessionObj.data.presentCount +
-                sessionObj.data.absentCount}{' '}
-              Present
-            </div>
-
-            <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-                    <span className='text-blue-500 font-[Poppins] text-[12px]'>Taken by: </span>{sessionObj.data.recordedByName}
-             </div>
-                
-              <div style={{ cursor: 'pointer', marginRight: '12px' }}>
-                
-                <div style={{ cursor: 'pointer', marginRight: '12px' }}>
-                  <Typography sx={{ fontSize: 16 }}>
-                    {sessionObj.data.classTopic ? ('Topic of Class: ' + sessionObj.data.classTopic + '') : ''}
-                  </Typography>
-                </div>
-              </div>
-
-              <AiOutlineRightCircle
-                style={{
-                  cursor: 'pointer',
-                  position: 'absolute',
-                  top: '50%',
-                  right: '10px',
-                  fontSize: '20px',
-                  color: '#9c27b0',
-                }}
-              />
-      
+                        <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
+                            <span className='text-blue-500 font-[Poppins] text-[12px]'>Time: </span>{formatTime(sessionObj.data.classStartTime) + '-' + formatTime(sessionObj.data.classEndTime)}
+                        </div>
 
 
-     
-        </div>
-            </Timeline.Content>
+                        <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
+                            <span className='text-blue-500 font-[Poppins] text-[12px]'>Attendance: </span>{sessionObj.data.presentCount} out of{' '}
+                            {sessionObj.data.presentCount +
+                                sessionObj.data.absentCount}{' '}
+                            Present
+                        </div>
+
+                        <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
+                            <span className='text-blue-500 font-[Poppins] text-[12px]'>Taken by: </span>{sessionObj.data.recordedByName}
+                        </div>
+
+                        <div style={{ cursor: 'pointer', marginRight: '12px' }}>
+
+                            <div style={{ cursor: 'pointer', marginRight: '12px' }}>
+                                <Typography sx={{ fontSize: 16 }}>
+                                    {sessionObj.data.classTopic ? ('Topic of Class: ' + sessionObj.data.classTopic + '') : ''}
+                                </Typography>
+                            </div>
+                        </div>
+
+                        <AiOutlineRightCircle
+                            style={{
+                                cursor: 'pointer',
+                                position: 'absolute',
+                                top: '50%',
+                                right: '10px',
+                                fontSize: '20px',
+                                color: '#9c27b0',
+                            }} />
+
+
+
+
+                    </div>
+                </Timeline.Content>
             </Timeline.Item>
-            </Timeline>
-      <ListItem key={index}>
-   
-      </ListItem>
+        </Timeline><ListItem key={index}>
+
+            </ListItem></>
      
     ))
 )}
