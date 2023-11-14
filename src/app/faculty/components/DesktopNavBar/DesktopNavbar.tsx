@@ -62,8 +62,11 @@ const items: MenuItem[] = [
 
 const DesktopNavbar: React.FC = () => {
     const [collapsed, setCollapsed] = useState(() => {
-        // Retrieve the collapsed state from localStorage or default to false
-        return window.localStorage.getItem('collapsed') === 'true' || false;
+        // Check if running on the client side before accessing localStorage
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('collapsed') === 'true' || false;
+        }
+        return false;
     });
 
     useEffect(() => {
