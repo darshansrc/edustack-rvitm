@@ -1,3 +1,4 @@
+'use client';
 import getUser from '@/lib/getUser'
 import React from 'react'
 import BottomNavbar from '../components/bottomNavbar/BottomNavbar';
