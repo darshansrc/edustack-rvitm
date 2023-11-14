@@ -328,6 +328,24 @@ const AttendanceForm = () => {
   ));
 
 
+const batchFilteredStudentCards = (batch) =>
+attendance.map((student) => {
+  if (labBatch === null || student.labBatch === batch) {
+    return (
+      <StudentCard
+        key={student.usn}
+        img={student.Image}
+        USN={student.usn}
+        Name={student.name}
+        Present={student.Present}
+        toggle={() => toggleAttendance(student.usn)}
+      />
+    );
+  }
+  return null;
+});
+
+
 
   const handleSubmitAttendanceForm = async () => {
     setConfirmLoading(true);
@@ -359,7 +377,19 @@ const AttendanceForm = () => {
       classDate: classDate.toISOString(),
       classStartTime: startTime.toISOString(),
       classEndTime: endTime.toISOString(),
-      students: attendance,
+      students: labBatch
+      ? attendance
+          .filter((student) => student.labBatch === labBatch)
+          .map((student) => ({
+            name: student.name,
+            usn: student.usn,
+            Present: student.Present,
+          }))
+      : attendance.filter((student) => isSubjectElective === 'compulsory' || electiveStudentUSN.includes(student.usn)).map((student) => ({
+          name: student.name,
+          usn: student.usn,
+          Present: student.Present,
+        })),
       presentCount: presentStudents.length,
       absentCount: absentStudents.length,
       recordedTime: dayjs().toISOString(),
@@ -409,22 +439,6 @@ const AttendanceForm = () => {
   
   } 
 
-const batchFilteredStudentCards = (batch) =>
-  attendance.map((student) => {
-    if (labBatch === null || student.labBatch === batch) {
-      return (
-        <StudentCard
-          key={student.usn}
-          img={student.Image}
-          USN={student.usn}
-          Name={student.name}
-          Present={student.Present}
-          toggle={() => toggleAttendance(student.usn)}
-        />
-      );
-    }
-    return null;
-  });
 
 
 
