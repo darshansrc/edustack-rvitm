@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DesktopOutlined,
   FileOutlined,
@@ -61,7 +61,15 @@ const items: MenuItem[] = [
 ];
 
 const DesktopNavbar: React.FC = () => {
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(() => {
+        // Retrieve the collapsed state from localStorage or default to false
+        return localStorage.getItem('collapsed') === 'true' || false;
+    });
+
+    useEffect(() => {
+        localStorage.setItem('collapsed', String(collapsed));
+    }, [collapsed]);
+
     const {
       token: { colorBgContainer },
     } = theme.useToken();
@@ -70,9 +78,17 @@ const DesktopNavbar: React.FC = () => {
   
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+        <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}  >
           <div className="demo-logo-vertical" />
-          <Menu theme="dark" defaultSelectedKeys={['none']} mode="inline">
+          <Menu theme="dark" defaultSelectedKeys={['none']} mode="inline" style={{
+          overflow: 'auto',
+          height: '100vh',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          transition: 'all 0.3s',
+        }} className={collapsed? 'max-w-[80px]' : 'max-w-[200px]'}>
             
             <div className='min-h-[15px]'></div>
   
