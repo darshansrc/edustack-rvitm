@@ -1,4 +1,4 @@
-
+'use client';
 import TopNavbar from '@/app/student/components/topnavbar/TopNavbar'
 import Link from 'next/link'
 import React from 'react'
