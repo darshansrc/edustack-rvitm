@@ -63,13 +63,13 @@ const items: MenuItem[] = [
 const DesktopNavbar: React.FC = () => {
     const [collapsed, setCollapsed] = useState(() => {
         // Check if the key 'collapsed' exists in localStorage
-        const localStorageValue = localStorage.getItem('collapsed');
+        const localStorageValue = localStorage?.getItem('collapsed');
         
         // Return the retrieved value if it exists, otherwise default to false
         return localStorageValue ? localStorageValue === 'true' : false;
     });
     useEffect(() => {
-        localStorage.setItem('collapsed', String(collapsed));
+        localStorage?.setItem('collapsed', String(collapsed));
     }, [collapsed]);
 
     const {
