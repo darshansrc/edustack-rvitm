@@ -519,7 +519,7 @@ attendance.map((student) => {
                 value={labBatch || undefined}
                 onChange={(value) => setLabBatch(value)}
                 placeholder='Select Lab Batch'
-                className='w-[80vw] max-w-[450px] text-[16px] mt-[2px]'
+                className='w-[80vw] max-w-[450px] text-[16px] mt-[2px] '
               >
                 {batchOptions.map((option) => (
                   <Select.Option key={option.value} value={option.value}>
@@ -538,7 +538,7 @@ attendance.map((student) => {
               format={'ddd, MMM D'}
               value={classDate}
               onChange={setClassDate}
-              className='w-[80vw] max-w-[450px]  text-[16px] mt-[2px]'
+              className='w-[80vw] max-w-[450px]  text-[16px] mt-[2px] '
             />
 
             <div className=' w-[80vw] max-w-[450px] flex flex-row justify-between mb-4 text-[16px]'>
@@ -549,7 +549,7 @@ attendance.map((student) => {
                 size='large'
                 value={classStartTime || undefined}
                 onChange={handleStartTimeChange}
-                className='w-[40vw] max-w-[225px] pr-[5px]  text-[16px] mt-[2px]'
+                className='w-[40vw] max-w-[225px] pr-[5px]  text-[16px] mt-[2px] '
                 placeholder='Select Start Time'
               >
                 {timeOptions.map((option) => (
@@ -567,7 +567,7 @@ attendance.map((student) => {
                 value={classEndTime || undefined}
                 onChange={(value) => setClassEndTime(value)}
                 placeholder='Select End Time'
-                className='w-[40vw] max-w-[225px] pl-[5px] text-[16px] mt-[2px]'
+                className='w-[40vw] max-w-[225px] pl-[5px] text-[16px] mt-[2px] '
               >
                 {timeOptions.map((option) => (
                   <Select.Option key={option.value} value={option.value}>

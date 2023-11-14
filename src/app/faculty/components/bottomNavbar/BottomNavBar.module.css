@@ -25,7 +25,7 @@
         font-weight: 400;
         margin: 5px;
         gap: 5px;
-        color: rgb(166,173,180);
+        color: #474747;
         font-size: 14px;
         text-align: center;
     }
@@ -36,7 +36,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: white;
             margin-top: 10px;
             padding-bottom: 10px;
             border-bottom: 1px solid #00000014;
@@ -48,10 +47,9 @@
             left: 0;
             border-right: 1px solid #dddddd ;
             height: 100vh;
-            width: 90px;
+            width: 80px;
             box-shadow: 4px 0 5px rgba(232, 232, 232, 0.1);
             text-align: center;
-            background-color: rgb(0 21 40);
 
         }
     
@@ -75,14 +73,14 @@
 
     .navItemActive{
         display: flex;
-        margin: 10px;
+        margin: 5px;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         font-weight: 400;
         gap: 5px;
-        background-color: rgb(29 78 216);
-        color: rgb(255, 255, 255);
+        background-color: #e9edff;
+        color: rgb(39, 86, 255);
         justify-content: left;
         padding: 10px;
         border-radius: 5px;
