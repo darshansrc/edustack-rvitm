@@ -66,11 +66,10 @@ const DesktopNavbar: React.FC = () => {
     useEffect(() => {
         const isCollapsed = localStorage.getItem('collapsed') === 'true' || false;
         setCollapsed(isCollapsed);
-    })
-
-    useEffect(() => {
         localStorage.setItem('collapsed', String(collapsed));
-    }, [collapsed]);
+    }, [collapsed])
+
+
 
     const {
       token: { colorBgContainer },
