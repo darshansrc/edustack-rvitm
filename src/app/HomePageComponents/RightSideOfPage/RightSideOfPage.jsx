@@ -11,7 +11,7 @@ const RightSideOfPage = () => {
             style={{
               fontSize: "30px",
               fontWeight: "bolder",
-              margin: "20px",
+              margin: "15px",
               fontFamily: "poppins",
               fontVariant: "600",
             }}
@@ -19,7 +19,7 @@ const RightSideOfPage = () => {
             Welcome to EduStack for RVITM
           </h1>
           <p
-            className="text-gray-500 font-medium text-base max-sm:mb-8"
+            className="text-gray-500 font-medium text-base"
             style={{
               fontFamily: "poppins",
             }}

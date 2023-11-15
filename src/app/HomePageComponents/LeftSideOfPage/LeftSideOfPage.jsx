@@ -10,7 +10,11 @@ const LeftSideOfPage = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1.5, delay: 2 }}
           className="font-extrabold text-9xl text-blue-600"
-          style={{ WebkitTextStroke: "0.5px white", fontFamily: "poppins" }}
+          style={{
+            WebkitTextStroke: "0.5px white",
+            fontFamily: "poppins",
+            marginBottom: "5px",
+          }}
         >
           EduStack
         </motion.h1>
