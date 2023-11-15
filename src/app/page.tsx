@@ -7,7 +7,10 @@ import RightSideOfPage from "./HomePageComponents/RightSideOfPage/RightSideOfPag
 const HomePage = () => {
   return (
     <>
-      <div className="h-screen flex justify-center items-center relative overflow-hidden">
+      <div
+        className="flex justify-center items-center relative overflow-hidden"
+        style={{ height: "100svh" }}
+      >
         <div className={styles.pill1}></div>
         <div className={styles.pill2}></div>
         <div className={styles.pill3}></div>
