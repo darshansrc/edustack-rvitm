@@ -10,7 +10,9 @@ import Link from 'next/link';
 import { Timeline } from 'keep-react';
 import { CiViewList } from "react-icons/ci";
 import { TbEdit } from 'react-icons/tb';
+import { FaChalkboardTeacher } from "react-icons/fa";
 import { Button, Checkbox, Modal } from 'antd';
+import { BsChatSquareText } from 'react-icons/bs';
 
 interface AttendanceFormData {
   classId: string;
@@ -136,6 +138,13 @@ const AttendanceDashboard = () => {
   const [selectedClassData, setSelectedClassData] = useState<any>({});
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [updateData, setUpdateData] = useState<boolean>(false);
+
+
+  // Daily dairy
+  const [classTopic, setClassTopic] = useState<string>('');
+  const [classDescription, setClassDescription] = useState<string>('');
+
+  const [topicModalOpen, setTopicModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchClassSubjectPairs = async () => {
@@ -392,13 +401,7 @@ const AttendanceDashboard = () => {
           <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
             <span className='text-blue-500 font-[Poppins] text-[12px]'>Taken by: </span>{selectedClassData.recordedByName}
           </div>
-          <div style={{ cursor: 'pointer', marginRight: '12px' }}>
-            <div style={{ cursor: 'pointer', marginRight: '12px' }}>
-              <Typography sx={{ fontSize: 16 }}>
-                {selectedClassData.classTopic ? ('Topic of Class: ' + selectedClassData.classTopic + '') : ''}
-              </Typography>
-            </div>
-          </div>
+
         </div>
      <div className="max-h-[50vh] h-[50vh] overflow-y-auto table-auto border border-slate-200 rounded mt-2">
         <table className="w-full">
@@ -470,13 +473,7 @@ const AttendanceDashboard = () => {
           <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
             <span className='text-blue-500 font-[Poppins] text-[12px]'>Taken by: </span>{selectedClassData.recordedByName}
           </div>
-          <div style={{ cursor: 'pointer', marginRight: '12px' }}>
-            <div style={{ cursor: 'pointer', marginRight: '12px' }}>
-              <Typography sx={{ fontSize: 16 }}>
-                {selectedClassData.classTopic ? ('Topic of Class: ' + selectedClassData.classTopic + '') : ''}
-              </Typography>
-            </div>
-          </div>
+
         </div>
         <div className='max-h-[50vh] h-[50vh] overflow-y-auto table-auto  border border-slate-200 rounded mt-2' >
           <table className='w-full '>
@@ -509,6 +506,150 @@ const AttendanceDashboard = () => {
   const handleEditClick = (sessionObjId) => {
     setEditModalOpen(true);
   }
+
+
+
+
+  const ClassTopicModal = () => {
+    const [editedClassTopic, setEditedClassTopic] = useState(selectedClassData);
+    const [editedTopic, setEditedTopic] = useState<string>(editedClassTopic.classTopic || '');
+    const [editedDescription, setEditedDescription] = useState<string>(editedClassTopic.classDescription || '');
+    const [editMode, setEditMode] = useState(!editedClassTopic.classTopic && !editedClassTopic.classDescription);
+  
+    useEffect(() => {
+      setEditedClassTopic(selectedClassData);
+      setEditedTopic(selectedClassData.classTopic || '');
+      setEditedDescription(selectedClassData.classDescription || '');
+      setEditMode(!selectedClassData.classTopic && !selectedClassData.classDescription);
+    }, [selectedClassData]);
+  
+    const handleEditButtonClick = () => {
+      setEditMode(true);
+    };
+  
+    const handleSaveChanges = async () => {
+      setEditedClassTopic({
+        ...selectedClassData,
+        classTopic: editedTopic,
+        classDescription: editedDescription,
+      });
+  
+      try {
+        const res = await fetch(`${window.location.origin}/api/faculty/attendance/submit`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...selectedClassData,
+            classTopic: editedTopic,
+            classDescription: editedDescription,
+          }),
+        });
+  
+        if (res.ok) {
+          console.log('Form data submitted successfully');
+          setSuccessMessageOpen(true);
+          setUpdateData(true);
+          setTopicModalOpen(false);
+        } else {
+          setErrorMessageOpen(true);
+          setTopicModalOpen(false);
+          throw new Error('Failed to submit form data');
+        }
+      } catch (error) {
+        console.log('Unable to save changes');
+        setEditModalOpen(false);
+        setErrorMessageOpen(true);
+      }
+  
+      setTopicModalOpen(false);
+    };
+  
+    const handleModalClose = () => {
+      setEditedTopic(selectedClassData.classTopic || '');
+      setEditedDescription(selectedClassData.classDescription || '');
+      setEditMode(!selectedClassData.classTopic && !selectedClassData.classDescription);
+      setTopicModalOpen(false);
+    };
+  
+    return (
+      <Modal
+        title=""
+        open={topicModalOpen}
+        centered
+        onOk={handleSaveChanges}
+        onCancel={handleModalClose}
+        footer={[
+          editMode ? (
+            <Button key="save" type="primary" className="bg-blue-500" onClick={handleSaveChanges}>
+              Save Changes
+            </Button>
+          ) : (
+            <Button key="edit" type="primary" className="bg-blue-500" onClick={handleEditButtonClick}>
+              Edit
+            </Button>
+          ),
+          <Button key="cancel" type="default" onClick={handleModalClose}>
+            Cancel
+          </Button>,
+        ]}
+      >
+        <div className="mb-4">
+          <label htmlFor="topic" className="block text-sm font-medium text-blue-600 mt-4">
+            Topic of Class
+          </label>
+          {editMode ? (
+            <input
+              id="topic"
+              value={editedTopic}
+              onChange={(e) => setEditedTopic(e.target.value)}
+              className="mt-1 p-2 border rounded-md w-full focus:border-blue-300 border-1px"
+            />
+          ) : (
+            <div className="mt-1 p-2 border rounded-md w-full ">
+              {editedTopic}
+            </div>
+          )}
+        </div>
+  
+        <div className="mb-4">
+          <label htmlFor="description" className="block text-sm font-medium text-blue-600">
+            Class Description
+          </label>
+          {editMode ? (
+            <textarea
+              id="description"
+              value={editedDescription}
+              onChange={(e) => setEditedDescription(e.target.value)}
+              className="mt-1 p-2 border rounded-md w-full focus:border-blue-300 border-1px"
+            />
+          ) : (
+            <div className="mt-1 p-2 border rounded-md w-full ">
+              {editedDescription}
+            </div>
+          )}
+        </div>
+      </Modal>
+    );
+  };
+  
+  const formatRecordedTime = (isoString) => {
+    const date = new Date(isoString);
+  
+
+  
+    const formattedDate = new Intl.DateTimeFormat('en-US', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true,
+      }).format(date);
+  
+    return formattedDate;
+  };
 
   return (
     <>
@@ -687,23 +828,30 @@ const AttendanceDashboard = () => {
                               : ''} { ' Present'}
                            
                             </div>
+
                             <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
                               <span className='text-blue-500 font-[Poppins] text-[12px]'>
-                                Taken by:{' '}
+                                Recorded by:{' '}
                               </span>
                               {sessionObj.data.recordedByName}
                             </div>
-                            <div style={{ cursor: 'pointer', marginRight: '12px' }}>
-                              <div style={{ cursor: 'pointer', marginRight: '12px' }}>
-                                <Typography sx={{ fontSize: 16 }}>
-                                  {sessionObj.data.classTopic
-                                    ? 'Topic of Class: ' +
-                                      sessionObj.data.classTopic +
-                                      ''
-                                    : ''}
-                                </Typography>
-                              </div>
+
+                            <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
+                              <span className='text-blue-500 font-[Poppins] text-[12px]'>
+                                Recorded on:{' '}
+                              </span>
+                              {sessionObj.data.recordedTime && formatRecordedTime(sessionObj.data.recordedTime)}
                             </div>
+
+                            <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
+                              <span className='text-blue-500 font-[Poppins] text-[12px]'>
+                                Topic of Class:{' '}
+                              </span>
+                              {sessionObj.data.classTopic ? (sessionObj.data.classTopic) : ('-')}
+                            </div>
+
+
+
                             <div className='flex flex-row'>
                               <button
                                 onClick={() => {
@@ -722,6 +870,11 @@ const AttendanceDashboard = () => {
                               className='p-2 bg-slate-100 text-blue-600 rounded mx-2 mt-2'>
                                 <TbEdit />
                               </button>
+                              <button
+                                        onClick={() => { setTopicModalOpen(true);  setSelectedClassData(sessionObj.data);}}
+                              className='p-2 bg-slate-100 text-blue-600 rounded mx-2 mt-2'>
+                                <BsChatSquareText />
+                              </button>
                               <div> </div>
                             </div>
                           </div>
@@ -738,6 +891,8 @@ const AttendanceDashboard = () => {
       <ViewModal />
 
       <EditModal />
+
+      <ClassTopicModal />
 
       <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'center' }} open={successMessageOpen} autoHideDuration={2000} onClose={() => setSuccessMessageOpen(false)}>
         <Alert onClose={() => setSuccessMessageOpen(false)} severity="success" sx={{ width: '100%' }}>
