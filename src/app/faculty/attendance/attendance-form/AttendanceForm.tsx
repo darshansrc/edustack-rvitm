@@ -4,11 +4,12 @@ import { DatePicker, Select } from 'antd';
 import TopNavbar from '@/app/student/components/topnavbar/TopNavbar';
 import StudentCard from './studentcard/StudentCard';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase-config';
+import { auth, db } from '@/lib/firebase-config';
 import styles from './AttendanceForm.module.css'
 import { IoChevronBackSharp } from 'react-icons/io5';
 
 import {Button as AntButton, Modal as AntModal } from 'antd';
+import { onAuthStateChanged } from 'firebase/auth';
 
 interface AttendanceFormData {
   classId: string;
@@ -129,6 +130,11 @@ const AttendanceForm = () => {
   const [absentCount, setAbsentCount] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [isDataRecorded, setIsDataRecorded] = useState(false);
+  const [ facultyDetails, setFacultyDetails ] = useState<any>({});
+  const [ user, setUser ] = useState<any>({});
+
+  const [classTopic, setClassTopic] = useState<string>('');
+  const [classDescription, setClassDescription] = useState<string>('');
 
   const clearAllStateVariables = () => {
     setClassDate(dayjs());
@@ -152,6 +158,64 @@ const AttendanceForm = () => {
     setIsDataRecorded(false);
     setFormStep(1);
   }
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
+      console.log("Auth", currentuser);
+      setUser(currentuser);
+      console.log(user);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+
+  const fetchFacultyData = async () => {
+    try {
+      const currentServerDomain = window.location.origin;
+      const responseAPI = await fetch(`${currentServerDomain}/api/faculty/home`, {
+        method: 'GET',
+      });
+
+      if (responseAPI.status === 200) {
+        const responseBody = await responseAPI.json();
+        setFacultyDetails(responseBody.facultyDetails);
+
+
+
+        // Store studentDetails in localStorage
+        localStorage.setItem('facultyDetails', JSON.stringify(responseBody.facultyDetails));
+      } else {
+        console.log('Cannot fetch data');
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+  }
+
+
+
+  useEffect(() => {
+        
+    const storedFacultyDetails = localStorage.getItem('facultyDetails');
+ 
+    if (storedFacultyDetails) {
+     
+      const parsedFacultyDetails = JSON.parse(storedFacultyDetails);
+      const userUidMatch = parsedFacultyDetails.userUID === user?.uid;
+      if(userUidMatch){
+        setFacultyDetails(parsedFacultyDetails);
+    
+      }
+      
+    } 
+
+    fetchFacultyData();
+    
+  }, [user]);
+
   
 
   const uniqueClassOptions = classSubjectPairList.reduce((acc, pair) => {
@@ -414,8 +478,8 @@ attendance.map((student) => {
       absentCount: absentCount,
       recordedTime: dayjs().toISOString(),
       updatedTime: dayjs().toISOString(),
-      recordedByEmail: '',
-      recordedByName: '',
+      recordedByEmail: user.email,
+      recordedByName: facultyDetails?.facultyName,
       classTopic: '',
       classDescription: ''
     }

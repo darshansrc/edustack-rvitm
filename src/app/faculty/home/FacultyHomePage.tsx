@@ -51,7 +51,7 @@ const FacultyHomePage =  () => {
   }, []);
 
 
-  const fetchAttendanceData = async () => {
+  const fetchFacultyData = async () => {
     try {
       const currentServerDomain = window.location.origin;
       const responseAPI = await fetch(`${currentServerDomain}/api/faculty/home`, {
@@ -105,7 +105,7 @@ const FacultyHomePage =  () => {
       
     } 
 
-    fetchAttendanceData();
+    fetchFacultyData();
     
   }, [user]);
 
