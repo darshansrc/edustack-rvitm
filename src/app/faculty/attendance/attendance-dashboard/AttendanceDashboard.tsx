@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase-config';
 import dayjs from 'dayjs';
-import { Box, Card, ListItem, Typography, styled } from '@mui/material';
+import { Alert, Box, Card, ListItem, Snackbar, Typography, styled } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Link from 'next/link';
@@ -135,6 +135,7 @@ const AttendanceDashboard = () => {
   const [viewModalOpen, setViewModalOpen] = useState<boolean>(false);
   const [selectedClassData, setSelectedClassData] = useState<any>({});
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [updateData, setUpdateData] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchClassSubjectPairs = async () => {
@@ -152,6 +153,8 @@ const AttendanceDashboard = () => {
   }, []);
 
   const [selectedPair, setSelectedPair] = useState(classSubjectPairList[0]);
+  const [successMessageOpen, setSuccessMessageOpen] = useState<boolean>(false);
+  const [ errorMessageOpen, setErrorMessageOpen ] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -188,11 +191,6 @@ const AttendanceDashboard = () => {
           setIsSubjectElective(subjectElective);
           setElectiveStudentUSN(electiveStudents);
 
-          console.log(subjectType)
-          console.log(subjectSemester)
-          console.log(subjectName)
-          console.log(subjectElective)
-          console.log(electiveStudents)
         }
       }
     };
@@ -235,12 +233,13 @@ const AttendanceDashboard = () => {
         });
 
         setPreviousAttendanceSessions(sessionsData);
+        setUpdateData(false);
         console.log(previousAttendanceSessions)
       }
     };
 
     fetchPreviousAttendanceSessions();
-  }, [classId, subjectCode, subjectSemester]);
+  }, [classId, subjectCode, subjectSemester, updateData]);
 
   const formatTime = (date) => {
     date = new Date(date);
@@ -251,78 +250,184 @@ const AttendanceDashboard = () => {
     });
   };
 
+
+
   const EditModal = () => {
-    // State to track edited data
     const [editedClassData, setEditedClassData] = useState(selectedClassData);
+    const [dataEditedSuccessfully, setDataEditedSuccessfully] = useState(true);
+    const [editMode, setEditMode] = useState(false); 
+
+
+    useEffect(() => {
+        setEditedClassData(selectedClassData);
+    }, [editModalOpen, editMode, selectedClassData])
   
-    // Handle checkbox changes
     const handleCheckboxChange = (index) => {
-      const updatedStudents = [...editedClassData.students];
-      updatedStudents[index].Present = !updatedStudents[index].Present;
+      if (editMode) {
+        const updatedStudents = [...editedClassData.students];
+        const student = updatedStudents[index];
   
-      // Update the state with the new data
-      setEditedClassData({
-        ...editedClassData,
-        students: updatedStudents,
-      });
+        const prevCount = editedClassData.presentCount;
+        const newPresentCount = student.Present ? prevCount - 1 : prevCount + 1;
+        const newAbsentCount = editedClassData.students.length - newPresentCount;
+  
+        student.Present = !student.Present;
+  
+        setEditedClassData({
+          ...editedClassData,
+          students: updatedStudents,
+          presentCount: newPresentCount,
+          absentCount: newAbsentCount,
+          updatedTime: new Date().toISOString(),
+        });
+      }
     };
   
-    // Save changes
-    const handleSaveChanges = () => {
-      // Save the edited data to your state or perform any other actions
-      // For now, just log the edited data
+    const handleEditButtonClick = () => {
+      setEditMode(true);
+    };
+  
+    const handleSaveChanges = async () => {
+      setDataEditedSuccessfully(false);
       console.log('Edited Data:', editedClassData);
   
-      // Close the modal
-      setEditModalOpen(false);
+      try {
+        const res = await fetch(`${window.location.origin}/api/faculty/attendance/submit`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(editedClassData),
+        });
+  
+        if (!res.ok) {
+          setEditedClassData(selectedClassData);
+          serErrorMessageOpen(true);
+          setEditModalOpen(false);
+          throw new Error('Failed to submit form data');
+          
+        }
+  
+        if (res.ok) {
+          console.log('Form data submitted successfully');
+          setDataEditedSuccessfully(true);
+          setEditedClassData(selectedClassData);
+          
+          setSuccessMessageOpen(true);
+          setUpdateData(true);
+          setEditModalOpen(false);
+        }
+      } catch (error) {
+        console.log('Unable to save changes');
+        setEditedClassData(selectedClassData);
+        setEditModalOpen(false);
+        
+      }
     };
   
+    const handleModalClose = () => {
+        setEditedClassData(selectedClassData);
+        setEditModalOpen(false);
+    }
+
     return (
       <Modal
         title="Edit Attendance Data"
         open={editModalOpen}
         centered
         onOk={() => setEditModalOpen(false)}
-        onCancel={() => setEditModalOpen(false)}
+        onCancel={handleModalClose}
         footer={[
-          <Button key="save" type="primary" className="bg-blue-500" onClick={handleSaveChanges}>
-            Save Changes
+          <Button
+            key="edit"
+            type="primary"
+            className="bg-blue-500"
+            onClick={handleEditButtonClick}
+            disabled={editMode}
+          >
+            Edit
           </Button>,
-          <Button key="cancel" type="default" onClick={() => setEditModalOpen(false)}>
+          <Button
+            key="save"
+            type="primary"
+            className="bg-blue-500"
+            onClick={handleSaveChanges}
+            disabled={!editMode}
+          >
+            {dataEditedSuccessfully ? 'Save Changes' : 'Updating'}
+          </Button>,
+          <Button key="cancel" type="default" onClick={handleModalClose}>
             Cancel
           </Button>,
         ]}
       >
+        <div className='border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px] mt-4'>
+          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
+            <span className='text-blue-500 font-[Poppins] text-[12px]'>Subject: </span>{subjectName}
+          </div>
+          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
+            <span className='text-blue-500 font-[Poppins] text-[12px]'>Date: </span>{new Date(selectedClassData.classDate).toLocaleDateString(
+              'en-US',
+              {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              }
+            )}
+          </div>
+          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
+            <span className='text-blue-500 font-[Poppins] text-[12px]'>Time: </span>{formatTime(selectedClassData.classStartTime) + '-' + formatTime(selectedClassData.classEndTime)}
+          </div>
+          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
+            <span className='text-blue-500 font-[Poppins] text-[12px]'>Attendance: </span>                              {selectedClassData.students
+                              ? `${selectedClassData.students.filter(student => student.Present).length} out of ${
+                                selectedClassData.students.length
+                                }`
+                              : ''} {' Present'}
+          </div>
+          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
+            <span className='text-blue-500 font-[Poppins] text-[12px]'>Taken by: </span>{selectedClassData.recordedByName}
+          </div>
+          <div style={{ cursor: 'pointer', marginRight: '12px' }}>
+            <div style={{ cursor: 'pointer', marginRight: '12px' }}>
+              <Typography sx={{ fontSize: 16 }}>
+                {selectedClassData.classTopic ? ('Topic of Class: ' + selectedClassData.classTopic + '') : ''}
+              </Typography>
+            </div>
+          </div>
+        </div>
+     <div className="max-h-[50vh] h-[50vh] overflow-y-auto table-auto border border-slate-200 rounded mt-2">
+        <table className="w-full">
+          <thead className="bg-slate-100 z-50">
+            <tr>
+              <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left z-50">Name</th>
+              <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left z-50">USN</th>
+              <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left z-50">Attendance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {editedClassData.students?.map((student, index) => (
+              <tr key={index}>
+                <td className="border-y border-slate-100 px-2 text-[12px] font-[Poppins]">{student.name}</td>
+                <td className="border-y border-slate-100 px-2 text-[12px] font-[Poppins]">{student.usn}</td>
+                <td className="border-y border-slate-100 px-2 text-[12px] font-[Poppins] text-center">
+                  {/* Use Checkbox instead of static text */}
+                  <Checkbox
+                    checked={student.Present}
+                    onChange={() => handleCheckboxChange(index)}
+                    disabled={!editMode}
+                    style={{ color: editMode ? '' : '#f0f0f0', borderColor: '#d9d9d9' }}
+                  >
+                    {student.Present ? 'P' : 'A'}
+                  </Checkbox>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
         {/* Your content */}
         {/* ... */}
-        <div className="max-h-[50vh] h-[50vh] overflow-y-auto table-auto border border-slate-200 rounded mt-2">
-          <table className="w-full">
-            <thead className="bg-slate-100">
-              <tr>
-                <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left">Name</th>
-                <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left">USN</th>
-                <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left">Attendance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {editedClassData.students?.map((student, index) => (
-                <tr key={index}>
-                  <td className="border-y border-slate-100 px-2 text-[12px] font-[Poppins]">{student.name}</td>
-                  <td className="border-y border-slate-100 px-2 text-[12px] font-[Poppins]">{student.usn}</td>
-                  <td className="border-y border-slate-100 px-2 text-[12px] font-[Poppins] text-center">
-                    {/* Use Checkbox instead of static text */}
-                    <Checkbox
-                      checked={student.Present}
-                      onChange={() => handleCheckboxChange(index)}
-                    >
-                      {student.Present ? 'P' : 'A'}
-                    </Checkbox>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </Modal>
     );
   };
@@ -352,10 +457,11 @@ const AttendanceDashboard = () => {
             <span className='text-blue-500 font-[Poppins] text-[12px]'>Time: </span>{formatTime(selectedClassData.classStartTime) + '-' + formatTime(selectedClassData.classEndTime)}
           </div>
           <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-            <span className='text-blue-500 font-[Poppins] text-[12px]'>Attendance: </span>{selectedClassData.presentCount} out of{' '}
-            {selectedClassData.presentCount +
-              selectedClassData.absentCount}{' '}
-            Present
+            <span className='text-blue-500 font-[Poppins] text-[12px]'>Attendance: </span>                              {selectedClassData.students
+                              ? `${selectedClassData.students.filter(student => student.Present).length} out of ${
+                                selectedClassData.students.length
+                                }`
+                              : ''} {' Present'}
           </div>
           <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
             <span className='text-blue-500 font-[Poppins] text-[12px]'>Taken by: </span>{selectedClassData.recordedByName}
@@ -570,10 +676,12 @@ const AttendanceDashboard = () => {
                               <span className='text-blue-500 font-[Poppins] text-[12px]'>
                                 Attendance:{' '}
                               </span>
-                              {sessionObj.data.presentCount} out of{' '}
-                              {sessionObj.data.presentCount +
-                                sessionObj.data.absentCount}{' '}
-                              Present
+                              {sessionObj.data.students
+                              ? `${sessionObj.data.students.filter(student => student.Present).length} out of ${
+                                  sessionObj.data.students.length
+                                }`
+                              : ''} { ' Present'}
+                           
                             </div>
                             <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
                               <span className='text-blue-500 font-[Poppins] text-[12px]'>
@@ -626,6 +734,18 @@ const AttendanceDashboard = () => {
       <ViewModal />
 
       <EditModal />
+
+      <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'center' }} open={successMessageOpen} autoHideDuration={2000} onClose={() => setSuccessMessageOpen(false)}>
+        <Alert onClose={() => setSuccessMessageOpen(false)} severity="success" sx={{ width: '100%' }}>
+         Attendance Updated Successfully
+        </Alert>
+      </Snackbar>
+
+      <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'center' } } open={successMessageOpen} autoHideDuration={2000} onClose={() => setErrorMessageOpen(false)}>
+        <Alert onClose={() => setErrorMessageOpen(false)} severity="error" sx={{ width: '100%' }}>
+        Failed to update Data
+        </Alert>
+      </Snackbar>
     </>
   );
 }
