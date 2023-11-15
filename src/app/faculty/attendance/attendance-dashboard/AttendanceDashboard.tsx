@@ -3,16 +3,14 @@ import { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase-config';
 import dayjs from 'dayjs';
-import { Box, Card, CardContent, ListItem, Typography, styled } from '@mui/material';
+import { Box, Card, ListItem, Typography, styled } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Link from 'next/link';
-import { AiOutlineRightCircle } from 'react-icons/ai';
 import { Timeline } from 'keep-react';
-import { CalendarBlank } from 'phosphor-react';
 import { CiViewList } from "react-icons/ci";
 import { TbEdit } from 'react-icons/tb';
-import { Button, Modal } from 'antd';
+import { Button, Checkbox, Modal } from 'antd';
 
 interface AttendanceFormData {
   classId: string;
@@ -136,6 +134,7 @@ const AttendanceDashboard = () => {
   const [previousAttendanceSessions, setPreviousAttendanceSessions] = useState<any[]>([]);
   const [viewModalOpen, setViewModalOpen] = useState<boolean>(false);
   const [selectedClassData, setSelectedClassData] = useState<any>({});
+  const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchClassSubjectPairs = async () => {
@@ -252,6 +251,82 @@ const AttendanceDashboard = () => {
     });
   };
 
+  const EditModal = () => {
+    // State to track edited data
+    const [editedClassData, setEditedClassData] = useState(selectedClassData);
+  
+    // Handle checkbox changes
+    const handleCheckboxChange = (index) => {
+      const updatedStudents = [...editedClassData.students];
+      updatedStudents[index].Present = !updatedStudents[index].Present;
+  
+      // Update the state with the new data
+      setEditedClassData({
+        ...editedClassData,
+        students: updatedStudents,
+      });
+    };
+  
+    // Save changes
+    const handleSaveChanges = () => {
+      // Save the edited data to your state or perform any other actions
+      // For now, just log the edited data
+      console.log('Edited Data:', editedClassData);
+  
+      // Close the modal
+      setEditModalOpen(false);
+    };
+  
+    return (
+      <Modal
+        title="Edit Attendance Data"
+        open={editModalOpen}
+        centered
+        onOk={() => setEditModalOpen(false)}
+        onCancel={() => setEditModalOpen(false)}
+        footer={[
+          <Button key="save" type="primary" className="bg-blue-500" onClick={handleSaveChanges}>
+            Save Changes
+          </Button>,
+          <Button key="cancel" type="default" onClick={() => setEditModalOpen(false)}>
+            Cancel
+          </Button>,
+        ]}
+      >
+        {/* Your content */}
+        {/* ... */}
+        <div className="max-h-[50vh] h-[50vh] overflow-y-auto table-auto border border-slate-200 rounded mt-2">
+          <table className="w-full">
+            <thead className="bg-slate-100">
+              <tr>
+                <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left">Name</th>
+                <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left">USN</th>
+                <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left">Attendance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {editedClassData.students?.map((student, index) => (
+                <tr key={index}>
+                  <td className="border-y border-slate-100 px-2 text-[12px] font-[Poppins]">{student.name}</td>
+                  <td className="border-y border-slate-100 px-2 text-[12px] font-[Poppins]">{student.usn}</td>
+                  <td className="border-y border-slate-100 px-2 text-[12px] font-[Poppins] text-center">
+                    {/* Use Checkbox instead of static text */}
+                    <Checkbox
+                      checked={student.Present}
+                      onChange={() => handleCheckboxChange(index)}
+                    >
+                      {student.Present ? 'P' : 'A'}
+                    </Checkbox>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Modal>
+    );
+  };
+
   const ViewModal = () => {
     return (
       <Modal title='Attdendance data' open={viewModalOpen} centered onOk={() => setViewModalOpen(false)} onCancel={() => setViewModalOpen(false)} footer={[
@@ -319,6 +394,10 @@ const AttendanceDashboard = () => {
 
   const handleViewClick = (sessionObjId) => {
     setViewModalOpen(true);
+  }
+
+  const handleEditClick = (sessionObjId) => {
+    setEditModalOpen(true);
   }
 
   return (
@@ -523,7 +602,12 @@ const AttendanceDashboard = () => {
                               >
                                 <CiViewList />
                               </button>
-                              <button className='p-2 bg-slate-100 text-blue-600 rounded mx-2 mt-2'>
+                              <button
+                                                              onClick={() => {
+                                                                handleEditClick(sessionObj.id);
+                                                                setSelectedClassData(sessionObj.data);
+                                                              }}
+                              className='p-2 bg-slate-100 text-blue-600 rounded mx-2 mt-2'>
                                 <TbEdit />
                               </button>
                               <div> </div>
@@ -540,6 +624,8 @@ const AttendanceDashboard = () => {
       </div>
   
       <ViewModal />
+
+      <EditModal />
     </>
   );
 }
