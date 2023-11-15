@@ -334,101 +334,109 @@ const AttendanceTable = () => {
 
 
   return (
-    <div className='flex flex-col items-center justify-center w-full'>
-      <p className='text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full'>
-        Class
-      </p>
-      <Select
-        size='large'
-        value={classId || undefined}
-        onChange={(value) => {
-          setClassId(value);
-          setSubjectCode('');
-          setIsLabSubject(false);
-          setLabBatch('');
-        }}
-        placeholder='Select Class'
-        className='w-[80vw] max-w-[450px]  '
-        options={Object.keys(uniqueClassOptions).map((ClassId, index) => ({
-          value: ClassId,
-          label: `${uniqueClassOptions[ClassId][0].classSemester}-SEM ${ClassId}`,
-        }))}
-      />
+    <>
+    <div className='flex flex-col items-center justify-center mt-[100px] w-[95%] max-w-[95%] md:flex-row md:justify-between md:px-[2.5vw] md:ml-[80px] md:mt-0'>
 
-      {classId && (
-        <>
-          <p className='text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full'>
-            Subject
+        <div>
+          <p className=' font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[80vw] max-w-[400px]'>
+              Class
           </p>
           <Select
-            size='large'
-            value={subjectCode || undefined}
-            onChange={handleSubjectChange}
-            className='w-[80vw] max-w-[450px]  text-[16px] mt-[2px]'
-            placeholder='Select Subject'
-            options={uniqueClassOptions[classId].map((pair, index) => ({
-              value: pair.code,
-              label: pair.subjectName,
-            }))}
-          />
-        </>
-      )}
+              size='large'
+              value={classId || undefined}
+              onChange={(value) => {
+                  setClassId(value);
+                  setSubjectCode('');
+                  setIsLabSubject(false);
+                  setLabBatch('');
+              } }
+              placeholder='Select Class'
+              className='w-[80vw] max-w-[400px]  '
+              options={Object.keys(uniqueClassOptions).map((ClassId, index) => ({
+                  value: ClassId,
+                  label: `${uniqueClassOptions[ClassId][0].classSemester}-SEM ${ClassId}`,
+              }))} />
+              </div>
 
-      {isLabSubject && (
-        <>
-          <p className='text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full'>
-            Lab Batch
-          </p>
-          <Select
-            size='large'
-            value={labBatch || undefined}
-            onChange={(value) => setLabBatch(value)}
-            placeholder='Select Lab Batch'
-            className='w-[80vw] max-w-[450px] text-[16px] mt-[2px] '
-          >
-            {batchOptions.map((option) => (
-              <Select.Option key={option.value} value={option.value}>
-                {option.label}
-              </Select.Option>
-            ))}
-          </Select>
-        </>
-      )}
+              <div>
 
-      <Space direction='vertical' size={12} className='mt-5 pl-2 w-full'>
-        <p className='text-left font-[Poppins] font-[500] text-[12px] text-slate-600 w-full'>
-          Date Range
-        </p>
-        <RangePicker
-          size='large'
-          value={[fromDate, toDate]}
-          onChange={(dates) => {
-            setFromDate(dates?.[0]);
-            setToDate(dates?.[1]);
-          }}
-        />
-      </Space>
-
-      <div>
-        {attendanceData && (
-          <div className='overflow-x-auto flex items-center justify-center w-full'>
-            <div className='max-w-[95vw] border-[2px] rounded-xl border-solid border-slate-200 my-4'>
-            <Table 
-              columns={columns} 
-              dataSource={data}  
-              size="small"
-              pagination={false}
-              className='text-[8px] font-[Poppins]'
-              scroll={{x: '95vw',  y: '50vh' }}
-              
-              
-              />
-            </div>
-
+          {classId && (
+              <>
+                  <p className=' font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[80vw] max-w-[400px]'>
+                      Subject
+                  </p>
+                  <Select
+                      size='large'
+                      value={subjectCode || undefined}
+                      onChange={handleSubjectChange}
+                      className='w-[80vw] max-w-[400px]  text-[16px] mt-[2px]'
+                      placeholder='Select Subject'
+                      options={uniqueClassOptions[classId].map((pair, index) => ({
+                          value: pair.code,
+                          label: pair.subjectName,
+                      }))} />
+              </>
+          )}
           </div>
-        )}
-      </div>
-    </div>
+
+          <div>
+
+          {isLabSubject && (
+              <>
+                  <p className='w-[80vw] max-w-[400px] font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 '>
+                      Lab Batch
+                  </p>
+                  <Select
+                      size='large'
+                      value={labBatch || undefined}
+                      onChange={(value) => setLabBatch(value)}
+                      placeholder='Select Lab Batch'
+                      className='w-[80vw] max-w-[400px] text-[16px] mt-[2px] '
+                  >
+                      {batchOptions.map((option) => (
+                          <Select.Option key={option.value} value={option.value}>
+                              {option.label}
+                          </Select.Option>
+                      ))}
+                  </Select>
+              </>
+          )}
+          </div>
+
+          <div>
+
+          <p className='w-[80vw] max-w-[450px] font-[Poppins] font-[500] text-[12px]  mt-5 pl-2 text-slate-600 '>
+              Date Range
+          </p>
+          <RangePicker
+              size='large'
+              value={[fromDate, toDate]}
+              onChange={(dates) => {
+                  setFromDate(dates?.[0]);
+                  setToDate(dates?.[1]);
+              } }
+              inputReadOnly
+
+              className='w-[80vw] max-w-[450px] text-[16px] mt-[2px]' />
+          </div>
+        
+
+      </div><div>
+              {attendanceData && (
+                  <div className='overflow-x-auto flex items-center justify-center w-[95%] md:ml-[80px]'>
+                      <div className='max-w-[95%] border-[1px] rounded-xl border-solid border-slate-100 my-4'>
+                          <Table
+                              columns={columns}
+                              dataSource={data}
+                              size="small"
+                              pagination={false}
+                              className='text-[8px] font-[Poppins]'
+                              scroll={{ x: '95vw', y: '50vh' }} />
+                      </div>
+
+                  </div>
+              )}
+          </div></>
   );
 };
 

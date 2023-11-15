@@ -1,9 +1,15 @@
 import React from 'react'
 import  AttendanceTable  from './AttendanceTable'
+import TopNavbar from '@/app/student/components/topnavbar/TopNavbar'
+import BottomNavbar from '../../components/bottomNavbar/BottomNavbar'
 
 const page = () => {
   return (
+    <>
+    <TopNavbar name='Export Attendance'/>
     <AttendanceTable/>
+    <BottomNavbar/>
+    </>
   )
 }
 
