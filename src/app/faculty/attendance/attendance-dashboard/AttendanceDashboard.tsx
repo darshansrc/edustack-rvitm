@@ -346,7 +346,7 @@ const AttendanceDashboard = () => {
 
     return (
       <Modal
-        title="Edit Attendance Data"
+        title="Edit Attendance"
         open={editModalOpen}
         centered
         onOk={() => setEditModalOpen(false)}
@@ -408,9 +408,9 @@ const AttendanceDashboard = () => {
         <table className="w-full">
           <thead className="bg-slate-100 z-50">
             <tr>
-              <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left z-50">Name</th>
-              <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left z-50">USN</th>
-              <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left z-50">Attendance</th>
+              <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left z-50  py-[5px]">Name</th>
+              <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left z-50  py-[5px]">USN</th>
+              <th className="sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left z-50  py-[5px]">Attendance</th>
             </tr>
           </thead>
           <tbody>
@@ -459,7 +459,7 @@ const AttendanceDashboard = () => {
     
       return (
         <Modal
-          title="Attdendance data"
+          title="View Attedendance"
           open={viewModalOpen}
           centered
           onOk={() => setViewModalOpen(false)}
@@ -521,11 +521,11 @@ const AttendanceDashboard = () => {
         </div>
         <div className='max-h-[50vh] h-[50vh] overflow-y-auto table-auto  border border-slate-200 rounded mt-2' >
           <table className='w-full '>
-            <thead className='bg-slate-100'>
+            <thead className='bg-slate-100 '>
               <tr>
-                <th className='sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left'>Name</th>
-                <th className='sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left'>USN</th>
-                <th className='sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left'>Attendance</th>
+                <th className='sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left py-[5px]'>Name</th>
+                <th className='sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left py-[5px]'>USN</th>
+                <th className='sticky top-0 bg-slate-50 text-blue-600 text-[12px] px-4 text-left py-[5px]'>Attendance</th>
               </tr>
             </thead>
             <tbody>
@@ -975,17 +975,29 @@ const AttendanceDashboard = () => {
 
       <ClassTopicModal />
 
-      <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'center' }} open={successMessageOpen} autoHideDuration={2000} onClose={() => setSuccessMessageOpen(false)}>
-        <Alert onClose={() => setSuccessMessageOpen(false)} severity="success" sx={{ width: '100%' }} style={{border: '1px solid green'}}>
-         Attendance Updated Successfully
-        </Alert>
-      </Snackbar>
+      <Snackbar
+  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+  open={successMessageOpen}
+  autoHideDuration={2000}
+  onClose={() => setSuccessMessageOpen(false)}
+  style={{ boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)' }}
+>
+  <Alert onClose={() => setSuccessMessageOpen(false)} severity="success" sx={{ width: '100%' }} style={{ border: '1px solid green' }}>
+    Attendance Updated Successfully
+  </Alert>
+</Snackbar>
 
-      <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'center' } } open={errorMessageOpen} autoHideDuration={2000} onClose={() => setErrorMessageOpen(false)}>
-        <Alert onClose={() => setErrorMessageOpen(false)} severity="error" sx={{ width: '100%' }}>
-        Failed to update Data
-        </Alert>
-      </Snackbar>
+<Snackbar
+  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+  open={errorMessageOpen}
+  autoHideDuration={2000}
+  onClose={() => setErrorMessageOpen(false)}
+  style={{ boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)' }}
+>
+  <Alert onClose={() => setErrorMessageOpen(false)} severity="error" sx={{ width: '100%' }}>
+    Failed to update Data
+  </Alert>
+</Snackbar>
     </>
   );
 }
