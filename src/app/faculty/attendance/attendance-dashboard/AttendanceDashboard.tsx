@@ -14,6 +14,8 @@ import { FaChalkboardTeacher } from "react-icons/fa";
 import { Button, Checkbox, Modal } from 'antd';
 import { BsChatSquareText } from 'react-icons/bs';
 import { CSVLink } from 'react-csv';
+import { MdOutlineRemoveRedEye } from 'react-icons/md';
+import { FiDownload } from 'react-icons/fi';
 
 interface AttendanceFormData {
   classId: string;
@@ -552,9 +554,7 @@ const AttendanceDashboard = () => {
   }
 
 
-
-
-  const ClassTopicModal = () => {
+const ClassTopicModal = () => {
     const [editedClassTopic, setEditedClassTopic] = useState(selectedClassData);
     const [editedTopic, setEditedTopic] = useState<string>(editedClassTopic.classTopic || '');
     const [editedDescription, setEditedDescription] = useState<string>(editedClassTopic.classDescription || '');
@@ -713,6 +713,20 @@ const AttendanceDashboard = () => {
         </div>
       </Modal>
     );
+  };
+
+  const generateCSVData = () => {
+    // Check if selectedClassData.students exists before mapping
+    const csvData = selectedClassData.students?.map((student) => [
+      student.name,
+      student.usn,
+      student.Present ? 'P' : 'A',
+    ]) || [];
+  
+    // Add header row
+    csvData.unshift(['Name', 'USN', 'Attendance']);
+  
+    return csvData;
   };
   
   const formatRecordedTime = (isoString) => {
@@ -879,16 +893,15 @@ const AttendanceDashboard = () => {
                           }
                         />
                         <Timeline.Content>
-                          <Timeline.Time>
-                            {new Date(sessionObj.data.classDate).toLocaleDateString(
-                              'en-US',
-                              {
-                                year: 'numeric',
-                                month: 'short',
-                                day: 'numeric',
-                              }
-                            )}
-                          </Timeline.Time>
+                        
+                        <Timeline.Time>
+                          {new Date(sessionObj.data.classDate).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                            weekday: 'short',
+                          })}
+                        </Timeline.Time>
                           <div className='border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px]'>
                             <div className='text-slate-500 font-[Poppins] text-[12px] '>
                               <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>
@@ -941,7 +954,7 @@ const AttendanceDashboard = () => {
                                 }}
                                 className='p-2 bg-slate-100 text-blue-600 rounded mx-2 mt-2'
                               >
-                                <CiViewList />
+                                <MdOutlineRemoveRedEye />
                               </button>
                               <button
                                                               onClick={() => {
@@ -956,7 +969,25 @@ const AttendanceDashboard = () => {
                               className='p-2 bg-slate-100 text-blue-600 rounded mx-2 mt-2'>
                                 <BsChatSquareText />
                               </button>
-                              <div> </div>
+
+
+                              <CSVLink
+                              onClick={() => { setSelectedClassData(sessionObj.data);}}
+                                   key="export-csv-data"
+                                   data={generateCSVData()}
+                                   filename={`Attendance-${subjectName}-${ new Date(selectedClassData.classDate).toLocaleDateString('en-US', {
+                                       year: 'numeric',
+                                       month: 'short',
+                                       day: 'numeric',
+                                     })}-${formatTime(
+                                     selectedClassData.classStartTime
+                                   )}-${formatTime(selectedClassData.classEndTime)}.csv`}
+                                   className="p-2 bg-slate-100 text-blue-600 rounded mx-2 mt-2"
+                                 >
+                                   <FiDownload />
+                                 </CSVLink>
+
+                             
                             </div>
                           </div>
                         </Timeline.Content>
