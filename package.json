@@ -35,6 +35,7 @@
     "react-csv": "^2.2.2",
     "react-datepicker": "^4.21.0",
     "react-dom": "^18",
+    "react-highlight-words": "^0.20.0",
     "react-icons": "^4.11.0",
     "react-keep": "^0.2.0",
     "react-tabs": "^6.0.2",

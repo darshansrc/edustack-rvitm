@@ -755,9 +755,11 @@ const ClassTopicModal = () => {
               Mark Attendance
             </button>
           </Link>
+          <Link href='/faculty/attendance/export-attendance' shallow={true}>
           <button className='bg-slate-100 w-full max-w-[550px] text-blue-500 rounded-[10px]   mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-slate-200 focus:outline-none focus:ring focus:ring-blue-300'>
             Export Attendance
           </button>
+          </Link>
   
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <StyledTabs value={selectedPair} onChange={handleChangeTab}>
