@@ -160,7 +160,7 @@ const AttendanceTable = () => {
   }, []);
 
   const getAttendancePercentage = (attendanceCount, classCount) => {
-    return classCount > 0 ? ((attendanceCount / classCount) * 100).toFixed(2) : 'N/A';
+    return classCount > 0 ? ((attendanceCount / classCount) * 100).toFixed(0) : 'N/A';
   };
 
   const getClassCount = () => {
@@ -272,11 +272,11 @@ const AttendanceTable = () => {
   });
 
   const columns = [
-    { title: 'Name', dataIndex: 'name', key: 'name', ...getColumnSearchProps('name'),},
-    { title: 'USN', dataIndex: 'usn', key: 'usn',...getColumnSearchProps('usn'), },
-    { title: 'Classes Held', dataIndex: 'classesHeld', key: 'classesHeld', sorter: (a, b) => a.classesHeld - b.classesHeld, },
-    { title: 'Classes Attended', dataIndex: 'classesAttended', key: 'classesAttended', sorter: (a, b) => a.classesAttended - b.classesAttended, },
-    { title: 'Attendance Percentage', dataIndex: 'attendancePercentage', key: 'attendancePercentage', sorter: (a, b) => a.attendancePercentage - b.attendancePercentage, },
+    { title: 'Name', dataIndex: 'name', key: 'name',width: 120,fixed: 'left', ...getColumnSearchProps('name')},
+    { title: 'USN', dataIndex: 'usn',width: 120, key: 'usn',...getColumnSearchProps('usn'),},
+    { title: 'Classes Held', dataIndex: 'classesHeld', key: 'classesHeld',width: 120,sorter: (a, b) => a.classesHeld - b.classesHeld,  },
+    { title: 'Classes Attended', dataIndex: 'classesAttended', key: 'classesAttended',width: 120,sorter: (a, b) => a.classesAttended - b.classesAttended, },
+    { title: 'Attendance Percentage', dataIndex: 'attendancePercentage', key: 'attendancePercentage', width: 120,sorter: (a, b) => a.attendancePercentage - b.attendancePercentage, },
     // Add columns for each date in attendanceData
     ...(attendanceData ? attendanceData.map((data) => ({
       title: new Date(data.classDate).toLocaleDateString('en-GB', {
@@ -284,6 +284,7 @@ const AttendanceTable = () => {
         month: 'short',
         year: 'numeric',
       }),
+      width: 120,
       dataIndex: `attendance_${data.classStartTime}`, // Adjust accordingly
       key: `attendance_${data.classStartTime}`, // Adjust accordingly
       filters: [
@@ -333,7 +334,7 @@ const AttendanceTable = () => {
 
 
   return (
-    <div>
+    <div className='flex flex-col items-center justify-center w-full'>
       <p className='text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full'>
         Class
       </p>
@@ -410,8 +411,20 @@ const AttendanceTable = () => {
 
       <div>
         {attendanceData && (
-          <div className='overflow-x-auto'>
-            <Table columns={columns} dataSource={data}  size="small"/>
+          <div className='overflow-x-auto flex items-center justify-center w-full'>
+            <div className='max-w-[95vw] border-[2px] rounded-xl border-solid border-slate-200 my-4'>
+            <Table 
+              columns={columns} 
+              dataSource={data}  
+              size="small"
+              pagination={false}
+              className='text-[8px] font-[Poppins]'
+              scroll={{x: '95vw',  y: '50vh' }}
+              
+              
+              />
+            </div>
+
           </div>
         )}
       </div>
