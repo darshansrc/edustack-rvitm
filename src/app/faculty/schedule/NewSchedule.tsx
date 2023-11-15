@@ -245,7 +245,7 @@ const NewSchedule = () => {
       try {
         const res = await fetch(`${window.location.origin}/api/faculty/attendance`, {});
         const fetchedData = await res.json();
-        setClassSubjectPairList(fetchedData?.classSubjectPairsList || []);
+        setClassSubjectPairList(fetchedData?.classSubjectPairList || []);
       } catch (error) {
         console.error('Error fetching data:', error);
       }

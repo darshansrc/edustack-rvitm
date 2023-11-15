@@ -138,7 +138,6 @@ const AttendanceForm = () => {
     setSubjectCode('');
     setIsLabSubject(false);
     setLabBatch('');
-    setClassSubjectPairList([]);
     setSubjectType('theory');
     setStep1Error('');
     setIsSubjectElective('');
