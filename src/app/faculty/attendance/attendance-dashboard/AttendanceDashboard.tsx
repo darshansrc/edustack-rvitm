@@ -313,6 +313,7 @@ const AttendanceDashboard = () => {
           
         if (!res.ok) {
             setEditedClassData(selectedClassData);
+            setErrorMessageOpen(true);
             setEditModalOpen(false);
             throw new Error('Failed to submit form data');
             
@@ -744,7 +745,7 @@ const AttendanceDashboard = () => {
         </Alert>
       </Snackbar>
 
-      <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'center' } } open={successMessageOpen} autoHideDuration={2000} onClose={() => setErrorMessageOpen(false)}>
+      <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'center' } } open={errorMessageOpen} autoHideDuration={2000} onClose={() => setErrorMessageOpen(false)}>
         <Alert onClose={() => setErrorMessageOpen(false)} severity="error" sx={{ width: '100%' }}>
         Failed to update Data
         </Alert>
