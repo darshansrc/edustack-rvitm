@@ -299,15 +299,7 @@ const AttendanceDashboard = () => {
           },
           body: JSON.stringify(editedClassData),
         });
-  
-        if (!res.ok) {
-          setEditedClassData(selectedClassData);
-          setErrorMessageOpen(true);
-          setEditModalOpen(false);
-          throw new Error('Failed to submit form data');
-          
-        }
-  
+
         if (res.ok) {
           console.log('Form data submitted successfully');
           setDataEditedSuccessfully(true);
@@ -317,10 +309,21 @@ const AttendanceDashboard = () => {
           setUpdateData(true);
           setEditModalOpen(false);
         }
+
+          
+        if (!res.ok) {
+            setEditedClassData(selectedClassData);
+            setEditModalOpen(false);
+            throw new Error('Failed to submit form data');
+            
+          }
+  
+          
       } catch (error) {
         console.log('Unable to save changes');
         setEditedClassData(selectedClassData);
         setEditModalOpen(false);
+        setErrorMessageOpen(true);
         
       }
     };
