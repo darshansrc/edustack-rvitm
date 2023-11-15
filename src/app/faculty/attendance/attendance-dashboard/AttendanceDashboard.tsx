@@ -13,6 +13,7 @@ import { TbEdit } from 'react-icons/tb';
 import { FaChalkboardTeacher } from "react-icons/fa";
 import { Button, Checkbox, Modal } from 'antd';
 import { BsChatSquareText } from 'react-icons/bs';
+import { CSVLink } from 'react-csv';
 
 interface AttendanceFormData {
   classId: string;
@@ -375,11 +376,11 @@ const AttendanceDashboard = () => {
         ]}
       >
         <div className='border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px] mt-4'>
-          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-            <span className='text-blue-500 font-[Poppins] text-[12px]'>Subject: </span>{subjectName}
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Subject: </span>{subjectName}
           </div>
-          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-            <span className='text-blue-500 font-[Poppins] text-[12px]'>Date: </span>{new Date(selectedClassData.classDate).toLocaleDateString(
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Date: </span>{new Date(selectedClassData.classDate).toLocaleDateString(
               'en-US',
               {
                 year: 'numeric',
@@ -388,18 +389,18 @@ const AttendanceDashboard = () => {
               }
             )}
           </div>
-          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-            <span className='text-blue-500 font-[Poppins] text-[12px]'>Time: </span>{formatTime(selectedClassData.classStartTime) + '-' + formatTime(selectedClassData.classEndTime)}
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Time: </span>{formatTime(selectedClassData.classStartTime) + '-' + formatTime(selectedClassData.classEndTime)}
           </div>
-          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-            <span className='text-blue-500 font-[Poppins] text-[12px]'>Attendance: </span>                              {selectedClassData.students
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Attendance: </span>                              {selectedClassData.students
                               ? `${selectedClassData.students.filter(student => student.Present).length} out of ${
                                 selectedClassData.students.length
                                 }`
                               : ''} {' Present'}
           </div>
-          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-            <span className='text-blue-500 font-[Poppins] text-[12px]'>Taken by: </span>{selectedClassData.recordedByName}
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Taken by: </span>{selectedClassData.recordedByName}
           </div>
 
         </div>
@@ -440,18 +441,61 @@ const AttendanceDashboard = () => {
   };
 
   const ViewModal = () => {
-    return (
-      <Modal title='Attdendance data' open={viewModalOpen} centered onOk={() => setViewModalOpen(false)} onCancel={() => setViewModalOpen(false)} footer={[
-        <Button key="submit" type="primary" className='bg-blue-500' onClick={() => setViewModalOpen(false)}>
-          Ok
-        </Button>,
-      ]}>
+
+   
+    const generateCSVData = () => {
+        // Check if selectedClassData.students exists before mapping
+        const csvData = selectedClassData.students?.map((student) => [
+          student.name,
+          student.usn,
+          student.Present ? 'P' : 'A',
+        ]) || [];
+      
+        // Add header row
+        csvData.unshift(['Name', 'USN', 'Attendance']);
+      
+        return csvData;
+      };
+    
+      return (
+        <Modal
+          title="Attdendance data"
+          open={viewModalOpen}
+          centered
+          onOk={() => setViewModalOpen(false)}
+          onCancel={() => setViewModalOpen(false)}
+          footer={[
+            <CSVLink
+            key="export-csv"
+            data={generateCSVData()}
+            filename={`Attendance-${subjectName}-${ new Date(selectedClassData.classDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })}-${formatTime(
+              selectedClassData.classStartTime
+            )}-${formatTime(selectedClassData.classEndTime)}.csv`}
+            className=" bg-blue-600 px-4 py-2 text-white rounded"
+          >
+            Download CSV
+          </CSVLink>,
+
+            <Button
+              key="submit"
+              onClick={() => setViewModalOpen(false)}
+              className='ml-4 bg-slate-50 rounded border border-slate-100'
+            >
+              Close
+            </Button>,
+
+          ]}
+        >
         <div className='border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px] mt-4'>
-          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-            <span className='text-blue-500 font-[Poppins] text-[12px]'>Subject: </span>{subjectName}
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Subject: </span>{subjectName}
           </div>
-          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-            <span className='text-blue-500 font-[Poppins] text-[12px]'>Date: </span>{new Date(selectedClassData.classDate).toLocaleDateString(
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Date: </span>{new Date(selectedClassData.classDate).toLocaleDateString(
               'en-US',
               {
                 year: 'numeric',
@@ -460,18 +504,18 @@ const AttendanceDashboard = () => {
               }
             )}
           </div>
-          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-            <span className='text-blue-500 font-[Poppins] text-[12px]'>Time: </span>{formatTime(selectedClassData.classStartTime) + '-' + formatTime(selectedClassData.classEndTime)}
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Time: </span>{formatTime(selectedClassData.classStartTime) + '-' + formatTime(selectedClassData.classEndTime)}
           </div>
-          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-            <span className='text-blue-500 font-[Poppins] text-[12px]'>Attendance: </span>                              {selectedClassData.students
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Attendance: </span>                              {selectedClassData.students
                               ? `${selectedClassData.students.filter(student => student.Present).length} out of ${
                                 selectedClassData.students.length
                                 }`
                               : ''} {' Present'}
           </div>
-          <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-            <span className='text-blue-500 font-[Poppins] text-[12px]'>Taken by: </span>{selectedClassData.recordedByName}
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Taken by: </span>{selectedClassData.recordedByName}
           </div>
 
         </div>
@@ -515,6 +559,8 @@ const AttendanceDashboard = () => {
     const [editedTopic, setEditedTopic] = useState<string>(editedClassTopic.classTopic || '');
     const [editedDescription, setEditedDescription] = useState<string>(editedClassTopic.classDescription || '');
     const [editMode, setEditMode] = useState(!editedClassTopic.classTopic && !editedClassTopic.classDescription);
+
+    const [topicEditedSuccessfully, setTopicEditedSuccessfully] = useState(true);
   
     useEffect(() => {
       setEditedClassTopic(selectedClassData);
@@ -528,6 +574,7 @@ const AttendanceDashboard = () => {
     };
   
     const handleSaveChanges = async () => {
+        setTopicEditedSuccessfully(false);
       setEditedClassTopic({
         ...selectedClassData,
         classTopic: editedTopic,
@@ -552,15 +599,18 @@ const AttendanceDashboard = () => {
           setSuccessMessageOpen(true);
           setUpdateData(true);
           setTopicModalOpen(false);
+          setTopicEditedSuccessfully(true)
         } else {
           setErrorMessageOpen(true);
           setTopicModalOpen(false);
+          setTopicEditedSuccessfully(true)
           throw new Error('Failed to submit form data');
         }
       } catch (error) {
         console.log('Unable to save changes');
         setEditModalOpen(false);
         setErrorMessageOpen(true);
+        setTopicEditedSuccessfully(true)
       }
   
       setTopicModalOpen(false);
@@ -575,15 +625,15 @@ const AttendanceDashboard = () => {
   
     return (
       <Modal
-        title=""
+        title="Class Description"
         open={topicModalOpen}
         centered
         onOk={handleSaveChanges}
-        onCancel={handleModalClose}
+        onCancel={handleModalClose} 
         footer={[
           editMode ? (
             <Button key="save" type="primary" className="bg-blue-500" onClick={handleSaveChanges}>
-              Save Changes
+              {topicEditedSuccessfully? ('Save Changes') : ('Updating...')}
             </Button>
           ) : (
             <Button key="edit" type="primary" className="bg-blue-500" onClick={handleEditButtonClick}>
@@ -595,6 +645,35 @@ const AttendanceDashboard = () => {
           </Button>,
         ]}
       >
+                <div className='border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px] mt-4'>
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Subject: </span>{subjectName}
+          </div>
+          <div className='text-slate-500 font-[Poppins] text-[12px]'>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Date: </span>{new Date(selectedClassData.classDate).toLocaleDateString(
+              'en-US',
+              {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              }
+            )}
+          </div>
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Time: </span>{formatTime(selectedClassData.classStartTime) + '-' + formatTime(selectedClassData.classEndTime)}
+          </div>
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Attendance: </span>                              {selectedClassData.students
+                              ? `${selectedClassData.students.filter(student => student.Present).length} out of ${
+                                selectedClassData.students.length
+                                }`
+                              : ''} {' Present'}
+          </div>
+          <div className='text-slate-500 font-[Poppins] text-[12px] '>
+            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Taken by: </span>{selectedClassData.recordedByName}
+          </div>
+
+        </div>
         <div className="mb-4">
           <label htmlFor="topic" className="block text-sm font-medium text-blue-600 mt-4">
             Topic of Class
@@ -602,6 +681,7 @@ const AttendanceDashboard = () => {
           {editMode ? (
             <input
               id="topic"
+              placeholder='Enter topic of class'
               value={editedTopic}
               onChange={(e) => setEditedTopic(e.target.value)}
               className="mt-1 p-2 border rounded-md w-full focus:border-blue-300 border-1px"
@@ -620,6 +700,7 @@ const AttendanceDashboard = () => {
           {editMode ? (
             <textarea
               id="description"
+              placeholder='Enter description of class'
               value={editedDescription}
               onChange={(e) => setEditedDescription(e.target.value)}
               className="mt-1 p-2 border rounded-md w-full focus:border-blue-300 border-1px"
@@ -809,16 +890,16 @@ const AttendanceDashboard = () => {
                             )}
                           </Timeline.Time>
                           <div className='border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px]'>
-                            <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-                              <span className='text-blue-500 font-[Poppins] text-[12px]'>
+                            <div className='text-slate-500 font-[Poppins] text-[12px] '>
+                              <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>
                                 Time:{' '}
                               </span>
                               {formatTime(sessionObj.data.classStartTime) +
                                 '-' +
                                 formatTime(sessionObj.data.classEndTime)}
                             </div>
-                            <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-                              <span className='text-blue-500 font-[Poppins] text-[12px]'>
+                            <div className='text-slate-500 font-[Poppins] text-[12px] '>
+                              <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>
                                 Attendance:{' '}
                               </span>
                               {sessionObj.data.students
@@ -829,22 +910,22 @@ const AttendanceDashboard = () => {
                            
                             </div>
 
-                            <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-                              <span className='text-blue-500 font-[Poppins] text-[12px]'>
+                            <div className='text-slate-500 font-[Poppins] text-[12px] '>
+                              <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>
                                 Recorded by:{' '}
                               </span>
                               {sessionObj.data.recordedByName}
                             </div>
 
-                            <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-                              <span className='text-blue-500 font-[Poppins] text-[12px]'>
+                            <div className='text-slate-500 font-[Poppins] text-[12px] '>
+                              <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>
                                 Recorded on:{' '}
                               </span>
                               {sessionObj.data.recordedTime && formatRecordedTime(sessionObj.data.recordedTime)}
                             </div>
 
-                            <div className='text-slate-500 font-[Poppins] text-[12px] font-semibold'>
-                              <span className='text-blue-500 font-[Poppins] text-[12px]'>
+                            <div className='text-slate-500 font-[Poppins] text-[12px] '>
+                              <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>
                                 Topic of Class:{' '}
                               </span>
                               {sessionObj.data.classTopic ? (sessionObj.data.classTopic) : ('-')}
@@ -895,7 +976,7 @@ const AttendanceDashboard = () => {
       <ClassTopicModal />
 
       <Snackbar anchorOrigin={ { vertical: 'top', horizontal: 'center' }} open={successMessageOpen} autoHideDuration={2000} onClose={() => setSuccessMessageOpen(false)}>
-        <Alert onClose={() => setSuccessMessageOpen(false)} severity="success" sx={{ width: '100%' }}>
+        <Alert onClose={() => setSuccessMessageOpen(false)} severity="success" sx={{ width: '100%' }} style={{border: '1px solid green'}}>
          Attendance Updated Successfully
         </Alert>
       </Snackbar>
