@@ -302,7 +302,7 @@ const AttendanceDashboard = () => {
   
         if (!res.ok) {
           setEditedClassData(selectedClassData);
-          serErrorMessageOpen(true);
+          setErrorMessageOpen(true);
           setEditModalOpen(false);
           throw new Error('Failed to submit form data');
           
