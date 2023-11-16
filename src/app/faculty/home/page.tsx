@@ -11,10 +11,16 @@ async function App() {
 
   return (
     <>
-      <TopNavbar name='EduStack' />
-      <FacultyHomePage />
+      <TopNavbar name='Edustack' />
+       
+
+       <FacultyHomePage />
+
+      
       <BottomNavbar />
-      <DesktopNavbar />
+
+
+      {/* <DesktopNavbar /> */}
 
     
     </>

@@ -9,7 +9,7 @@ const page = () => {
     <div>
       <BottomNavbar/>
      <AttendanceForm/>
-     <DesktopNavbar/>
+     {/* <DesktopNavbar/> */}
     </div>
   )
 }

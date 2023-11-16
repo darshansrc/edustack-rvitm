@@ -10,7 +10,7 @@ const page = () => {
     <>
     <TopNavbar name='Marks Entry'/>
  
-        <DesktopNavbar/>
+        {/* <DesktopNavbar/> */}
     <BottomNavbar/>
     </>
 

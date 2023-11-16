@@ -4,12 +4,21 @@
     align-items: center;
     justify-content: center;
     margin-top: 20px;
+
 }
 
 
 @media  (max-width: 768px) {
     .homePageContainer{
         margin-top: 80px;
+    }
+
+}
+
+@media  (min-width: 768px) {
+    .homePageContainer{
+        padding-left: 208px;
+        color: #4f46e5
     }
 
 }

@@ -31,6 +31,7 @@ interface AttendanceFormData {
   recordedByName: string;
   classTopic: string;
   classDescription: string;
+  labBatch: string;
 }
 
 interface TimeOption {
@@ -97,6 +98,7 @@ const AttendanceForm = () => {
     recordedByName: '',
     classTopic: '',
     classDescription: '',
+    labBatch: '',
   });
 
   const [formStep, setFormStep] = useState<number>(1);
@@ -481,7 +483,8 @@ attendance.map((student) => {
       recordedByEmail: user.email,
       recordedByName: facultyDetails?.facultyName,
       classTopic: '',
-      classDescription: ''
+      classDescription: '',
+      labBatch: labBatch || '',
     }
 
     setAttendanceFormData(attendanceFormData);

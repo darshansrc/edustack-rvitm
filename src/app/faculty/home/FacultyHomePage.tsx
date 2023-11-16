@@ -65,7 +65,7 @@ const FacultyHomePage =  () => {
         getDownloadURL(ref(storage, `photos/${user.email}.jpg`))
           .then((url) => {
             setPhotoUrl(url);
-            sessionStorage.setItem('photoUrl', url);
+            localStorage.setItem('photoUrl', url);
           })
           .catch((error) => {
             console.log(error);
@@ -74,7 +74,7 @@ const FacultyHomePage =  () => {
         setDataFetched(true);
 
         // Store studentDetails in localStorage
-        sessionStorage.setItem('facultyDetails', JSON.stringify(responseBody.facultyDetails));
+        localStorage.setItem('facultyDetails', JSON.stringify(responseBody.facultyDetails));
       } else {
         console.log('Cannot fetch data');
       }
@@ -87,8 +87,8 @@ const FacultyHomePage =  () => {
 
   useEffect(() => {
         
-    const storedFacultyDetails = sessionStorage.getItem('facultyDetails');
-    const storedPhotoUrl = sessionStorage.getItem('photoUrl');
+    const storedFacultyDetails = localStorage.getItem('facultyDetails');
+    const storedPhotoUrl = localStorage.getItem('photoUrl');
 
     if (storedFacultyDetails) {
      
@@ -98,9 +98,9 @@ const FacultyHomePage =  () => {
       if(userUidMatch){
         setFacultyDetails(parsedFacultyDetails);
         setDataFetched(true);
-        if(storedPhotoUrl){
-          setPhotoUrl(storedPhotoUrl); 
-        }
+        // if(storedPhotoUrl){
+        //   setPhotoUrl(storedPhotoUrl); 
+        // }
       }
       
     } 
