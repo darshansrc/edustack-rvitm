@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { auth } from '@/lib/firebase-config';
 import Link from 'next/link';
 import { ModalDialog } from '@mui/joy';
+import { BsStack } from 'react-icons/bs';
 
 
 const TopNavbar = ({name}) => {
@@ -77,7 +78,7 @@ const TopNavbar = ({name}) => {
     <div className={styles.container}>
     <div className={styles.topNavbar}>
         <div style={{paddingLeft: '20px',fontSize: '18px',display: 'flex',flexDirection: 'row',alignItems: 'center', paddingRight: '20px',}}>
-        <Image priority  width={35} height={35} src='/logo.png' alt={''} style={{paddingRight: '10px'}}/>
+        <BsStack className='w-6 h-6 text-blue-600 pr-2' />
         <div style={{ fontWeight: '500',fontFamily: 'Poppins',color: '#333',fontSize: '16px', borderLeft: '1px solid #00000014', paddingLeft: '10px'}}>
             {name}
         </div>
