@@ -78,7 +78,7 @@ const TopNavbar = ({name}) => {
     <div className={styles.container}>
     <div className={styles.topNavbar}>
         <div style={{paddingLeft: '20px',fontSize: '18px',display: 'flex',flexDirection: 'row',alignItems: 'center', paddingRight: '20px',}}>
-        <BsStack className='w-6 h-6 text-blue-600 pr-2' />
+        <BsStack className='w-8 h-8 text-blue-600 pr-2' />
         <div style={{ fontWeight: '500',fontFamily: 'Poppins',color: '#333',fontSize: '16px', borderLeft: '1px solid #00000014', paddingLeft: '10px'}}>
             {name}
         </div>
