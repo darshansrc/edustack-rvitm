@@ -1,4 +1,5 @@
 import DesktopNavbar from "./components/DesktopNavBar/DesktopNavbar"
+import BottomNavbar from "./components/bottomNavbar/BottomNavbar"
 
 export default function DashboardLayout({
     children,
@@ -8,6 +9,7 @@ export default function DashboardLayout({
     return (
         <>
         <DesktopNavbar/>
+        <BottomNavbar/>
         <section>{children}</section>
         </>
         
