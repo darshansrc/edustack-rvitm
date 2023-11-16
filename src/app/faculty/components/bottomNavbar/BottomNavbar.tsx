@@ -75,7 +75,7 @@ const BottomNavbar = () => {
         </div>
         </Link>
 
-        <Link href='/faculty/marks' >
+        <Link href='/faculty/marks-entry' >
         <div className={pathname.endsWith("/grades") ? styles.navItemActive : styles.navItem}>
         <i><TbReport style={{ fontSize: "25px" }} /></i> 
         <div className={pathname.endsWith("/grades") ? styles.navTextActive : styles.navText} style={{fontFamily: 'Poppins'}}>Marks Entry</div>

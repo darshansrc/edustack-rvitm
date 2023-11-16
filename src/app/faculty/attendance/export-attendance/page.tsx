@@ -2,6 +2,7 @@ import React from 'react'
 import  AttendanceTable  from './AttendanceTable'
 import TopNavbar from '@/app/student/components/topnavbar/TopNavbar'
 import BottomNavbar from '../../components/bottomNavbar/BottomNavbar'
+import DesktopNavbar from '../../components/DesktopNavBar/DesktopNavbar'
 
 const page = () => {
   return (
@@ -9,6 +10,7 @@ const page = () => {
     <TopNavbar name='Export Attendance'/>
     <AttendanceTable/>
     <BottomNavbar/>
+    <DesktopNavbar/>
     </>
   )
 }

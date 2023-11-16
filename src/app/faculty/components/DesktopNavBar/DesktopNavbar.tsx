@@ -30,18 +30,20 @@ const DesktopNavbar = () => {
 
                 <ul className='space-y-2 border-t border-gray-50 border-solid'>
                     <li className='mt-4'>
-                        <Link href={'/faculty/home'} passHref>
-                            <div
-
-                                className={`cursor-pointer flex items-center p-2 text-sm font-normal rounded-lg  ${
-                                    pathname === '/faculty/home' ? 'bg-blue-600 text-gray-50 hover:none' : 'text-gray-900 hover:bg-gray-50 group'
-                                }`}
-                            >
-                        
-                                <AiFillHome className='w-4 h-4 text-gray-400 transition duration-75 group-hover:text-gray-900' />
-                                <span className='ml-3 text-sm'>Home</span>
-                            </div>
-                        </Link>
+                    <Link href={'/faculty/home'} passHref>
+                        <div
+                            className={`cursor-pointer flex items-center p-2 text-sm font-normal rounded-lg  ${
+                                pathname === '/faculty/home' ? 'bg-blue-600 text-gray-50 hover:none' : 'text-gray-900 hover:bg-gray-50 group'
+                            }`}
+                        >
+                            <AiFillHome
+                                className={`w-4 h-4 ${
+                                    pathname === '/faculty/home' ? 'text-gray-50' : 'text-gray-400 group-hover:text-gray-900'
+                                } transition duration-75`}
+                            />
+                            <span className='ml-3 text-sm'>Home</span>
+                        </div>
+                    </Link>
                     </li>
 
                     <li>
@@ -51,9 +53,9 @@ const DesktopNavbar = () => {
                                 pathname.startsWith('/faculty/attendance') ? '' : ''
                             }`}
                         >
-                            <BsFillPeopleFill className='w-4 h-4 text-gray-400 transition duration-75 '  />
+                            <BsFillPeopleFill className='w-4 h-4 text-gray-400  '  />
                             <span className='ml-3 text-sm'>Attendance</span>
-                            <IoIosArrowDown className='w-4 h-4 ml-8 text-gray-400 transition duration-75 group-hover:text-gray-900' />
+                            <IoIosArrowDown className='w-4 h-4 ml-8 text-gray-400  group-hover:text-gray-900' />
                         </div>
                     
                         {subMenuActive && (
@@ -61,7 +63,7 @@ const DesktopNavbar = () => {
                                 <li>
                                     <Link href={'/faculty/attendance'} passHref>
                                         <div
-                                            className={`cursor-pointer select-none flex items-center px-2 py-1 pl-11 w-full text-xs font-normal rounded-lg transition duration-75 group  ${
+                                            className={`cursor-pointer select-none flex items-center px-2 py-1 pl-11 w-full text-xs font-normal rounded-lg  group  ${
                                                 pathname === '/faculty/attendance' ? 'bg-blue-600 text-gray-50 hover:none' : 'text-gray-900 hover:bg-gray-50 group'
                                             }`}
                                         >
@@ -72,7 +74,7 @@ const DesktopNavbar = () => {
                                 <li>
                                     <Link href={'/faculty/attendance/attendance-form'} passHref>
                                         <div
-                                            className={`cursor-pointer select-none flex items-center px-2 py-1 pl-11 w-full text-xs font-normal rounded-lg transition duration-75 group  ${
+                                            className={`cursor-pointer select-none flex items-center px-2 py-1 pl-11 w-full text-xs font-normal rounded-lg  group  ${
                                                 pathname === '/faculty/attendance/attendance-form' ? 'bg-blue-600 text-gray-50 hover:none' : 'text-gray-900 hover:bg-gray-50 group'
                                             }`}
                                         >
@@ -83,7 +85,7 @@ const DesktopNavbar = () => {
                                 <li>
                                     <Link href={'/faculty/attendance/export-attendance'} passHref>
                                         <div
-                                            className={`cursor-pointer select-none flex items-center px-2 py-1 pl-11 w-full text-xs font-normal rounded-lg transition duration-75 group  ${
+                                            className={`cursor-pointer select-none flex items-center px-2 py-1 pl-11 w-full text-xs font-normal rounded-lg  group  ${
                                                 pathname === '/faculty/attendance/export-attendance' ? 'bg-blue-600 text-gray-50 hover:none' : 'text-gray-900 hover:bg-gray-50 group'
                                             }`}
                                         >
@@ -96,46 +98,43 @@ const DesktopNavbar = () => {
                     </li>
 
                     <li>
-                        <Link href={'/faculty/schedule'} passHref>
-                            <div
-
-                                className={`cursor-pointer flex items-center p-2 text-sm font-normal rounded-lg  ${
-                                    pathname === '/faculty/schedule' ? 'bg-blue-600 text-gray-50 hover:none' : 'text-gray-900 hover:bg-gray-50 group'
-                                }`}
-                            >
-                                <IoCalendarNumber className='w-4 h-4 text-gray-400 transition duration-75 group-hover:text-gray-900' />
-                                <span className='ml-3 text-sm'>Schedule</span>
-                            </div>
-                        </Link>
-                    </li>
-
-                    <li>
-                        <Link href={'/faculty/marks-entry'} passHref>
-                            <div
-
-                                className={`cursor-pointer flex items-center p-2 text-sm font-normal rounded-lg  ${
-                                    pathname === '/faculty/marks-entry' ? 'bg-blue-600 text-gray-50 hover:none' : 'text-gray-900 hover:bg-gray-50 group'
-                                }`}
-                            >
-                                <HiDocumentText className='w-4 h-4 text-gray-400 transition duration-75 group-hover:text-gray-900' />
-                                <span className='ml-3 text-sm'>Marks Entry</span>
-                            </div>
-                        </Link>
-                    </li>
-
-                    <li>
-                        <Link href={'/faculty/profile'} passHref>
-                            <div
-
-                                className={`cursor-pointer flex items-center p-2 text-sm font-normal rounded-lg  ${
-                                    pathname === '/faculty/profile' ? 'bg-blue-600 text-gray-50 hover:none' : 'text-gray-900 hover:bg-gray-50 group'
-                                }`}
-                            >
-                                <FaCircleUser className='w-4 h-4 text-gray-400 transition duration-75 group-hover:text-gray-900' />
-                                <span className='ml-3 text-sm'>Profile</span>
-                            </div>
-                        </Link>
-                    </li>
+                     <Link href={'/faculty/schedule'} passHref>
+                         <div
+                             className={`cursor-pointer flex items-center p-2 text-sm font-normal rounded-lg  ${
+                                 pathname === '/faculty/schedule' ? 'bg-blue-600 text-gray-50 hover:none' : 'text-gray-900 hover:bg-gray-50 group'
+                             }`}
+                         >
+                             <IoCalendarNumber className='w-4 h-4 text-gray-400  group-hover:text-gray-900' />
+                             <span className='ml-3 text-sm'>Schedule</span>
+                         </div>
+                     </Link>
+                 </li>
+                 
+                 <li>
+                     <Link href={'/faculty/marks-entry'} passHref>
+                         <div
+                             className={`cursor-pointer flex items-center p-2 text-sm font-normal rounded-lg  ${
+                                 pathname === '/faculty/marks-entry' ? 'bg-blue-600 text-gray-50 hover:none' : 'text-gray-900 hover:bg-gray-50 group'
+                             }`}
+                         >
+                             <HiDocumentText className='w-4 h-4 text-gray-400  group-hover:text-gray-900' />
+                             <span className='ml-3 text-sm'>Marks Entry</span>
+                         </div>
+                     </Link>
+                 </li>
+                 
+                 <li>
+                     <Link href={'/faculty/profile'} passHref>
+                         <div
+                             className={`cursor-pointer flex items-center p-2 text-sm font-normal rounded-lg  ${
+                                 pathname === '/faculty/profile' ? 'bg-blue-600 text-gray-50 hover:none' : 'text-gray-900 hover:bg-gray-50 group'
+                             }`}
+                         >
+                             <FaCircleUser className='w-4 h-4 text-gray-400  group-hover:text-gray-900' />
+                             <span className='ml-3 text-sm'>Profile</span>
+                         </div>
+                     </Link>
+                 </li>
                 </ul>
             </div>
         </aside>

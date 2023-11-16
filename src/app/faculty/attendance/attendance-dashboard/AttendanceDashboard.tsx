@@ -748,19 +748,20 @@ const ClassTopicModal = () => {
 
   return (
     <>
-      <div className='w-full flex flex-col justify-center items-center bg-[#F9FAFB]'>
-        <div className='w-[95vw] max-w-[550px] mt-16 md:mt-0 '>
+      <div className='w-full flex flex-col justify-center items-center bg-[#F9FAFB] md:mt-20 md:pl-52'>
+        <div className='w-[95vw] max-w-[550px] mt-16 md:mt-0  '>
           <Link href='/faculty/attendance/attendance-form' shallow={true}>
-            <button className='bg-blue-600 w-full  max-w-[550px] text-white rounded-[10px]  mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300'>
+            <button className='bg-blue-600 w-full  max-w-[550px] text-white rounded-[10px]  mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 md:hidden'>
               Mark Attendance
             </button>
           </Link>
           <Link href='/faculty/attendance/export-attendance' shallow={true}>
-          <button className='bg-slate-100 w-full max-w-[550px] text-blue-500 rounded-[10px]   mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-slate-200 focus:outline-none focus:ring focus:ring-blue-300'>
+          <button className='bg-slate-100 w-full max-w-[550px] text-blue-500 rounded-[10px]   mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-slate-200 focus:outline-none focus:ring focus:ring-blue-300 md:hidden'>
             Export Attendance
           </button>
           </Link>
-  
+          
+          <div className='md:fixed md:top-0 md:left-52 md:w-full z-50 bg-white md:pt-[13px] '>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <StyledTabs value={selectedPair} onChange={handleChangeTab}>
               {classSubjectPairList.map((pair, index) => (
@@ -772,6 +773,7 @@ const ClassTopicModal = () => {
               ))}
             </StyledTabs>
           </Box>
+          </div>
   
           <Card
             sx={{

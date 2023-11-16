@@ -536,7 +536,7 @@ attendance.map((student) => {
     return (
       <>
       <TopNavbar name='Mark Attendance' /> 
-      <div className='flex items-center justify-center flex-col w-full min-h-[100vh] '>
+      <div className='flex items-center justify-center flex-col w-full min-h-[100vh] md:pl-52'>
         <div className='flex items-center flex-col bg-white rounded-xl  w-[90vw] max-w-[500px]  p-4' style={{boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 -4px 6px rgba(0,0,0,.04)'}}>
           <h2 className='text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600'> Mark Attendance</h2>
           <div className='flex flex-col items-center'>
@@ -691,19 +691,23 @@ attendance.map((student) => {
         className={styles.cardContainer}
 
       >
-
+       
         <div className={styles.cardTopBar}>
-          <button onClick={() => setFormStep(1)} className='absolute left-0 p-2 m-4 bg-slate-50 rounded-[20px]'>
-            <IoChevronBackSharp />
+          <button onClick={() => setFormStep(1)} className='absolute left-0 p-2 items-center justify-center m-4 flex flex-row bg-slate-50 rounded-[20px]'>
+            <IoChevronBackSharp /> <span className='hidden md:block px-2'>Step 1</span>
           </button>
 
           <h4 className='font-[Poppins] text-slate-800 font-[500]  my-4'>Mark Attendance</h4>
 
         </div>
+   
 
 
 
-        <div className='py-[70px] '>
+
+
+
+        <div className='py-[70px] md:pl-52'>
 
           <div className='flex flex-col border border-solid border-slate-200 rounded my-2 w-[95vw] p-[10px] max-w-[450px]'>
             <h4 className='pl-1 text-blue-600 font-[Poppins] font-[500] text-[16px] pb-1'>Class Details</h4>
@@ -815,7 +819,7 @@ attendance.map((student) => {
   const stepThree = () => {
     return (
       <><TopNavbar name='Mark Attendance' />
-      <div className='flex items-center justify-center flex-col w-full min-h-[100vh] '>
+      <div className='flex items-center justify-center flex-col w-full min-h-[100vh] md:pl-52'>
         <div className='flex items-center flex-col bg-white rounded-xl  w-[90vw] max-w-[500px]  p-4' style={{ boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 -4px 6px rgba(0,0,0,.04)' }}>
         <img src='/attendance.svg' className='w-[100px] h-[100px] max-h-[100px]  rounded-[50%] align-left' alt="StudentImage" />
           <h2 className='text-center  font-[Poppins] font-[500] text-[16px] p-2 text-slate-800'> Attendance Recorded Successfully</h2>
