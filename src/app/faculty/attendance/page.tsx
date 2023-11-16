@@ -11,8 +11,7 @@ const page = () => {
     <>
     <TopNavbar name='Attendance Dashboard'/>
         <AttendanceDashboard/>
-        {/* <DesktopNavbar/> */}
-    <BottomNavbar/>
+
     </>
 
   )

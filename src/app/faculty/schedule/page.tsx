@@ -10,8 +10,7 @@ const page = () => {
     <>
         <TopNavbar name='Your Schedule'/>
         <ScheduleDashboard/>
-        <BottomNavbar/>
-        <DesktopNavbar/>
+
     </>
   )
 }

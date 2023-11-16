@@ -17,10 +17,7 @@ async function App() {
        <FacultyHomePage />
 
       
-      <BottomNavbar />
 
-
-      {/* <DesktopNavbar /> */}
 
     
     </>

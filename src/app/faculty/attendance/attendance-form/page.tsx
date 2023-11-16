@@ -7,9 +7,7 @@ import DesktopNavbar from '../../components/DesktopNavBar/DesktopNavbar';
 const page = () => {
   return (
     <div>
-      <BottomNavbar/>
      <AttendanceForm/>
-     {/* <DesktopNavbar/> */}
     </div>
   )
 }

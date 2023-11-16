@@ -9,8 +9,7 @@ const page = () => {
     <>
     <TopNavbar name='Export Attendance'/>
     <AttendanceTable/>
-    <BottomNavbar/>
-    {/* <DesktopNavbar/> */}
+
     </>
   )
 }
