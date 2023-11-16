@@ -24,4 +24,11 @@ body {
 html{
   display: block;
 }
+/* 
+thead.ant-table-thead{
+  background-color: rgb(57, 69, 184);
+}
 
+ thead{
+  background-color: rgb(57, 69, 184);
+ } */

@@ -42,14 +42,7 @@
         }
     
         .navBar{
-            flex-direction: column;
-            top: 0;
-            left: 0;
-            border-right: 1px solid #dddddd ;
-            height: 100vh;
-            width: 80px;
-            box-shadow: 4px 0 5px rgba(232, 232, 232, 0.1);
-            text-align: center;
+            display: none;
 
         }
     

@@ -10,7 +10,18 @@ import type { InputRef } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 
+import styles from './AttendanceTable.module.css';
+
 const { RangePicker } = DatePicker;
+
+function convertTo12HourFormat(time) {
+    const date = new Date(time);
+
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+  }
+  
+  const formattedTime = convertTo12HourFormat('2023-11-15T04:30:00.000Z');
+  console.log(formattedTime);
 
 const batchOptions = [
   { value: '1', label: 'Batch 1' },
@@ -272,37 +283,30 @@ const AttendanceTable = () => {
   });
 
   const columns = [
-    { title: 'Name', dataIndex: 'name', key: 'name',width: 120,fixed: 'left', ...getColumnSearchProps('name')},
-    { title: 'USN', dataIndex: 'usn',width: 120, key: 'usn',...getColumnSearchProps('usn'),},
-    { title: 'Classes Held', dataIndex: 'classesHeld', key: 'classesHeld',width: 120,sorter: (a, b) => a.classesHeld - b.classesHeld,  },
-    { title: 'Classes Attended', dataIndex: 'classesAttended', key: 'classesAttended',width: 120,sorter: (a, b) => a.classesAttended - b.classesAttended, },
-    { title: 'Attendance Percentage', dataIndex: 'attendancePercentage', key: 'attendancePercentage', width: 120,sorter: (a, b) => a.attendancePercentage - b.attendancePercentage, },
+    {className: 'text-[10px] font-[Poppins] z-0 ', title: 'Name', dataIndex: 'name', key: 'name',width: 100, ...getColumnSearchProps('name')},
+    {className: 'text-[10px] font-[Poppins] ', title: 'USN', dataIndex: 'usn',width: 100, key: 'usn',...getColumnSearchProps('usn'),},
+    {className: 'text-[10px] font-[Poppins] ',align: 'center', title: 'Classes Held', dataIndex: 'classesHeld', key: 'classesHeld',width: 100 ,sorter: (a, b) => a.classesHeld - b.classesHeld,  },
+    {className: 'text-[10px] font-[Poppins] ',align: 'center', title: 'Classes Attended', dataIndex: 'classesAttended', key: 'classesAttended',width: 100 ,sorter: (a, b) => a.classesAttended - b.classesAttended, },
+    {className: 'text-[10px] font-[Poppins] ',align: 'center', title: 'Attendance Percentage', dataIndex: 'attendancePercentage', key: 'attendancePercentage', width: 100 ,sorter: (a, b) => a.attendancePercentage - b.attendancePercentage, },
     // Add columns for each date in attendanceData
     ...(attendanceData ? attendanceData.map((data) => ({
       title: new Date(data.classDate).toLocaleDateString('en-GB', {
         day: '2-digit',
         month: 'short',
         year: 'numeric',
-      }),
-      width: 120,
+      }) + ' (' + convertTo12HourFormat(data.classStartTime) +'-' + convertTo12HourFormat(data.classEndTime)+ ')',
+      width: 100,
+      className: 'text-[10px] font-[Poppins] ',
+      align: 'center',
       dataIndex: `attendance_${data.classStartTime}`, // Adjust accordingly
       key: `attendance_${data.classStartTime}`, // Adjust accordingly
-      filters: [
-        {
-          text: 'Present',
-          value: 'P',
-        },
-        {
-          text: 'Absent',
-          value: 'A',
-        },
-      ],
-    onFilter: (value, record) => record[`attendance_${data.classStartTime}`].indexOf(value as string) === 0,
+
     })) : []),
   ];
   
   const data = mergedAttendanceData?.map((student) => {
     const rowData = {
+      className: 'text-[10px] font-[Poppins] ',  
       key: student.usn,
       name: student.name,
       usn: student.usn,
@@ -335,10 +339,12 @@ const AttendanceTable = () => {
 
   return (
     <>
-    <div className='flex flex-col items-center justify-center mt-[100px] w-[95%] max-w-[95%] md:flex-row md:justify-between md:px-[2.5vw] md:ml-[80px] md:mt-0'>
+    <div className='flex flex-col items-center justify-center mt-[80px] w-full max-w-full md:flex-row md:justify-between md:px-[2.5vw] md:ml-[80px] md:mt-0'>
 
-        <div>
-          <p className=' font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[80vw] max-w-[400px]'>
+        <div className='flex flex-row items-center justify-center w-[430px] max-w-[80vw] md:max-w-[424px] mt-4'>
+
+          <div className='flex flex-col items-center'>  
+          <p className='text-left w-11/12 font-[Poppins] font-[500] max-w-[40vw] ml-1 text-[12px]  text-slate-600 '>
               Class
           </p>
           <Select
@@ -351,39 +357,39 @@ const AttendanceTable = () => {
                   setLabBatch('');
               } }
               placeholder='Select Class'
-              className='w-[80vw] max-w-[400px]  '
+              className='w-[200px] mr-2 max-w-[40vw]'
               options={Object.keys(uniqueClassOptions).map((ClassId, index) => ({
                   value: ClassId,
                   label: `${uniqueClassOptions[ClassId][0].classSemester}-SEM ${ClassId}`,
               }))} />
               </div>
-
-              <div>
+   
 
           {classId && (
-              <>
-                  <p className=' font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[80vw] max-w-[400px]'>
+              <div className='flex flex-col'>
+                  <p className='text-left ml-[12px] max-w-[40vw] font-[Poppins] font-[500] text-[12px]  text-slate-600 '>
                       Subject
                   </p>
                   <Select
                       size='large'
                       value={subjectCode || undefined}
                       onChange={handleSubjectChange}
-                      className='w-[80vw] max-w-[400px]  text-[16px] mt-[2px]'
+                      className='w-[200px] ml-2 max-w-[40vw]'
                       placeholder='Select Subject'
                       options={uniqueClassOptions[classId].map((pair, index) => ({
                           value: pair.code,
                           label: pair.subjectName,
                       }))} />
-              </>
+              </div>
           )}
           </div>
 
-          <div>
-
+          
+          
           {isLabSubject && (
-              <>
-                  <p className='w-[80vw] max-w-[400px] font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 '>
+              <div className='flex flex-row items-center justify-center w-[430px] max-w-[83vw] mt-4'>
+              <div  className='flex flex-col items-center'>
+                  <p className='text-left w-[83vw] max-w-[416px] md:w-[200px]  md:max-w-[40vw] font-[Poppins] font-[500]  ml-2 text-[12px]  text-slate-600 '>
                       Lab Batch
                   </p>
                   <Select
@@ -391,7 +397,7 @@ const AttendanceTable = () => {
                       value={labBatch || undefined}
                       onChange={(value) => setLabBatch(value)}
                       placeholder='Select Lab Batch'
-                      className='w-[80vw] max-w-[400px] text-[16px] mt-[2px] '
+                      className='w-[83vw] max-w-[416px] md:w-[200px]  md:max-w-[40vw] '
                   >
                       {batchOptions.map((option) => (
                           <Select.Option key={option.value} value={option.value}>
@@ -399,11 +405,11 @@ const AttendanceTable = () => {
                           </Select.Option>
                       ))}
                   </Select>
-              </>
+                  </div>
+              </div>
           )}
-          </div>
 
-          <div>
+          {/* <div>
 
           <p className='w-[80vw] max-w-[450px] font-[Poppins] font-[500] text-[12px]  mt-5 pl-2 text-slate-600 '>
               Date Range
@@ -419,24 +425,29 @@ const AttendanceTable = () => {
 
               className='w-[80vw] max-w-[450px] text-[16px] mt-[2px]' />
           </div>
-        
+         */}
 
-      </div><div>
-              {attendanceData && (
-                  <div className='overflow-x-auto flex items-center justify-center w-[95%] md:ml-[80px]'>
-                      <div className='max-w-[95%] border-[1px] rounded-xl border-solid border-slate-100 my-4'>
-                          <Table
-                              columns={columns}
-                              dataSource={data}
-                              size="small"
-                              pagination={false}
-                              className='text-[8px] font-[Poppins]'
-                              scroll={{ x: '95vw', y: '50vh' }} />
-                      </div>
-
-                  </div>
-              )}
-          </div></>
+      </div>
+      
+      <div>
+  {attendanceData && (
+    <div className='md:pl-[80px] flex items-center justify-center mt-4 mb-[150px]'>
+      <div className='max-h-[60vh] max-w-[95vw]  md:max-w-[80vw]'>
+        <Table
+          columns={columns}
+          dataSource={data}
+          size="small"
+          
+          className={styles.table}
+          scroll={{ x: '95vw', y: '60vh' }}
+          
+        />
+      </div>
+    </div>
+  )}
+</div>
+          
+          </>
   );
 };
 

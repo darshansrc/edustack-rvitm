@@ -47,7 +47,7 @@ const BottomNavbar = () => {
  
 
   return (
-    <nav className={styles.navBar} >
+    <nav className={styles.navBar} style={navbarStyle}>
         <div className={styles.navLogo}>
             <Image src='/logo.png' alt='logo' height={30} width={30}/>
             <h2 style={{fontWeight: '500', fontFamily: 'Poppins', fontSize: '12px',color: '#555'}}>EduStack</h2>
