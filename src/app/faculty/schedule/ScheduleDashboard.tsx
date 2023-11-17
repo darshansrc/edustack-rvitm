@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./ScheduleDashboard.module.css";
 import { IoChevronBackSharp, IoChevronForwardSharp } from "react-icons/io5";
 import { Modal, ModalClose, ModalDialog } from "@mui/joy";
-import { Modal as AntdModal, Button } from "antd";
+import { Modal as AntdModal, Button, Popconfirm } from "antd";
 import { Timeline } from "keep-react";
 import { ArrowRight, CalendarBlank } from "phosphor-react";
 import { TiDeleteOutline } from "react-icons/ti";
@@ -114,6 +114,8 @@ const ScheduleDashboard = () => {
 
   const [scheduleSuccessful, setScheduleSuccessful] = useState<boolean>(false);
 
+  const [messageApi, contextHolder] = message.useMessage();
+
   const clearState = () => {
     setSelectedSubject("");
     setSelectedClassName("");
@@ -159,8 +161,11 @@ const ScheduleDashboard = () => {
     setSelectedBatch(value);
   };
 
-  const handleDateChange = (date: Date) => {
-    setSelectedDate(date);
+  const success = () => {
+    messageApi.open({
+      type: "success",
+      content: "Schedule Deleted Successfully",
+    });
   };
 
   const submitForm = async (formData) => {
@@ -180,7 +185,12 @@ const ScheduleDashboard = () => {
         throw new Error("Failed to submit form data");
       }
 
+      messageApi.open({
+        type: "success",
+        content: "Class Scheduled Successfully",
+      });
       setScheduleSuccessful(true);
+      setScheduleClassModalOpen(false);
     } catch (error) {
       // Handle errors, e.g., show an error message
       console.error("Error submitting form data:", error);
@@ -407,6 +417,12 @@ const ScheduleDashboard = () => {
       if (!response.ok) {
         throw new Error(`Failed to delete session: ${response.statusText}`);
       }
+      if (response.ok) {
+        messageApi.open({
+          type: "success",
+          content: "Schedule Deleted Successfully",
+        });
+      }
 
       // Update the local state to reflect the deletion
       const updatedScheduleData = [...(scheduleData?.queryResult || [])];
@@ -528,13 +544,19 @@ const ScheduleDashboard = () => {
                     )}
                 </div>
 
-                {/* Delete button/icon */}
                 <div className="top-[35%] right-3 absolute">
-                  <TiDeleteOutline
-                    size={20}
-                    className="text-red-500 cursor-pointer"
-                    onClick={() => handleDeleteSession(index)}
-                  />
+                  <Popconfirm
+                    title="Delete the task"
+                    description="Are you sure to delete this task?"
+                    onConfirm={() => handleDeleteSession(index)}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <TiDeleteOutline
+                      size={20}
+                      className="text-red-500 cursor-pointer"
+                    />
+                  </Popconfirm>
                 </div>
               </Timeline.Content>
             </Timeline.Item>
@@ -635,14 +657,14 @@ const ScheduleDashboard = () => {
         centered
         open={scheduleClassModalOpen}
         onCancel={() => setScheduleClassModalOpen(false)}
-        onOk={() => setScheduleClassModalOpen(false)}
+        onOk={handleSubmit}
         footer={[
           <Button key="back" onClick={() => setScheduleClassModalOpen(false)}>
             Cancel
           </Button>,
           <Button
             key="submit"
-            onAbort={handleSubmit}
+            onClick={handleSubmit}
             className="bg-blue-600 text-white border-white border-solid border-[1px]"
           >
             Schedule
@@ -842,6 +864,7 @@ const ScheduleDashboard = () => {
           </div>
         )}
       </AntdModal>
+      {contextHolder}
     </>
   );
 };
