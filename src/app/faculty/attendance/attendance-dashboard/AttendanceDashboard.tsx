@@ -249,7 +249,9 @@ const AttendanceDashboard = () => {
           setSubjectSemester(subjectSemester);
           setIsSubjectElective(subjectElective);
           setElectiveStudentUSN(electiveStudents);
-          setIsDataRecorded(true)
+          setTimeout(() => {
+            setIsDataRecorded(true);
+          }, 1000);
 
         }
       }
