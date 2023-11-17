@@ -6,14 +6,29 @@ import { HiDocumentText } from "react-icons/hi";
 import { IoCalendarNumber } from "react-icons/io5";
 import { FaCircleUser } from "react-icons/fa6";
 import { AiFillHome } from "react-icons/ai";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { IoIosArrowDown } from "react-icons/io";
 import Link from "next/link";
 
-import { Layout, Menu, theme } from "antd";
+import { Layout, Menu, Popconfirm, theme } from "antd";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase-config";
+import { MdLogout } from "react-icons/md";
 
 const { SubMenu } = Menu;
 const { Sider } = Layout;
+
+const router = useRouter();
+
+const handleSignOut = async () => {
+  signOut(auth);
+  const response = await fetch(`${window.location.origin}/api/signout`, {
+    method: "POST",
+  });
+  if (response.status === 200) {
+    router.push("/");
+  }
+};
 
 const DesktopNavbar = () => {
   const [subMenuActive, setSubMenuActive] = useState<boolean>(false);
@@ -29,7 +44,7 @@ const DesktopNavbar = () => {
   } = theme.useToken();
 
   return (
-    <Layout>
+    <Layout className="md:hidden">
       <Sider
         collapsible
         collapsed={collapsed}
@@ -82,6 +97,18 @@ const DesktopNavbar = () => {
 
           <Menu.Item key="/faculty/profile" icon={<FaCircleUser />}>
             <Link href={"/faculty/profile"}>Profile</Link>
+          </Menu.Item>
+
+          <Menu.Item icon={<MdLogout />}>
+            <Popconfirm
+              title="Log out"
+              description="Are you sure you want to log out?"
+              onConfirm={handleSignOut}
+              okText="Yes"
+              cancelText="No"
+            >
+              Logout
+            </Popconfirm>
           </Menu.Item>
         </Menu>
       </Sider>
