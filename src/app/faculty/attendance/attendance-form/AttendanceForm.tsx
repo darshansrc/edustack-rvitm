@@ -368,6 +368,14 @@ const AttendanceForm = () => {
     getSubjectData();
   }, [classId, subjectCode, isParamsPresent]);
 
+  function setAllDefaultAttendance() {
+    setAttendance((prevAttendance) => {
+      return prevAttendance.map((student) => {
+        return { ...student, Present: true };
+      });
+    });
+  }
+
   useEffect(() => {
     const getStudents = async () => {
       try {
@@ -395,6 +403,7 @@ const AttendanceForm = () => {
         const data = await res.json();
 
         setAttendance(data.StudentData);
+        setAllDefaultAttendance();
       } catch (error) {
         // Handle errors, e.g., show an error message
         console.error("Error fetching students", error);
@@ -434,14 +443,6 @@ const AttendanceForm = () => {
         } else {
           return student;
         }
-      });
-    });
-  }
-
-  function setAllDefaultAttendance() {
-    setAttendance((prevAttendance) => {
-      return prevAttendance.map((student) => {
-        return { ...student, Present: true };
       });
     });
   }
