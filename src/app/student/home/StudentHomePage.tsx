@@ -3,7 +3,7 @@ import {  auth, db } from '@/lib/firebase-config';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import styles from './StudentHomePage.module.css'
 import Image from 'next/image';
-import { BsClockHistory, BsFiletypePdf, BsPersonCheck } from 'react-icons/bs';
+import { BsClockHistory, BsFiletypeCsv, BsFiletypePdf, BsPersonCheck } from 'react-icons/bs';
 import { RxReader } from 'react-icons/rx'
 import { MdOutlineAssignment } from 'react-icons/md';
 import { TbReportAnalytics } from 'react-icons/tb';
@@ -17,6 +17,7 @@ import { collectionGroup, doc, getDoc, getDocs, query, where } from 'firebase/fi
 import Link from 'next/link';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import { useEffect, useState } from 'react';
+import { IoMdCheckmarkCircleOutline } from 'react-icons/io';
 
 
 
@@ -164,15 +165,21 @@ const StudentHomePage =  () => {
       </div>
 
       <div className={styles.menuBox}>
-      
-      <Link href='/student/attendance'  shallow={true}>
+
+
+
+       <Link href='/student/attendance'  shallow={true}>
         <div className={styles.menuItem} >
           <div className={styles.menuItemIcon}>
             <BsPersonCheck size={25} style={{margin: '0 10px', color: '#475569'}}/>
           </div>
           <div className={styles.menuItemText}>Attendance</div>
         </div>
-        </Link>
+        </Link>   
+
+
+      
+
 
         <Link href='/student/course'  shallow={true}>
         <div className={styles.menuItem}>

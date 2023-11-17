@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import { db } from '@/lib/firebase-config';
+import { auth, db } from '@/lib/firebase-config';
 import dayjs from 'dayjs';
 import { Alert, Box, Card, ListItem, Snackbar, Typography, styled } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
@@ -16,6 +16,7 @@ import { BsChatSquareText } from 'react-icons/bs';
 import { CSVLink } from 'react-csv';
 import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { FiDownload } from 'react-icons/fi';
+import { onAuthStateChanged } from 'firebase/auth';
 
 interface AttendanceFormData {
   classId: string;
@@ -121,7 +122,12 @@ const AttendanceDashboard = () => {
   const [labBatch, setLabBatch] = useState<string>('');
 
   // form required data states
-  const [classSubjectPairList, setClassSubjectPairList] = useState<any[]>([]);
+  const storedClassSubjectPairListString = localStorage.getItem('classSubjectPairList');
+  const storedClassSubjectPairList = storedClassSubjectPairListString !== null ? JSON.parse(storedClassSubjectPairListString) : [];
+  const [classSubjectPairList, setClassSubjectPairList] = useState(storedClassSubjectPairList);
+  
+
+
   const [subjectType, setSubjectType] = useState<string>('theory');
   const [step1Error, setStep1Error] = useState<string>('');
   const [isSubjectElective, setIsSubjectElective] = useState<string>('');
@@ -143,26 +149,55 @@ const AttendanceDashboard = () => {
   const [updateData, setUpdateData] = useState<boolean>(false);
 
 
+  const [ user, setUser ] = useState<any>(null);
+
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
+      console.log("Auth", currentuser);
+      setUser(currentuser);
+      console.log(user);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+
   // Daily dairy
   const [classTopic, setClassTopic] = useState<string>('');
   const [classDescription, setClassDescription] = useState<string>('');
 
   const [topicModalOpen, setTopicModalOpen] = useState<boolean>(false);
 
+
   useEffect(() => {
     const fetchClassSubjectPairs = async () => {
       try {
         const res = await fetch(`${window.location.origin}/api/faculty/attendance`, {});
         const fetchedData = await res.json();
-        setClassSubjectPairList(fetchedData?.classSubjectPairList);
-        console.log(fetchedData?.classSubjectPairList[0])
+  
+        // Check if userUID matches
+        const storedFacultyDetailsString = localStorage.getItem('facultyDetails');
+        if (storedFacultyDetailsString !== null) {
+          const storedFacultyDetails = JSON.parse(storedFacultyDetailsString) || {};
+  
+          if (storedFacultyDetails.userUID === user?.uid) {
+            setClassSubjectPairList(fetchedData?.classSubjectPairList);
+  
+            // Store classSubjectPairList in localStorage
+            localStorage.setItem('classSubjectPairList', JSON.stringify(fetchedData?.classSubjectPairList));
+          }
+        }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-
+  
     fetchClassSubjectPairs();
-  }, []);
+  }, [user]);
+ 
 
   const [selectedPair, setSelectedPair] = useState(classSubjectPairList[0]);
   const [successMessageOpen, setSuccessMessageOpen] = useState<boolean>(false);

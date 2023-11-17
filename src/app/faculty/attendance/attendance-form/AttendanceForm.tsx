@@ -114,7 +114,13 @@ const AttendanceForm = () => {
 
 
   // form required data states
-  const [classSubjectPairList, setClassSubjectPairList] = useState<any[]>([]);
+    // form required data states
+  const storedClassSubjectPairListString = localStorage.getItem('classSubjectPairList');
+  const storedClassSubjectPairList = storedClassSubjectPairListString !== null ? JSON.parse(storedClassSubjectPairListString) : [];
+  const [classSubjectPairList, setClassSubjectPairList] = useState(storedClassSubjectPairList);
+
+
+
   const [subjectType, setSubjectType] = useState<string>('theory');
   const [step1Error, setStep1Error] = useState<string>('');
   const [isSubjectElective, setIsSubjectElective] = useState<string>('');
