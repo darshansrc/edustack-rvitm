@@ -1,21 +1,18 @@
+import TopNavbar from "@/app/student/components/topnavbar/TopNavbar";
+import Link from "next/link";
+import React from "react";
+import BottomNavbar from "../components/bottomNavbar/BottomNavbar";
 
-import TopNavbar from '@/app/student/components/topnavbar/TopNavbar'
-import Link from 'next/link'
-import React from 'react'
-import BottomNavbar from '../components/bottomNavbar/BottomNavbar'
-
-import DesktopNavbar from '../components/DesktopNavBar/DesktopNavbar'
+import DesktopNavbar from "../components/DesktopNavBar/DesktopNavbar";
 
 const page = () => {
   return (
     <>
-    <TopNavbar name='Profile'/>
-  
-        <DesktopNavbar/>
-    <BottomNavbar/>
+      <TopNavbar name="Profile" />
+      <DesktopNavbar />
+      <BottomNavbar />
     </>
+  );
+};
 
-  )
-}
-
-export default page
+export default page;

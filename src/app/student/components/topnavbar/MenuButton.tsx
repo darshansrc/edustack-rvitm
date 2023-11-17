@@ -22,30 +22,30 @@ const MenuButton = ({
   const top = {
     closed: {
       rotate: 0,
-      translateY: 0
+      translateY: 0,
     },
     opened: {
       rotate: 45,
-      translateY: 2
-    }
+      translateY: 2,
+    },
   };
   const center = {
     closed: {
-      opacity: 1
+      opacity: 1,
     },
     opened: {
-      opacity: 0
-    }
+      opacity: 0,
+    },
   };
   const bottom = {
     closed: {
       rotate: 0,
-      translateY: 0
+      translateY: 0,
     },
     opened: {
       rotate: -45,
-      translateY: -2
-    }
+      translateY: -2,
+    },
   };
   lineProps = {
     stroke: color,
@@ -53,7 +53,7 @@ const MenuButton = ({
     vectorEffect: "non-scaling-stroke",
     initial: "closed",
     animate: variant,
-    ...lineProps
+    ...lineProps,
   };
   const unitHeight = 4;
   const unitWidth = (unitHeight * (width as number)) / (height as number);

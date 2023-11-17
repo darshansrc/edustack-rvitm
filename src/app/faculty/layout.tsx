@@ -1,24 +1,16 @@
-'use client'; 
-import { useRef } from "react"
-import DesktopNavbar from "./components/DesktopNavBar/DesktopNavbar"
-import BottomNavbar from "./components/bottomNavbar/BottomNavbar"
-import LoadingBar from 'react-top-loading-bar'
-
+import DesktopNavbar from "./components/DesktopNavBar/DesktopNavbar";
+import BottomNavbar from "./components/bottomNavbar/BottomNavbar";
 
 export default function DashboardLayout({
-    children,
-  }: {
-    children: React.ReactNode
-  }) {
-
-    const ref = useRef(null)
-
-    return (
-        <>
-        <DesktopNavbar/>
-        <BottomNavbar/>
-        <section>{children}</section>
-        </>
-        
-    )
-  }
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      <DesktopNavbar />
+      <BottomNavbar />
+      <section>{children}</section>
+    </>
+  );
+}
