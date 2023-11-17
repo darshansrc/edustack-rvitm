@@ -289,6 +289,7 @@ const NewSchedule = () => {
                 setIsLabSubject(false);
                 setSelectedBatch("");
               }}
+              size="large"
               placeholder="Select Class"
               className="w-[85vw] max-w-[450px]"
             >
@@ -310,6 +311,7 @@ const NewSchedule = () => {
                   onChange={handleSubjectChange}
                   placeholder="Select Subject"
                   className="w-[85vw] max-w-[450px]"
+                  size="large"
                 >
                   {uniqueClassOptions[selectedClassName].map((pair, index) => (
                     <AntSelect.Option key={index} value={pair.code}>
@@ -330,6 +332,7 @@ const NewSchedule = () => {
                   onChange={handleBatchChange}
                   placeholder="Select Lab Batch"
                   className="w-[85vw] max-w-[450px]"
+                  size="large"
                 >
                   {batchOptions.map((option) => (
                     <AntSelect.Option key={option.value} value={option.value}>
@@ -350,6 +353,7 @@ const NewSchedule = () => {
                 maxWidth: "100%",
                 textOverflow: "ellipsis",
               }}
+              size="large"
               format="ddd, MMM D"
               onChange={setSelectedDate}
               value={selectedDate || undefined}
@@ -369,6 +373,7 @@ const NewSchedule = () => {
                   onChange={handleStartTimeChange}
                   placeholder="Select Start Time"
                   className="w-11/12 mr-[8%]"
+                  size="large"
                 >
                   {timeOptions.map((option) => (
                     <AntSelect.Option key={option.value} value={option.value}>
@@ -387,6 +392,7 @@ const NewSchedule = () => {
                   onChange={(value) => setEndTime(value)}
                   placeholder="Select End Time"
                   className="w-11/12 ml-[8%]"
+                  size="large"
                 >
                   {timeOptions.map((option) => (
                     <AntSelect.Option key={option.value} value={option.value}>
@@ -403,6 +409,7 @@ const NewSchedule = () => {
             <Input
               placeholder="Enter Topic of Class (optional)"
               onChange={(e) => setClassTopic(e.target.value)}
+              size="large"
             />
 
             <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
@@ -412,6 +419,7 @@ const NewSchedule = () => {
               placeholder="Enter Class Description or any Instructions if necessary (optional)"
               onChange={(e) => setClassDescription(e.target.value)}
               className="mb-4"
+              size="large"
             />
 
             {error && (
