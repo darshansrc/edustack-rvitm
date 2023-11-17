@@ -43,6 +43,17 @@ const DesktopNavbar = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  useEffect(() => {
+    const storedCollapsed = localStorage.getItem("collapsed");
+    if (storedCollapsed) {
+      setCollapsed(storedCollapsed === "true");
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("collapsed", collapsed.toString());
+  }, [collapsed]);
+
   return (
     <Layout className="hidden md:block">
       <Sider
@@ -99,17 +110,34 @@ const DesktopNavbar = () => {
             <Link href={"/faculty/profile"}>Profile</Link>
           </Menu.Item>
 
-          <Menu.Item icon={<MdLogout />}>
-            <Popconfirm
-              title="Log out"
-              description="Are you sure you want to log out?"
-              onConfirm={handleSignOut}
-              okText="Yes"
-              cancelText="No"
-            >
-              Logout
-            </Popconfirm>
-          </Menu.Item>
+          <div className={collapsed ? "" : "pl-2"}>
+            <Menu selectable={false} theme="dark">
+              <Menu.Item
+                icon={
+                  <Popconfirm
+                    title="Log out"
+                    description="Are you sure you want to log out?"
+                    onConfirm={handleSignOut}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    {" "}
+                    <MdLogout />
+                  </Popconfirm>
+                }
+              >
+                <Popconfirm
+                  title="Log out"
+                  description="Are you sure you want to log out?"
+                  onConfirm={handleSignOut}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  Logout
+                </Popconfirm>
+              </Menu.Item>
+            </Menu>
+          </div>
         </Menu>
       </Sider>
     </Layout>
