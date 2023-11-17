@@ -123,15 +123,17 @@ const AttendanceDashboard = () => {
 
   // form required data states
     // form required data states
-    const [classSubjectPairList, setClassSubjectPairList] = useState<any>();
+  // form required data states
+  const [classSubjectPairList, setClassSubjectPairList] = useState<any[]>([]);
 
-    useEffect(() => {
-      const storedClassSubjectPairListString = localStorage.getItem('classSubjectPairList');
-      if (storedClassSubjectPairListString !== null) {
-        const storedList = JSON.parse(storedClassSubjectPairListString);
-        setClassSubjectPairList(storedList);
-      }
-    }, []);
+  useEffect(() => {
+    const storedClassSubjectPairListString = localStorage.getItem('classSubjectPairList');
+    if (storedClassSubjectPairListString !== null) {
+      const storedList = JSON.parse(storedClassSubjectPairListString);
+      setClassSubjectPairList(storedList);
+    }
+  }, []);
+
   
 
 

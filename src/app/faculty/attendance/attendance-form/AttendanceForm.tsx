@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { DatePicker, Select } from 'antd';
@@ -115,18 +115,18 @@ const AttendanceForm = () => {
 
 
   // form required data states
-    // form required data states
-    const [classSubjectPairList, setClassSubjectPairList] = useState<any>();
+  const [classSubjectPairList, setClassSubjectPairList] = useState<any[]>([]);
 
-    useEffect(() => {
-      const storedClassSubjectPairListString = localStorage.getItem('classSubjectPairList');
-      if (storedClassSubjectPairListString !== null) {
-        const storedList = JSON.parse(storedClassSubjectPairListString);
-        setClassSubjectPairList(storedList);
-      }
-    }, []);
+  useEffect(() => {
+    const storedClassSubjectPairListString = localStorage.getItem('classSubjectPairList');
+    if (storedClassSubjectPairListString !== null) {
+      const storedList = JSON.parse(storedClassSubjectPairListString);
+      setClassSubjectPairList(storedList);
+    }
+  }, []);
 
 
+  
   const [subjectType, setSubjectType] = useState<string>('theory');
   const [step1Error, setStep1Error] = useState<string>('');
   const [isSubjectElective, setIsSubjectElective] = useState<string>('');
