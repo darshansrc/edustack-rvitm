@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase-config';
 import dayjs from 'dayjs';
-import { Alert, Box, Card, ListItem, Snackbar, Typography, styled } from '@mui/material';
+import { Alert, Box, Card, ListItem, Skeleton, Snackbar, Typography, styled } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Link from 'next/link';
@@ -125,23 +125,14 @@ const AttendanceDashboard = () => {
     // form required data states
   // form required data states
   const [classSubjectPairList, setClassSubjectPairList] = useState<any[]>([]);
-  const [previousAttendanceSessions, setPreviousAttendanceSessions] = useState<any[]>([]);
 
   useEffect(() => {
     const storedClassSubjectPairListString = localStorage.getItem('classSubjectPairList');
-
-    const storedPreviousAttendanceSessions = localStorage.getItem('previousAttendanceSessions');
-
-    if (storedClassSubjectPairListString && storedPreviousAttendanceSessions !== null) {
+    if (storedClassSubjectPairListString !== null) {
       const storedList = JSON.parse(storedClassSubjectPairListString);
-      const storedData = JSON.parse(storedPreviousAttendanceSessions);
       setClassSubjectPairList(storedList);
-      setPreviousAttendanceSessions(storedData);
     }
   }, []);
-
-
-
 
   
 
@@ -160,11 +151,14 @@ const AttendanceDashboard = () => {
   const [absentCount, setAbsentCount] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [isDataRecorded, setIsDataRecorded] = useState(false);
-
+  const [previousAttendanceSessions, setPreviousAttendanceSessions] = useState<any[]>([]);
   const [viewModalOpen, setViewModalOpen] = useState<boolean>(false);
   const [selectedClassData, setSelectedClassData] = useState<any>({});
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [updateData, setUpdateData] = useState<boolean>(false);
+
+
+  const [attendanceDataFetched, setAttendanceDataFetched] = useState<boolean>(false);
 
 
   const [ user, setUser ] = useState<any>(null);
@@ -262,6 +256,13 @@ const AttendanceDashboard = () => {
 
     getSubjectData();
   }, [classId, subjectCode]);
+
+
+  useEffect(() => {
+    if(previousAttendanceSessions && subjectName){
+        setAttendanceDataFetched(true);
+    }
+  }, [previousAttendanceSessions, subjectName])
 
   useEffect(() => {
     if (selectedPair) {
@@ -828,108 +829,121 @@ const ClassTopicModal = () => {
             </StyledTabs>
           </Box>
           </div>
+
+          
   
           <Card
-            sx={{
-              width: '100%',
-              boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04)',
-              position: 'relative',
-              marginTop: '12px',
-              paddingBottom: 0,
-              backgroundColor: 'white',
-              borderRadius: '10px',
-              marginBottom: '12px',
-            }}
-          >
-            <Typography
-              sx={{
-                marginTop: '10px',
-                marginLeft: '10px',
-                fontWeight: '500',
-                color: '#555',
-                fontFamily: 'Poppins',
-                marginBottom: '5px',
-              }}
-            >
-              {classId} - {subjectName}
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                marginTop: '2px',
-                marginLeft: '10px',
-                fontSize: '13px',
-                fontFamily: 'Poppins',
-              }}
-            >
-              Attendance from{' '}
-              {previousAttendanceSessions.length > 0
-                ? new Date(
-                    previousAttendanceSessions[0].data.classDate
-                  ).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  })
-                : 'N/A'}{' '}
-              to{' '}
-              {previousAttendanceSessions.length > 0
-                ? new Date(
-                    previousAttendanceSessions[
-                      previousAttendanceSessions.length - 1
-                    ].data.classDate
-                  ).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  })
-                : 'N/A'}{' '}
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                marginTop: '2px',
-                marginLeft: '10px',
-                fontSize: '13px',
-                fontFamily: 'Poppins',
-              }}
-            >
-              Total Classes Held: {previousAttendanceSessions.length}
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                marginTop: '2px',
-                marginBottom: '10px',
-                marginLeft: '10px',
-                fontSize: '13px',
-                fontFamily: 'Poppins',
-              }}
-            >
-              Class Average Attendance Percentage:{' '}
-              {(
-                (previousAttendanceSessions.reduce(
-                  (total, session) =>
-                    total + session.data.presentCount,
-                  0
-                ) /
-                  previousAttendanceSessions.reduce(
-                    (total, session) =>
-                      total +
-                      session.data.presentCount +
-                      session.data.absentCount,
-                    0
-                  )) *
-                100
-              ).toFixed(2)}
-              %
-            </Typography>
-          </Card>
+      sx={{
+        width: '100%',
+        boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04)',
+        position: 'relative',
+        marginTop: '12px',
+        paddingBottom: 0,
+        backgroundColor: 'white',
+        borderRadius: '10px',
+        marginBottom: '12px',
+      }}
+    >
+      <Typography
+        sx={{
+          marginTop: '10px',
+          marginLeft: '10px',
+          fontWeight: '500',
+          color: '#555',
+          fontFamily: 'Poppins',
+          marginBottom: '5px',
+        }}
+      >
+        {classId ? `${classId} - ${subjectName}` : <Skeleton width={150} height={20} />}
+      </Typography>
+      <Typography
+        variant="body1"
+        sx={{
+          marginTop: '2px',
+          marginLeft: '10px',
+          fontSize: '13px',
+          fontFamily: 'Poppins',
+        }}
+      >
+        Attendance from{' '}
+        {previousAttendanceSessions.length > 0 ? (
+          new Date(
+            previousAttendanceSessions[0].data.classDate
+          ).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })
+        ) : (
+          <Skeleton width={100} height={14} />
+        )}{' '}
+        to{' '}
+        {previousAttendanceSessions.length > 0 ? (
+          new Date(
+            previousAttendanceSessions[
+              previousAttendanceSessions.length - 1
+            ].data.classDate
+          ).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })
+        ) : (
+          <Skeleton width={100} height={14} />
+        )}{' '}
+      </Typography>
+      <Typography
+        variant="body1"
+        sx={{
+          marginTop: '2px',
+          marginLeft: '10px',
+          fontSize: '13px',
+          fontFamily: 'Poppins',
+        }}
+      >
+        Total Classes Held:{' '}
+        {previousAttendanceSessions.length > 0 ? (
+          previousAttendanceSessions.length
+        ) : (
+          <Skeleton width={30} height={14} />
+        )}
+      </Typography>
+      <Typography
+        variant="body1"
+        sx={{
+          marginTop: '2px',
+          marginBottom: '10px',
+          marginLeft: '10px',
+          fontSize: '13px',
+          fontFamily: 'Poppins',
+        }}
+      >
+        Class Average Attendance Percentage:{' '}
+        {previousAttendanceSessions.length > 0 ? (
+          (
+            (previousAttendanceSessions.reduce(
+              (total, session) => total + session.data.presentCount,
+              0
+            ) /
+              previousAttendanceSessions.reduce(
+                (total, session) =>
+                  total +
+                  session.data.presentCount +
+                  session.data.absentCount,
+                0
+              )) *
+            100
+          ).toFixed(2) + '%'
+        ) : (
+          <Skeleton width={50} height={14} />
+        )}
+      </Typography>
+    </Card>
   
           <div className='flex flex-col w-[95vw] max-w-[550px] my-8 px-6 relative'>
             {previousAttendanceSessions.length === 0 ? (
               <ListItem>
-                <Typography variant="subtitle1">No data available.</Typography>
+                <Typography variant="subtitle1"></Typography>
               </ListItem>
             ) : (
               previousAttendanceSessions
