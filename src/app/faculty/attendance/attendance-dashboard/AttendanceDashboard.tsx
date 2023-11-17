@@ -122,9 +122,16 @@ const AttendanceDashboard = () => {
   const [labBatch, setLabBatch] = useState<string>('');
 
   // form required data states
-  const storedClassSubjectPairListString = localStorage.getItem('classSubjectPairList');
-  const storedClassSubjectPairList = storedClassSubjectPairListString !== null ? JSON.parse(storedClassSubjectPairListString) : [];
-  const [classSubjectPairList, setClassSubjectPairList] = useState(storedClassSubjectPairList);
+    // form required data states
+    const [classSubjectPairList, setClassSubjectPairList] = useState<any>();
+
+    useEffect(() => {
+      const storedClassSubjectPairListString = localStorage.getItem('classSubjectPairList');
+      if (storedClassSubjectPairListString !== null) {
+        const storedList = JSON.parse(storedClassSubjectPairListString);
+        setClassSubjectPairList(storedList);
+      }
+    }, []);
   
 
 
