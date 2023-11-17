@@ -92,7 +92,7 @@ const ScheduleDashboard = () => {
         open={scheduleClassModalOpen}
         onCancel={() => setScheduleClassModalOpen(false)}
         onOk={() => setScheduleClassModalOpen(false)}
-        footer={null}
+        footer={[]}
         title={"Schedule New Class"}
       >
         <NewSchedule />
