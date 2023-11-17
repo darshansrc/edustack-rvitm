@@ -8,8 +8,7 @@ import { db } from "@/lib/firebase-config";
 customInitApp();
 
 export async function GET(request: NextRequest) {
-
-  let userType : string = '';
+  let userType: string = "";
   const session = cookies().get("session")?.value || "";
 
   if (!session) {
@@ -24,20 +23,23 @@ export async function GET(request: NextRequest) {
 
   const userUID = decodedClaims.uid; // Get the user's UID
   const userEmail = decodedClaims.email; // Get the user's email
-  const getRef = doc(db, 'users', userUID);
+  const getRef = doc(db, "users", userUID);
   const userDoc = await getDoc(getRef);
-  
+
   if (userDoc.exists()) {
     const userData = userDoc.data();
     userType = userData.type;
   }
 
-  return NextResponse.json({ isLogged: true, userUID ,userEmail, userType}, { status: 200 });
+  return NextResponse.json(
+    { isLogged: true, userUID, userEmail, userType },
+    { status: 200 }
+  );
 }
 
 export async function POST(request: NextRequest, response: NextResponse) {
   const authorization = headers().get("Authorization");
-  
+
   if (authorization?.startsWith("Bearer ")) {
     const idToken = authorization.split("Bearer ")[1];
     const decodedToken = await auth().verifyIdToken(idToken);

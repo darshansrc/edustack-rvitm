@@ -19,7 +19,6 @@ const { SubMenu } = Menu;
 const { Sider } = Layout;
 
 const DesktopNavbar = () => {
-  const [subMenuActive, setSubMenuActive] = useState<boolean>(false);
   const pathname = usePathname() || "";
 
   const router = useRouter();
@@ -34,14 +33,7 @@ const DesktopNavbar = () => {
     }
   };
 
-  useEffect(() => {
-    pathname.startsWith("/faculty/attendance") && setSubMenuActive(true);
-  }, []);
-
   const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
 
   useEffect(() => {
     const storedCollapsed = localStorage.getItem("collapsed");

@@ -9,8 +9,6 @@ const page = () => {
   return (
     <>
       <TopNavbar name="Profile" />
-      <DesktopNavbar />
-      <BottomNavbar />
     </>
   );
 };
