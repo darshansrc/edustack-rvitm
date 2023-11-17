@@ -525,9 +525,11 @@ const ScheduleDashboard = () => {
                         classDate: dayjs(event?.date).format("YYYY-MM-DD"),
                         classStartTime: fullformatTime(event?.startTime),
                         classEndTime: fullformatTime(event?.endTime),
+                        classTopic: event?.classTopic,
+                        classDescription: event?.classDescription,
                       }
                     )}`}
-                    className="bg-blue-600 px-2 text-white border border-blue-600 p-1 rounded flex items-center justify-center font-poppins text-xs cursor-pointer max-w-[100px]"
+                    className="bg-blue-600 px-2 text-white border border-blue-600 p-1 rounded flex items-center justify-center font-poppins text-xs cursor-pointer w-max"
                   >
                     Mark Attendance
                   </Link>
