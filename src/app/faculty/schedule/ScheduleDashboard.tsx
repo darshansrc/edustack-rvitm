@@ -73,6 +73,8 @@ interface ScheduleEvent {
   startTime: string;
   endTime: string;
   selectedBatch: string;
+  classTopic: string;
+  classDescription: string;
 }
 
 interface ScheduleData {
@@ -450,26 +452,42 @@ const ScheduleDashboard = () => {
                   {formatTime(event.startTime)} - {formatTime(event.endTime)}
                 </Timeline.Time>
 
-                <div className="border border-dashed border-slate-600 rounded bg-white flex flex-col justify-center p-[12px] mt-2 pr-[30px]">
-                  <div className="text-slate-500 font-[Poppins] text-[12px] font-semibold">
+                <div className="border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[12px] mt-2 pr-[30px]">
+                  <div className="text-slate-500 font-[Poppins] text-[12px]  ">
                     <span className="text-blue-500 font-[Poppins] text-[12px]">
-                      SUBJECT:{" "}
+                      Subject:{" "}
                     </span>
                     {event.subjectName}
                   </div>
                   <div className="text-slate-500 font-[Poppins] text-[12px]">
-                    <span className="text-blue-500 font-[Poppins] text-[12px] font-semibold">
-                      CLASS:{" "}
+                    <span className="text-blue-500 font-[Poppins] text-[12px]  ">
+                      Class:{" "}
                     </span>
                     {event.selectedClassName}
                   </div>
 
                   {event.isLabSubject && (
                     <div className="text-slate-500 font-[Poppins] text-[12px]">
-                      <span className="text-blue-500 font-[Poppins] text-[12px] font-semibold">
-                        BATCH:{" "}
+                      <span className="text-blue-500 font-[Poppins] text-[12px]  ">
+                        Lab Batch:{" "}
                       </span>
                       B-{event?.selectedBatch}
+                    </div>
+                  )}
+
+                  <div className="text-slate-500 font-[Poppins] text-[12px]">
+                    <span className="text-blue-500 font-[Poppins] text-[12px]  ">
+                      Topic:{" "}
+                    </span>
+                    {event?.classTopic ? event?.classTopic : "N/A"}
+                  </div>
+
+                  {event.classDescription && (
+                    <div className="text-slate-500 font-[Poppins] text-[12px]">
+                      <span className="text-blue-500 font-[Poppins] text-[12px]  ">
+                        Description:{" "}
+                      </span>
+                      {event?.classDescription}
                     </div>
                   )}
                 </div>
@@ -490,85 +508,91 @@ const ScheduleDashboard = () => {
     );
   };
 
-  const handleScheduleClassModalOpen = () => {
-    setScheduleClassModalOpen(true);
-  };
-
   return (
     <>
-      <div className={styles.scheduleContainer}>
-        <div className={styles.schedulePage}>
-          <button
-            className="bg-blue-600 w-11/12 text-white rounded-lg mx-4 mt-12 mb-4 font-[Poppins] p-2 hover:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring focus:ring-blue-300"
-            onClick={handleScheduleClassModalOpen}
-          >
-            Schedule New Class
-          </button>
+      <div className="md:pl-52">
+        <div className={styles.scheduleContainer}>
+          <div className={styles.schedulePage}>
+            <div className="mt-14 md:mt-0">
+              <div className="font-poppins pl-4 pt-2 pb-4 font-[400] text-blue-600 text-[20px]">
+                Your Schedule
+              </div>
+              <div className={styles.selectedDateBar}>
+                <div className={styles.selectedDate}>
+                  {selectedScheduleDate.toLocaleString("en-US", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </div>
 
-          <div>
-            <div className={styles.selectedDateBar}>
-              <div className={styles.selectedDate}>
-                {selectedScheduleDate.toLocaleString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </div>
-              <div
-                onClick={() =>
-                  formattedDate === selectedDateDate ? null : handleTodayClick()
-                }
-                className={
-                  formattedDate === selectedDateDate
-                    ? styles.todayButtonDisabled
-                    : styles.todayButton
-                }
-                style={{ padding: "5px 10px", marginRight: "15px" }}
-              >
-                Today
-              </div>
-            </div>
-            <div className={styles.dateGrid}>
-              <div
-                onClick={() => handleWeekChange(-1)}
-                className={styles.button}
-              >
-                <IoChevronBackSharp />
-              </div>
-              {currentWeekDates.map((date, index) => {
-                const isSelected =
-                  date.toDateString() === selectedScheduleDate.toDateString();
-                const todayDate = date.toDateString() === formattedDate;
-                return (
-                  <div className={styles.dateContainer} key={index}>
-                    <span
-                      onClick={() => handleDateClick(date)}
-                      className={`${styles.date} ${
-                        isSelected
-                          ? styles.selectedDateDiv
-                          : todayDate
-                          ? styles.currentDateDiv
-                          : ""
-                      }`}
-                    >
-                      {date.getDate()}
-                      <div className={styles.day}>
-                        {date.toLocaleString("en-US", { weekday: "short" })}
-                      </div>
-                    </span>
+                <div className="flex flex-row gap-2">
+                  <div
+                    onClick={() => setScheduleClassModalOpen(true)}
+                    className="bg-blue-600 px-2 text-white border border-blue-600 p-1 rounded flex items-center justify-center font-poppins text-xs cursor-pointer"
+                  >
+                    Schedule
                   </div>
-                );
-              })}
-              <div
-                onClick={() => handleWeekChange(1)}
-                className={styles.button}
-              >
-                <IoChevronForwardSharp />
+
+                  <div
+                    onClick={() =>
+                      formattedDate === selectedDateDate
+                        ? null
+                        : handleTodayClick()
+                    }
+                    className={
+                      formattedDate === selectedDateDate
+                        ? styles.todayButtonDisabled
+                        : styles.todayButton
+                    }
+                    style={{ padding: "5px 10px", marginRight: "15px" }}
+                  >
+                    Today
+                  </div>
+                </div>
+              </div>
+              <div className={styles.dateGrid}>
+                <div
+                  onClick={() => handleWeekChange(-1)}
+                  className={styles.button}
+                >
+                  <IoChevronBackSharp />
+                </div>
+                {currentWeekDates.map((date, index) => {
+                  const isSelected =
+                    date.toDateString() === selectedScheduleDate.toDateString();
+                  const todayDate = date.toDateString() === formattedDate;
+                  return (
+                    <div className={styles.dateContainer} key={index}>
+                      <span
+                        onClick={() => handleDateClick(date)}
+                        className={`${styles.date} ${
+                          isSelected
+                            ? styles.selectedDateDiv
+                            : todayDate
+                            ? styles.currentDateDiv
+                            : ""
+                        }`}
+                      >
+                        {date.getDate()}
+                        <div className={styles.day}>
+                          {date.toLocaleString("en-US", { weekday: "short" })}
+                        </div>
+                      </span>
+                    </div>
+                  );
+                })}
+                <div
+                  onClick={() => handleWeekChange(1)}
+                  className={styles.button}
+                >
+                  <IoChevronForwardSharp />
+                </div>
               </div>
             </div>
           </div>
+          {renderScheduleTimeline()}
         </div>
-        {renderScheduleTimeline()}
       </div>
 
       <AntdModal

@@ -11,6 +11,7 @@ import { IoChevronBackSharp } from "react-icons/io5";
 
 import { Button as AntButton, Modal as AntModal } from "antd";
 import { onAuthStateChanged } from "firebase/auth";
+import { useSearchParams } from "next/navigation";
 
 interface AttendanceFormData {
   classId: string;
@@ -151,6 +152,32 @@ const AttendanceForm = () => {
 
   const [classTopic, setClassTopic] = useState<string>("");
   const [classDescription, setClassDescription] = useState<string>("");
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const paramsClassId = searchParams.get("classId");
+    const paramsSubjectCode = searchParams.get("subjectCode");
+    const paramsClassDate = searchParams.get("classDate");
+    const paramsClassStartTime = searchParams.get("classStartTime");
+    const paramsClassEndTime = searchParams.get("classEndTime");
+    const paramsLabBatch = searchParams.get("labBatch");
+
+    if (
+      paramsClassId &&
+      paramsSubjectCode &&
+      paramsClassDate &&
+      paramsClassStartTime &&
+      paramsClassEndTime
+    ) {
+      setClassId(paramsClassId);
+      setSubjectCode(paramsSubjectCode);
+      setClassDate(dayjs(paramsClassDate));
+      setClassStartTime(paramsClassStartTime);
+      setClassEndTime(paramsClassEndTime);
+      if (paramsLabBatch) setLabBatch(paramsLabBatch);
+    }
+  }, []);
 
   const clearAllStateVariables = () => {
     setClassDate(dayjs());
