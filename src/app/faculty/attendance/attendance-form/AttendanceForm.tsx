@@ -122,12 +122,16 @@ const AttendanceForm = () => {
   const [classSubjectPairList, setClassSubjectPairList] = useState<any[]>([]);
 
   useEffect(() => {
-    const storedClassSubjectPairListString = localStorage.getItem(
-      "classSubjectPairList"
-    );
-    if (storedClassSubjectPairListString !== null) {
-      const storedList = JSON.parse(storedClassSubjectPairListString);
-      setClassSubjectPairList(storedList);
+    try {
+      const storedClassSubjectPairListString = localStorage.getItem(
+        "classSubjectPairList"
+      );
+      if (storedClassSubjectPairListString !== null) {
+        const storedList = JSON.parse(storedClassSubjectPairListString);
+        setClassSubjectPairList(storedList);
+      }
+    } catch (err) {
+      console.log(err);
     }
   }, []);
 
@@ -228,46 +232,30 @@ const AttendanceForm = () => {
     };
   }, []);
 
-  const fetchFacultyData = async () => {
-    try {
-      const currentServerDomain = window.location.origin;
-      const responseAPI = await fetch(
-        `${currentServerDomain}/api/faculty/home`,
-        {
-          method: "GET",
-        }
-      );
-
-      if (responseAPI.status === 200) {
-        const responseBody = await responseAPI.json();
-        setFacultyDetails(responseBody.facultyDetails);
-
-        // Store studentDetails in localStorage
-        localStorage.setItem(
-          "facultyDetails",
-          JSON.stringify(responseBody.facultyDetails)
-        );
-      } else {
-        console.log("Cannot fetch data");
-      }
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
-  };
-
   useEffect(() => {
-    const storedFacultyDetails = localStorage.getItem("facultyDetails");
+    const fetchFacultyData = async () => {
+      try {
+        const currentServerDomain = window.location.origin;
+        const responseAPI = await fetch(
+          `${currentServerDomain}/api/faculty/home`,
+          {
+            method: "GET",
+          }
+        );
 
-    if (storedFacultyDetails) {
-      const parsedFacultyDetails = JSON.parse(storedFacultyDetails);
-      const userUidMatch = parsedFacultyDetails.userUID === user?.uid;
-      if (userUidMatch) {
-        setFacultyDetails(parsedFacultyDetails);
+        if (responseAPI.status === 200) {
+          const responseBody = await responseAPI.json();
+          setFacultyDetails(responseBody.facultyDetails);
+        } else {
+          console.log("Cannot fetch data");
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
       }
-    }
+    };
 
     fetchFacultyData();
-  }, [user]);
+  }, []);
 
   const uniqueClassOptions = classSubjectPairList.reduce((acc, pair) => {
     if (!acc[pair.className]) {

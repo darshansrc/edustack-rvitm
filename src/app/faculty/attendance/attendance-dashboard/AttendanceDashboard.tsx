@@ -137,12 +137,16 @@ const AttendanceDashboard = () => {
   const [classSubjectPairList, setClassSubjectPairList] = useState<any[]>([]);
 
   useEffect(() => {
-    const storedClassSubjectPairListString = localStorage.getItem(
-      "classSubjectPairList"
-    );
-    if (storedClassSubjectPairListString !== null) {
-      const storedList = JSON.parse(storedClassSubjectPairListString);
-      setClassSubjectPairList(storedList);
+    try {
+      const storedClassSubjectPairListString = localStorage.getItem(
+        "classSubjectPairList"
+      );
+      if (storedClassSubjectPairListString !== null) {
+        const storedList = JSON.parse(storedClassSubjectPairListString);
+        setClassSubjectPairList(storedList);
+      }
+    } catch (err) {
+      console.log(err);
     }
   }, []);
 
@@ -201,30 +205,18 @@ const AttendanceDashboard = () => {
         );
         const fetchedData = await res.json();
 
-        // Check if userUID matches
-        const storedFacultyDetailsString =
-          localStorage.getItem("facultyDetails");
-        if (storedFacultyDetailsString !== null) {
-          const storedFacultyDetails =
-            JSON.parse(storedFacultyDetailsString) || {};
-
-          if (storedFacultyDetails.userUID === user?.uid) {
-            setClassSubjectPairList(fetchedData?.classSubjectPairList);
-
-            // Store classSubjectPairList in localStorage
-            localStorage.setItem(
-              "classSubjectPairList",
-              JSON.stringify(fetchedData?.classSubjectPairList)
-            );
-          }
-        }
+        // Store classSubjectPairList in localStorage
+        localStorage.setItem(
+          "classSubjectPairList",
+          JSON.stringify(fetchedData?.classSubjectPairList)
+        );
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchClassSubjectPairs();
-  }, [user]);
+  }, []);
 
   const [selectedPair, setSelectedPair] = useState(classSubjectPairList[0]);
   const [successMessageOpen, setSuccessMessageOpen] = useState<boolean>(false);
@@ -321,10 +313,7 @@ const AttendanceDashboard = () => {
         });
 
         setPreviousAttendanceSessions(sessionsData);
-        localStorage.setItem(
-          "previousAttendanceSessions",
-          JSON.stringify(sessionsData)
-        );
+
         setUpdateData(false);
         console.log(previousAttendanceSessions);
       }
