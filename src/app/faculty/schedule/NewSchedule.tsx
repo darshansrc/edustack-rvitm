@@ -272,13 +272,13 @@ const NewSchedule = () => {
   return (
     <>
       {!scheduleSuccessful ? (
-        <div className="flex items-center flex-col ">
+        <div className="flex items-center flex-col  justify-center w-full">
           <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-4 text-blue-600">
             {" "}
             Schedule New Class
           </h2>
           <div className="flex flex-col items-center">
-            <p className="text-left font-[Poppins] font-[500] text-[12px] mt-2 pl-2 text-slate-600 w-full">
+            <p className="text-left font-[Poppins] font-[500] text-[12px] mt-2 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
               Class
             </p>
             <AntSelect
@@ -290,12 +290,7 @@ const NewSchedule = () => {
                 setSelectedBatch("");
               }}
               placeholder="Select Class"
-              style={{
-                width: "70vw",
-                maxWidth: "450px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
+              className="w-[85vw] max-w-[450px]"
             >
               {Object.keys(uniqueClassOptions).map((className, index) => (
                 <AntSelect.Option key={index} value={className}>
@@ -307,18 +302,14 @@ const NewSchedule = () => {
 
             {selectedClassName && (
               <>
-                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
                   Subject
                 </p>
                 <AntSelect
                   value={selectedSubject || undefined}
                   onChange={handleSubjectChange}
                   placeholder="Select Subject"
-                  style={{
-                    width: "70vw",
-                    maxWidth: "450px",
-                    textOverflow: "ellipsis",
-                  }}
+                  className="w-[85vw] max-w-[450px]"
                 >
                   {uniqueClassOptions[selectedClassName].map((pair, index) => (
                     <AntSelect.Option key={index} value={pair.code}>
@@ -331,18 +322,14 @@ const NewSchedule = () => {
 
             {isLabSubject && (
               <>
-                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
                   Batch
                 </p>
                 <AntSelect
                   value={selectedBatch || undefined}
                   onChange={handleBatchChange}
                   placeholder="Select Lab Batch"
-                  style={{
-                    width: "70vw",
-                    maxWidth: "450px",
-                    textOverflow: "ellipsis",
-                  }}
+                  className="w-[85vw] max-w-[450px]"
                 >
                   {batchOptions.map((option) => (
                     <AntSelect.Option key={option.value} value={option.value}>

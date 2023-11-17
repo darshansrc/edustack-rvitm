@@ -88,6 +88,7 @@ const ScheduleDashboard = () => {
   const NewScheduleModal = () => {
     return (
       <AntdModal
+        centered
         open={scheduleClassModalOpen}
         onCancel={() => setScheduleClassModalOpen(false)}
         onOk={() => setScheduleClassModalOpen(false)}
