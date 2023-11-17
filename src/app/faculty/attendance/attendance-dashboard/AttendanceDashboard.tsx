@@ -940,7 +940,7 @@ const AttendanceDashboard = () => {
             </button>
           </Link>
 
-          <div className="md:fixed md:top-0 md:left-52 md:w-full z-50 bg-white md:pt-[13px] ">
+          <div className="md:fixed md:top-0 md:left-52 md:w-[calc(100%-208px)] z-50 bg-white md:pt-[13px] ">
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <StyledTabs value={selectedPair} onChange={handleChangeTab}>
                 {classSubjectPairList.map((pair, index) => (
