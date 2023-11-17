@@ -18,21 +18,21 @@ import { MdLogout } from "react-icons/md";
 const { SubMenu } = Menu;
 const { Sider } = Layout;
 
-const router = useRouter();
-
-const handleSignOut = async () => {
-  signOut(auth);
-  const response = await fetch(`${window.location.origin}/api/signout`, {
-    method: "POST",
-  });
-  if (response.status === 200) {
-    router.push("/");
-  }
-};
-
 const DesktopNavbar = () => {
   const [subMenuActive, setSubMenuActive] = useState<boolean>(false);
   const pathname = usePathname() || "";
+
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    signOut(auth);
+    const response = await fetch(`${window.location.origin}/api/signout`, {
+      method: "POST",
+    });
+    if (response.status === 200) {
+      router.push("/");
+    }
+  };
 
   useEffect(() => {
     pathname.startsWith("/faculty/attendance") && setSubMenuActive(true);
