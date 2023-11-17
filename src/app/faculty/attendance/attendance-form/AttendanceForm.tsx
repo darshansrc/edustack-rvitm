@@ -155,6 +155,8 @@ const AttendanceForm = () => {
 
   const searchParams = useSearchParams();
 
+  const [isParamsPresent, setIsParamsPresent] = useState(false);
+
   useEffect(() => {
     const paramsClassId = searchParams.get("classId");
     const paramsSubjectCode = searchParams.get("subjectCode");
@@ -162,6 +164,8 @@ const AttendanceForm = () => {
     const paramsClassStartTime = searchParams.get("classStartTime");
     const paramsClassEndTime = searchParams.get("classEndTime");
     const paramsLabBatch = searchParams.get("labBatch");
+    const paramsClassTopic = searchParams.get("classTopic");
+    const paramsClassDescription = searchParams.get("classDescription");
 
     if (
       paramsClassId &&
@@ -176,6 +180,10 @@ const AttendanceForm = () => {
       setClassStartTime(paramsClassStartTime);
       setClassEndTime(paramsClassEndTime);
       if (paramsLabBatch) setLabBatch(paramsLabBatch);
+      if (paramsClassTopic) setClassTopic(paramsClassTopic);
+      if (paramsClassDescription) setClassDescription(paramsClassDescription);
+      setIsParamsPresent(true);
+      setFormStep(2);
     }
   }, []);
 
@@ -352,7 +360,7 @@ const AttendanceForm = () => {
     };
 
     getSubjectData();
-  }, [classId, subjectCode]);
+  }, [classId, subjectCode, isParamsPresent]);
 
   useEffect(() => {
     const getStudents = async () => {
@@ -388,7 +396,7 @@ const AttendanceForm = () => {
     };
 
     getStudents();
-  }, [classId]);
+  }, [classId, isParamsPresent]);
 
   const handleStartTimeChange = (value: string) => {
     setClassStartTime(value);
@@ -545,8 +553,8 @@ const AttendanceForm = () => {
       updatedTime: dayjs().toISOString(),
       recordedByEmail: user.email,
       recordedByName: facultyDetails?.facultyName,
-      classTopic: "",
-      classDescription: "",
+      classTopic: classTopic || "",
+      classDescription: classDescription || "",
       labBatch: labBatch || "",
     };
 
@@ -1019,6 +1027,18 @@ const AttendanceForm = () => {
                 <span className="font-[500]"> Students Absent: </span>
                 {absentCount}
               </p>
+              <p className="pl-1 text-slate-700 font-[Poppins] text-[12px]">
+                {" "}
+                <span className="font-[500]"> Class Topic: </span>
+                {classTopic ? classTopic : "-"}
+              </p>
+              {classDescription && (
+                <p className="pl-1 text-slate-700 font-[Poppins] text-[12px]">
+                  {" "}
+                  <span className="font-[500]"> Class Description: </span>
+                  {classDescription}
+                </p>
+              )}
             </div>
 
             <button
