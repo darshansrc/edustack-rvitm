@@ -44,7 +44,7 @@ const DesktopNavbar = () => {
   } = theme.useToken();
 
   return (
-    <Layout className="md:hidden">
+    <Layout className="hidden md:block">
       <Sider
         collapsible
         collapsed={collapsed}
