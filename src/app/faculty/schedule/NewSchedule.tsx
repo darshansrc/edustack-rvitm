@@ -1,20 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { DatePicker } from "keep-react";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Alert,
-  Snackbar,
-} from "@mui/material";
-
-import { Select as AntSelect } from "antd";
-
-import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "antd";
+import { Select as AntSelect, message } from "antd";
 import dayjs from "dayjs";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase-config";
@@ -101,8 +88,8 @@ const NewSchedule = () => {
     };
   }, []);
 
-  const handleSubjectChange = (event: any) => {
-    const selectedSubjectCode = event.target.value;
+  const handleSubjectChange = (value: any) => {
+    const selectedSubjectCode = value;
     setSelectedSubject(selectedSubjectCode);
     setSelectedBatch("");
 
@@ -115,8 +102,8 @@ const NewSchedule = () => {
     }
   };
 
-  const handleBatchChange = (event) => {
-    setSelectedBatch(event.target.value);
+  const handleBatchChange = (value: any) => {
+    setSelectedBatch(value);
   };
 
   const handleDateChange = (date: Date) => {
@@ -265,38 +252,35 @@ const NewSchedule = () => {
             Schedule New Class
           </h2>
           <div className="flex flex-col items-center">
-            <FormControl className="flex items-center">
-              <InputLabel>Select Class</InputLabel>
-              <Select
-                value={selectedClassName}
-                onChange={(event) => {
-                  setSelectedClassName(event.target.value);
-                  setSelectedSubject("");
-                  setIsLabSubject(false);
-                  setSelectedBatch("");
-                }}
-                displayEmpty
-                variant="outlined"
-                label="Select Class"
-                style={{
-                  width: "70vw",
-                  maxWidth: "450px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-                sx={{ "&:focus": { borderColor: "green" } }}
-              >
-                {Object.keys(uniqueClassOptions).map((className, index) => (
-                  <MenuItem key={index} value={className}>
-                    {uniqueClassOptions[className][0].classSemester}SEM{" "}
-                    {className}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <AntSelect
+              value={selectedClassName}
+              onChange={(value) => {
+                setSelectedClassName(value);
+                setSelectedSubject("");
+                setIsLabSubject(false);
+                setSelectedBatch("");
+              }}
+              placeholder="Select Class"
+              style={{
+                width: "70vw",
+                maxWidth: "450px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {Object.keys(uniqueClassOptions).map((className, index) => (
+                <AntSelect.Option key={index} value={className}>
+                  {uniqueClassOptions[className][0].classSemester}SEM{" "}
+                  {className}
+                </AntSelect.Option>
+              ))}
+            </AntSelect>
 
             {selectedClassName && (
-              <FormControl
+              <AntSelect
+                value={selectedSubject}
+                onChange={handleSubjectChange}
+                placeholder="Select Subject"
                 style={{
                   width: "70vw",
                   maxWidth: "450px",
@@ -304,31 +288,19 @@ const NewSchedule = () => {
                   textOverflow: "ellipsis",
                 }}
               >
-                <InputLabel>Select Subject</InputLabel>
-                <Select
-                  value={selectedSubject}
-                  onChange={handleSubjectChange}
-                  displayEmpty
-                  label="Select Subject"
-                  variant="outlined"
-                  style={{
-                    width: "70vw",
-                    maxWidth: "450px",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {uniqueClassOptions[selectedClassName].map((pair, index) => (
-                    <MenuItem key={index} value={pair.code}>
-                      {pair.subjectName} ({pair.code})
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                {uniqueClassOptions[selectedClassName].map((pair, index) => (
+                  <AntSelect.Option key={index} value={pair.code}>
+                    {pair.subjectName} ({pair.code})
+                  </AntSelect.Option>
+                ))}
+              </AntSelect>
             )}
 
             {isLabSubject && (
-              <FormControl
+              <AntSelect
+                value={selectedBatch}
+                onChange={handleBatchChange}
+                placeholder="Lab Batch"
                 style={{
                   width: "70vw",
                   maxWidth: "450px",
@@ -336,81 +308,53 @@ const NewSchedule = () => {
                   textOverflow: "ellipsis",
                 }}
               >
-                <InputLabel>Lab Batch</InputLabel>
-                <Select
-                  value={selectedBatch}
-                  onChange={handleBatchChange}
-                  displayEmpty
-                  variant="outlined"
-                  label="Lab Batch"
-                  style={{
-                    width: "70vw",
-                    maxWidth: "450px",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {batchOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+                {batchOptions.map((option) => (
+                  <AntSelect.Option key={option.value} value={option.value}>
+                    {option.label}
+                  </AntSelect.Option>
+                ))}
+              </AntSelect>
             )}
 
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <FormControl
-                style={{
-                  width: "100%",
-                  maxWidth: "100%",
-                  marginTop: "20px",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                <MobileDatePicker
-                  defaultValue={dayjs()}
-                  label="Select Date"
-                  format="ddd, MMM D"
-                  onChange={handleDateChange}
-                  value={selectedDate}
-                />
-              </FormControl>
-            </LocalizationProvider>
+            <DatePicker
+              defaultValue={dayjs()}
+              style={{
+                width: "100%",
+                maxWidth: "100%",
+                marginTop: "20px",
+                textOverflow: "ellipsis",
+              }}
+              format="ddd, MMM D"
+              onChange={setSelectedDate}
+              value={selectedDate}
+            />
 
             <div className="flex flex-row justify-between mt-5 mb-4 w-full">
-              <FormControl style={{ width: "95%", marginRight: "5%" }}>
-                <InputLabel>Start Time</InputLabel>
-                <Select
-                  value={startTime}
-                  onChange={(event) => setStartTime(event.target.value)}
-                  displayEmpty
-                  variant="outlined"
-                  label="Start time"
-                >
-                  {timeOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <AntSelect
+                style={{ width: "45%" }}
+                value={startTime}
+                onChange={(value) => setStartTime(value)}
+                placeholder="Start Time"
+              >
+                {timeOptions.map((option) => (
+                  <AntSelect.Option key={option.value} value={option.value}>
+                    {option.label}
+                  </AntSelect.Option>
+                ))}
+              </AntSelect>
 
-              <FormControl style={{ width: "95%", marginLeft: "5%" }}>
-                <InputLabel>End Time</InputLabel>
-                <Select
-                  value={endTime}
-                  onChange={(event) => setEndTime(event.target.value)}
-                  displayEmpty
-                  variant="outlined"
-                  label="End time"
-                >
-                  {timeOptions.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <AntSelect
+                style={{ width: "45%" }}
+                value={endTime}
+                onChange={(value) => setEndTime(value)}
+                placeholder="End Time"
+              >
+                {timeOptions.map((option) => (
+                  <AntSelect.Option key={option.value} value={option.value}>
+                    {option.label}
+                  </AntSelect.Option>
+                ))}
+              </AntSelect>
             </div>
 
             {error && (

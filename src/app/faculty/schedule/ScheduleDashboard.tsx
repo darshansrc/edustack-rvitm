@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import styles from "./ScheduleDashboard.module.css";
 import { IoChevronBackSharp, IoChevronForwardSharp } from "react-icons/io5";
 import { Modal, ModalClose, ModalDialog } from "@mui/joy";
+import { Modal as AntdModal } from "antd";
 import NewSchedule from "./NewSchedule";
 import { Timeline } from "keep-react";
 import { ArrowRight, CalendarBlank } from "phosphor-react";
@@ -86,15 +87,14 @@ const ScheduleDashboard = () => {
 
   const NewScheduleModal = () => {
     return (
-      <Modal
+      <AntdModal
         open={scheduleClassModalOpen}
-        onClose={() => setScheduleClassModalOpen(false)}
+        onCancel={() => setScheduleClassModalOpen(false)}
+        onOk={() => setScheduleClassModalOpen(false)}
+        footer={null}
       >
-        <ModalDialog>
-          <ModalClose onClick={() => setScheduleClassModalOpen(false)} />
-          <NewSchedule />
-        </ModalDialog>
-      </Modal>
+        <NewSchedule />
+      </AntdModal>
     );
   };
 
