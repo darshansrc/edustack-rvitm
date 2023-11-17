@@ -125,12 +125,16 @@ const AttendanceDashboard = () => {
     // form required data states
   // form required data states
   const [classSubjectPairList, setClassSubjectPairList] = useState<any[]>([]);
+  const [previousAttendanceSessions, setPreviousAttendanceSessions] = useState<any[]>([]);
 
   useEffect(() => {
     const storedClassSubjectPairListString = localStorage.getItem('classSubjectPairList');
-    if (storedClassSubjectPairListString !== null) {
+    const storedPreviousAttendanceSessions = localStorage.getItem('previousAttendanceSessions');
+    if (storedClassSubjectPairListString && storedPreviousAttendanceSessions !== null) {
       const storedList = JSON.parse(storedClassSubjectPairListString);
+      const storedData = JSON.parse(storedPreviousAttendanceSessions);
       setClassSubjectPairList(storedList);
+      setPreviousAttendanceSessions(storedData);
     }
   }, []);
 
@@ -151,7 +155,6 @@ const AttendanceDashboard = () => {
   const [absentCount, setAbsentCount] = useState(0);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [isDataRecorded, setIsDataRecorded] = useState(false);
-  const [previousAttendanceSessions, setPreviousAttendanceSessions] = useState<any[]>([]);
   const [viewModalOpen, setViewModalOpen] = useState<boolean>(false);
   const [selectedClassData, setSelectedClassData] = useState<any>({});
   const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
@@ -174,7 +177,7 @@ const AttendanceDashboard = () => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [user]);
 
 
   // Daily dairy
