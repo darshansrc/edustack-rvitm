@@ -434,10 +434,10 @@ const AttendanceDashboard = () => {
       >
         <div className='border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px] mt-4'>
           <div className='text-slate-500 font-[Poppins] text-[12px] '>
-            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Subject: </span>{subjectName}
+            <span className='text-blue-500 font-[Poppins] text-[12px] '>Subject: </span>{subjectName}
           </div>
           <div className='text-slate-500 font-[Poppins] text-[12px] '>
-            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Date: </span>{new Date(selectedClassData.classDate).toLocaleDateString(
+            <span className='text-blue-500 font-[Poppins] text-[12px] '>Date: </span>{new Date(selectedClassData.classDate).toLocaleDateString(
               'en-US',
               {
                 year: 'numeric',
@@ -447,17 +447,17 @@ const AttendanceDashboard = () => {
             )}
           </div>
           <div className='text-slate-500 font-[Poppins] text-[12px] '>
-            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Time: </span>{formatTime(selectedClassData.classStartTime) + '-' + formatTime(selectedClassData.classEndTime)}
+            <span className='text-blue-500 font-[Poppins] text-[12px] '>Time: </span>{formatTime(selectedClassData.classStartTime) + '-' + formatTime(selectedClassData.classEndTime)}
           </div>
           <div className='text-slate-500 font-[Poppins] text-[12px] '>
-            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Attendance: </span>                              {selectedClassData.students
+            <span className='text-blue-500 font-[Poppins] text-[12px] '>Attendance: </span>                              {selectedClassData.students
                               ? `${selectedClassData.students.filter(student => student.Present).length} out of ${
                                 selectedClassData.students.length
                                 }`
                               : ''} {' Present'}
           </div>
           <div className='text-slate-500 font-[Poppins] text-[12px] '>
-            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Taken by: </span>{selectedClassData.recordedByName}
+            <span className='text-blue-500 font-[Poppins] text-[12px] '>Taken by: </span>{selectedClassData.recordedByName}
           </div>
 
         </div>
@@ -549,10 +549,10 @@ const AttendanceDashboard = () => {
         >
         <div className='border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px] mt-4'>
           <div className='text-slate-500 font-[Poppins] text-[12px] '>
-            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Subject: </span>{subjectName}
+            <span className='text-blue-500 font-[Poppins] text-[12px] '>Subject: </span>{subjectName}
           </div>
           <div className='text-slate-500 font-[Poppins] text-[12px] '>
-            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Date: </span>{new Date(selectedClassData.classDate).toLocaleDateString(
+            <span className='text-blue-500 font-[Poppins] text-[12px] '>Date: </span>{new Date(selectedClassData.classDate).toLocaleDateString(
               'en-US',
               {
                 year: 'numeric',
@@ -562,17 +562,17 @@ const AttendanceDashboard = () => {
             )}
           </div>
           <div className='text-slate-500 font-[Poppins] text-[12px] '>
-            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Time: </span>{formatTime(selectedClassData.classStartTime) + '-' + formatTime(selectedClassData.classEndTime)}
+            <span className='text-blue-500 font-[Poppins] text-[12px] '>Time: </span>{formatTime(selectedClassData.classStartTime) + '-' + formatTime(selectedClassData.classEndTime)}
           </div>
           <div className='text-slate-500 font-[Poppins] text-[12px] '>
-            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Attendance: </span>                              {selectedClassData.students
+            <span className='text-blue-500 font-[Poppins] text-[12px] '>Attendance: </span>                              {selectedClassData.students
                               ? `${selectedClassData.students.filter(student => student.Present).length} out of ${
                                 selectedClassData.students.length
                                 }`
                               : ''} {' Present'}
           </div>
           <div className='text-slate-500 font-[Poppins] text-[12px] '>
-            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Taken by: </span>{selectedClassData.recordedByName}
+            <span className='text-blue-500 font-[Poppins] text-[12px] '>Taken by: </span>{selectedClassData.recordedByName}
           </div>
 
         </div>
@@ -702,7 +702,7 @@ const ClassTopicModal = () => {
       >
                 <div className='border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px] mt-4'>
           <div className='text-slate-500 font-[Poppins] text-[12px] '>
-            <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Subject: </span>{subjectName}
+            <span className='text-blue-500 font-[Poppins] text-[12px] '>Subject: </span>{subjectName}
           </div>
           <div className='text-slate-500 font-[Poppins] text-[12px]'>
             <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>Date: </span>{new Date(selectedClassData.classDate).toLocaleDateString(
@@ -930,6 +930,7 @@ const ClassTopicModal = () => {
               </Typography>
             </>
           ) : (
+            <div className='flex items-center justify-center w-full h-12'>
             <Typography
               variant="body1"
               sx={{
@@ -941,15 +942,17 @@ const ClassTopicModal = () => {
             >
               No classes held.
             </Typography>
+            </div>
           )}
         </>
       ) : (
-        <Skeleton
-          variant="rectangular"
-          animation="wave"
-          width="100%"
-          height={80}
-        />
+
+          <div className='pl-4 py-4'>
+             <Skeleton width={'90%'} height={24} className='pb-4' />
+             <Skeleton width={'70%'} height={18} />
+             <Skeleton width={'70%'} height={18} />
+             <Skeleton width={'70%'} height={18} />
+             </div>
       )}
     </Card>
   
@@ -989,7 +992,7 @@ const ClassTopicModal = () => {
                         </Timeline.Time>
                           <div className='border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px]'>
                             <div className='text-slate-500 font-[Poppins] text-[12px] '>
-                              <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>
+                              <span className='text-blue-500 font-[Poppins] text-[12px] '>
                                 Time:{' '}
                               </span>
                               {formatTime(sessionObj.data.classStartTime) +
@@ -997,7 +1000,7 @@ const ClassTopicModal = () => {
                                 formatTime(sessionObj.data.classEndTime)}
                             </div>
                             <div className='text-slate-500 font-[Poppins] text-[12px] '>
-                              <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>
+                              <span className='text-blue-500 font-[Poppins] text-[12px] '>
                                 Attendance:{' '}
                               </span>
                               {sessionObj.data.students
@@ -1009,21 +1012,21 @@ const ClassTopicModal = () => {
                             </div>
 
                             <div className='text-slate-500 font-[Poppins] text-[12px] '>
-                              <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>
+                              <span className='text-blue-500 font-[Poppins] text-[12px] '>
                                 Recorded by:{' '}
                               </span>
                               {sessionObj.data.recordedByName}
                             </div>
 
                             <div className='text-slate-500 font-[Poppins] text-[12px] '>
-                              <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>
+                              <span className='text-blue-500 font-[Poppins] text-[12px] '>
                                 Recorded on:{' '}
                               </span>
                               {sessionObj.data.recordedTime && formatRecordedTime(sessionObj.data.recordedTime)}
                             </div>
 
                             <div className='text-slate-500 font-[Poppins] text-[12px] '>
-                              <span className='text-blue-500 font-[Poppins] text-[12px] font-semibold'>
+                              <span className='text-blue-500 font-[Poppins] text-[12px] '>
                                 Topic of Class:{' '}
                               </span>
                               {sessionObj.data.classTopic ? (sessionObj.data.classTopic) : ('-')}
