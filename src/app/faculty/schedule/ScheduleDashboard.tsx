@@ -504,21 +504,28 @@ const ScheduleDashboard = () => {
                     </div>
                   )}
 
-                  <Link
-                    href={{
-                      pathname: "/faculty/attendance/attendance-form",
-                      query: {
-                        classId: event?.selectedClassName,
-                        subjectCode: event?.selectedSubject,
-                        classDate: dayjs(event?.date).format("YYYY-MM-DD"),
-                        classStartTime: fullformatTime(event?.startTime),
-                        classEndTime: fullformatTime(event?.endTime),
-                      },
-                    }}
-                    className="bg-blue-600 px-2 text-white border border-blue-600 p-1 rounded flex items-center justify-center font-poppins text-xs cursor-pointer max-w-[100px]"
-                  >
-                    Mark Attendance
-                  </Link>
+                  {event &&
+                    event.selectedClassName &&
+                    event.selectedSubject &&
+                    event.date &&
+                    event.startTime &&
+                    event.endTime && (
+                      <Link
+                        href={{
+                          pathname: "/faculty/attendance/attendance-form",
+                          query: {
+                            classId: event.selectedClassName,
+                            subjectCode: event.selectedSubject,
+                            classDate: dayjs(event.date).format("YYYY-MM-DD"),
+                            classStartTime: fullformatTime(event.startTime),
+                            classEndTime: fullformatTime(event.endTime),
+                          },
+                        }}
+                        className="bg-blue-600 px-2 text-white border border-blue-600 p-1 rounded flex items-center justify-center font-poppins text-xs cursor-pointer max-w-[100px]"
+                      >
+                        Mark Attendance
+                      </Link>
+                    )}
                 </div>
 
                 {/* Delete button/icon */}
