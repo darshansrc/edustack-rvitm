@@ -157,6 +157,12 @@ const AttendanceForm = () => {
 
   const [isParamsPresent, setIsParamsPresent] = useState(false);
 
+  const convertEncodedTimeToFormat = (encodedTime: string): string => {
+    const decodedTime = decodeURIComponent(encodedTime); // Decode the URL-encoded time
+    const [hours, minutes] = decodedTime.split(":");
+    return `${parseInt(hours, 10)}:${minutes}`;
+  };
+
   useEffect(() => {
     const paramsClassId = searchParams.get("classId");
     const paramsSubjectCode = searchParams.get("subjectCode");
@@ -177,8 +183,8 @@ const AttendanceForm = () => {
       setClassId(paramsClassId);
       setSubjectCode(paramsSubjectCode);
       setClassDate(dayjs(paramsClassDate));
-      setClassStartTime(paramsClassStartTime);
-      setClassEndTime(paramsClassEndTime);
+      setClassStartTime(convertEncodedTimeToFormat(paramsClassStartTime));
+      setClassEndTime(convertEncodedTimeToFormat(paramsClassEndTime));
       if (paramsLabBatch) setLabBatch(paramsLabBatch);
       if (paramsClassTopic) setClassTopic(paramsClassTopic);
       if (paramsClassDescription) setClassDescription(paramsClassDescription);
