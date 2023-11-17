@@ -93,6 +93,7 @@ const ScheduleDashboard = () => {
         onCancel={() => setScheduleClassModalOpen(false)}
         onOk={() => setScheduleClassModalOpen(false)}
         footer={null}
+        title={"Schedule New Class"}
       >
         <NewSchedule />
       </AntdModal>

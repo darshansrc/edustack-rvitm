@@ -273,10 +273,6 @@ const NewSchedule = () => {
     <>
       {!scheduleSuccessful ? (
         <div className="flex items-center flex-col  justify-center w-full">
-          <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-4 text-blue-600">
-            {" "}
-            Schedule New Class
-          </h2>
           <div className="flex flex-col items-center">
             <p className="text-left font-[Poppins] font-[500] text-[12px] mt-2 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
               Class
@@ -303,7 +299,7 @@ const NewSchedule = () => {
 
             {selectedClassName && (
               <>
-                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-6 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
                   Subject
                 </p>
                 <AntSelect
@@ -353,6 +349,7 @@ const NewSchedule = () => {
                 maxWidth: "100%",
                 textOverflow: "ellipsis",
               }}
+              inputReadOnly
               size="large"
               format="ddd, MMM D"
               onChange={setSelectedDate}
