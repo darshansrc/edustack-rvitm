@@ -606,7 +606,7 @@ const AttendanceForm = () => {
     return (
       <>
         <TopNavbar name="Mark Attendance" />
-        <div className="flex items-center justify-center flex-col w-full min-h-[100vh] md:pl-52">
+        <div className="flex items-center justify-center flex-col w-full min-h-[100vh] ">
           <div
             className="flex items-center flex-col bg-white rounded-xl  w-[90vw] max-w-[500px]  p-4"
             style={{
@@ -795,7 +795,7 @@ const AttendanceForm = () => {
             </h4>
           </div>
 
-          <div className="py-[70px] md:pl-52">
+          <div className="py-[70px] ">
             <div className="flex flex-col border border-solid border-slate-200 rounded my-2 w-[95vw] p-[10px] max-w-[450px]">
               <h4 className="pl-1 text-blue-600 font-[Poppins] font-[500] text-[16px] pb-1">
                 Class Details
@@ -971,7 +971,7 @@ const AttendanceForm = () => {
     return (
       <>
         <TopNavbar name="Mark Attendance" />
-        <div className="flex items-center justify-center flex-col w-full min-h-[100vh] md:pl-52">
+        <div className="flex items-center justify-center flex-col w-full min-h-[100vh] ">
           <div
             className="flex items-center flex-col bg-white rounded-xl  w-[90vw] max-w-[500px]  p-4"
             style={{

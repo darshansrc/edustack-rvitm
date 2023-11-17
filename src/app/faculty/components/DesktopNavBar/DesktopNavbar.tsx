@@ -55,65 +55,89 @@ const DesktopNavbar = () => {
   }, [collapsed]);
 
   return (
-    <Layout className="hidden md:block">
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-        style={{
-          overflow: "auto",
-          height: "100vh",
-          position: "fixed",
-          left: 0,
-          top: 0,
-          bottom: 0,
-        }}
-      >
-        <Menu mode="inline" theme="dark" defaultSelectedKeys={[pathname]}>
-          <div className="min-h-[15px]"></div>
+    <div
+      className={
+        collapsed
+          ? "hidden md:block md:h-screen md:w-[80px] transition-all "
+          : "hidden md:block md:h-screen md:w-[200px] transition-all "
+      }
+    >
+      <Layout className="hidden h-screen min-h-screen md:block fixed left-0 top-0">
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
+          className="h-full "
+        >
+          <Menu
+            mode="inline"
+            className="w-full"
+            theme="dark"
+            defaultSelectedKeys={[pathname]}
+          >
+            <div className="min-h-[15px]"></div>
 
-          <Menu.Item key="icon" icon={<BsStack style={{ fontSize: "20px" }} />}>
-            <p className="font-[Poppins] text-[20px] font-[500]">Edustack</p>
-          </Menu.Item>
-
-          <div className="min-h-[15px] mb-4 border-b border-solid border-slate-800"></div>
-
-          <Menu.Item key="/faculty/home" icon={<AiFillHome />}>
-            <Link href={"/faculty/home"}>Home</Link>
-          </Menu.Item>
-
-          <SubMenu key="sub1" icon={<BsFillPeopleFill />} title={"Attendance"}>
-            <Menu.Item key="/faculty/attendance">
-              <Link href={"/faculty/attendance"}>View Attendance</Link>
+            <Menu.Item
+              key="icon"
+              icon={<BsStack style={{ fontSize: "20px" }} />}
+            >
+              <p className="font-[Poppins] text-[20px] font-[500]">Edustack</p>
             </Menu.Item>
-            <Menu.Item key="/faculty/attendance/attendance-form">
-              <Link href={"/faculty/attendance/attendance-form"}>
-                Mark Attendance
-              </Link>
+
+            <div className="min-h-[15px] mb-4 border-b border-solid border-slate-800"></div>
+
+            <Menu.Item key="/faculty/home" icon={<AiFillHome />}>
+              <Link href={"/faculty/home"}>Home</Link>
             </Menu.Item>
-            <Menu.Item key="/faculty/attendance/export-attendance">
-              <Link href={"/faculty/attendance/export-attendance"}>
-                Export Attendance
-              </Link>
+
+            <SubMenu
+              key="sub1"
+              icon={<BsFillPeopleFill />}
+              title={"Attendance"}
+            >
+              <Menu.Item key="/faculty/attendance">
+                <Link href={"/faculty/attendance"}>View Attendance</Link>
+              </Menu.Item>
+              <Menu.Item key="/faculty/attendance/attendance-form">
+                <Link href={"/faculty/attendance/attendance-form"}>
+                  Mark Attendance
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="/faculty/attendance/export-attendance">
+                <Link href={"/faculty/attendance/export-attendance"}>
+                  Export Attendance
+                </Link>
+              </Menu.Item>
+            </SubMenu>
+
+            <Menu.Item key="/faculty/schedule" icon={<IoCalendarNumber />}>
+              <Link href={"/faculty/schedule"}>Schedule</Link>
             </Menu.Item>
-          </SubMenu>
 
-          <Menu.Item key="/faculty/schedule" icon={<IoCalendarNumber />}>
-            <Link href={"/faculty/schedule"}>Schedule</Link>
-          </Menu.Item>
+            <Menu.Item key="/faculty/marks-entry" icon={<HiDocumentText />}>
+              <Link href={"/faculty/marks-entry"}>Marks Entry</Link>
+            </Menu.Item>
 
-          <Menu.Item key="/faculty/marks-entry" icon={<HiDocumentText />}>
-            <Link href={"/faculty/marks-entry"}>Marks Entry</Link>
-          </Menu.Item>
+            <Menu.Item key="/faculty/profile" icon={<FaCircleUser />}>
+              <Link href={"/faculty/profile"}>Profile</Link>
+            </Menu.Item>
 
-          <Menu.Item key="/faculty/profile" icon={<FaCircleUser />}>
-            <Link href={"/faculty/profile"}>Profile</Link>
-          </Menu.Item>
-
-          <div className={collapsed ? "" : "pl-2"}>
-            <Menu selectable={false} theme="dark">
-              <Menu.Item
-                icon={
+            <div className={collapsed ? "" : "pl-2"}>
+              <Menu selectable={false} theme="dark">
+                <Menu.Item
+                  icon={
+                    <Popconfirm
+                      title="Log out"
+                      description="Are you sure you want to log out?"
+                      onConfirm={handleSignOut}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      {" "}
+                      <MdLogout />
+                    </Popconfirm>
+                  }
+                >
                   <Popconfirm
                     title="Log out"
                     description="Are you sure you want to log out?"
@@ -121,26 +145,15 @@ const DesktopNavbar = () => {
                     okText="Yes"
                     cancelText="No"
                   >
-                    {" "}
-                    <MdLogout />
+                    Logout
                   </Popconfirm>
-                }
-              >
-                <Popconfirm
-                  title="Log out"
-                  description="Are you sure you want to log out?"
-                  onConfirm={handleSignOut}
-                  okText="Yes"
-                  cancelText="No"
-                >
-                  Logout
-                </Popconfirm>
-              </Menu.Item>
-            </Menu>
-          </div>
-        </Menu>
-      </Sider>
-    </Layout>
+                </Menu.Item>
+              </Menu>
+            </div>
+          </Menu>
+        </Sider>
+      </Layout>
+    </div>
   );
 };
 

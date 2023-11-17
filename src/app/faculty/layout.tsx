@@ -8,9 +8,11 @@ export default function DashboardLayout({
 }) {
   return (
     <>
-      <DesktopNavbar />
       <BottomNavbar />
-      <section>{children}</section>
+      <div className="flex flex-row min-w-[100vw]">
+        <DesktopNavbar />
+        <section className="w-full">{children}</section>
+      </div>
     </>
   );
 }

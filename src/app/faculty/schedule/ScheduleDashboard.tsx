@@ -568,7 +568,7 @@ const ScheduleDashboard = () => {
 
   return (
     <>
-      <div className="md:pl-52">
+      <div className="">
         <div className={styles.scheduleContainer}>
           <div className={styles.schedulePage}>
             <div className="mt-14 md:mt-0">
