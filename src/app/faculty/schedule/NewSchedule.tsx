@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { DatePicker } from "antd";
+import { DatePicker, Input } from "antd";
 import { Select as AntSelect, message } from "antd";
 import dayjs from "dayjs";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase-config";
+import TextArea from "antd/es/input/TextArea";
 
 interface ClassSubjectPair {
   branch: string;
@@ -51,6 +52,9 @@ const NewSchedule = () => {
   const [isRepeating, setIsRepeating] = useState<boolean>(false);
   const [date, setDate] = useState<any>("");
   const [subjectName, setSubjectName] = useState<string>("");
+
+  const [classTopic, setClassTopic] = useState<string>("");
+  const [classDescription, setClassDescription] = useState<string>("");
 
   const [error, setError] = useState<string>("");
   const [user, setUser] = useState<any>(null);
@@ -176,6 +180,8 @@ const NewSchedule = () => {
       endTime: endDate.toISOString(),
       faculty: user.email,
       selectedBatch,
+      classTopic,
+      classDescription,
     };
 
     // Call the submitForm function to send data to the API
@@ -243,17 +249,40 @@ const NewSchedule = () => {
     }, 1000);
   }, [error]);
 
+  const handleStartTimeChange = (value: string) => {
+    setStartTime(value);
+
+    // Parse the hours and minutes
+    const [hours, minutes] = value.split(":").map(Number);
+
+    let newHours = (hours + 1) % 24;
+
+    if (subjectType === "lab") {
+      newHours = (hours + 2) % 24;
+    }
+
+    // Format the result as "HH:mm"
+    const formattedEndTime = `${newHours < 10 ? "0" : ""}${newHours}:${
+      minutes < 10 ? "0" : ""
+    }${minutes}`;
+
+    setEndTime(formattedEndTime);
+  };
+
   return (
     <>
       {!scheduleSuccessful ? (
         <div className="flex items-center flex-col ">
-          <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600">
+          <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-4 text-blue-600">
             {" "}
             Schedule New Class
           </h2>
           <div className="flex flex-col items-center">
+            <p className="text-left font-[Poppins] font-[500] text-[12px] mt-2 pl-2 text-slate-600 w-full">
+              Class
+            </p>
             <AntSelect
-              value={selectedClassName}
+              value={selectedClassName || undefined}
               onChange={(value) => {
                 setSelectedClassName(value);
                 setSelectedSubject("");
@@ -277,85 +306,126 @@ const NewSchedule = () => {
             </AntSelect>
 
             {selectedClassName && (
-              <AntSelect
-                value={selectedSubject}
-                onChange={handleSubjectChange}
-                placeholder="Select Subject"
-                style={{
-                  width: "70vw",
-                  maxWidth: "450px",
-                  marginTop: "20px",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {uniqueClassOptions[selectedClassName].map((pair, index) => (
-                  <AntSelect.Option key={index} value={pair.code}>
-                    {pair.subjectName} ({pair.code})
-                  </AntSelect.Option>
-                ))}
-              </AntSelect>
+              <>
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+                  Subject
+                </p>
+                <AntSelect
+                  value={selectedSubject || undefined}
+                  onChange={handleSubjectChange}
+                  placeholder="Select Subject"
+                  style={{
+                    width: "70vw",
+                    maxWidth: "450px",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {uniqueClassOptions[selectedClassName].map((pair, index) => (
+                    <AntSelect.Option key={index} value={pair.code}>
+                      {pair.subjectName} ({pair.code})
+                    </AntSelect.Option>
+                  ))}
+                </AntSelect>
+              </>
             )}
 
             {isLabSubject && (
-              <AntSelect
-                value={selectedBatch}
-                onChange={handleBatchChange}
-                placeholder="Lab Batch"
-                style={{
-                  width: "70vw",
-                  maxWidth: "450px",
-                  marginTop: "20px",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {batchOptions.map((option) => (
-                  <AntSelect.Option key={option.value} value={option.value}>
-                    {option.label}
-                  </AntSelect.Option>
-                ))}
-              </AntSelect>
+              <>
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+                  Batch
+                </p>
+                <AntSelect
+                  value={selectedBatch || undefined}
+                  onChange={handleBatchChange}
+                  placeholder="Select Lab Batch"
+                  style={{
+                    width: "70vw",
+                    maxWidth: "450px",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {batchOptions.map((option) => (
+                    <AntSelect.Option key={option.value} value={option.value}>
+                      {option.label}
+                    </AntSelect.Option>
+                  ))}
+                </AntSelect>
+              </>
             )}
 
+            <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+              Date
+            </p>
             <DatePicker
               defaultValue={dayjs()}
               style={{
                 width: "100%",
                 maxWidth: "100%",
-                marginTop: "20px",
                 textOverflow: "ellipsis",
               }}
               format="ddd, MMM D"
               onChange={setSelectedDate}
-              value={selectedDate}
+              value={selectedDate || undefined}
+              placeholder="Select Date"
+              disabledDate={(current) =>
+                current && current < dayjs().subtract(1, "day")
+              }
             />
 
-            <div className="flex flex-row justify-between mt-5 mb-4 w-full">
-              <AntSelect
-                style={{ width: "45%" }}
-                value={startTime}
-                onChange={(value) => setStartTime(value)}
-                placeholder="Start Time"
-              >
-                {timeOptions.map((option) => (
-                  <AntSelect.Option key={option.value} value={option.value}>
-                    {option.label}
-                  </AntSelect.Option>
-                ))}
-              </AntSelect>
+            <div className="flex flex-row justify-between   w-full">
+              <div className="w-full">
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+                  Start Time
+                </p>
+                <AntSelect
+                  value={startTime || undefined}
+                  onChange={handleStartTimeChange}
+                  placeholder="Select Start Time"
+                  className="w-11/12 mr-[8%]"
+                >
+                  {timeOptions.map((option) => (
+                    <AntSelect.Option key={option.value} value={option.value}>
+                      {option.label}
+                    </AntSelect.Option>
+                  ))}
+                </AntSelect>
+              </div>
 
-              <AntSelect
-                style={{ width: "45%" }}
-                value={endTime}
-                onChange={(value) => setEndTime(value)}
-                placeholder="End Time"
-              >
-                {timeOptions.map((option) => (
-                  <AntSelect.Option key={option.value} value={option.value}>
-                    {option.label}
-                  </AntSelect.Option>
-                ))}
-              </AntSelect>
+              <div className="w-full">
+                <p className="text-left ml-[8%] font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+                  End Time
+                </p>
+                <AntSelect
+                  value={endTime || undefined}
+                  onChange={(value) => setEndTime(value)}
+                  placeholder="Select End Time"
+                  className="w-11/12 ml-[8%]"
+                >
+                  {timeOptions.map((option) => (
+                    <AntSelect.Option key={option.value} value={option.value}>
+                      {option.label}
+                    </AntSelect.Option>
+                  ))}
+                </AntSelect>
+              </div>
             </div>
+
+            <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+              Topic of Class
+            </p>
+            <Input
+              placeholder="Enter Topic of Class (optional)"
+              onChange={(e) => setClassTopic(e.target.value)}
+            />
+
+            <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+              Class Description
+            </p>
+            <TextArea
+              placeholder="Enter Class Description or any Instructions if necessary (optional)"
+              onChange={(e) => setClassDescription(e.target.value)}
+              className="mb-4"
+            />
 
             {error && (
               <div className="bg-red-100 w-full text-red-500 rounded-lg mx-4  mb-2 font-[Poppins] p-2 ">
