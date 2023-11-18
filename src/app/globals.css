@@ -7,7 +7,10 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --primary-color: #0577fb; /* Define primary color */
+
   -webkit-tap-highlight-color: transparent;
+
   padding: 0;
   margin: 0;
 }
@@ -23,15 +26,7 @@ body {
 html {
   display: block;
 }
-/* 
-thead.ant-table-thead{
-  background-color: rgb(57, 69, 184);
-}
-
- thead{
-  background-color: rgb(57, 69, 184);
- } */
 
 .ant-btn-primary {
-  background-color: rgb(5, 119, 251);
+  background-color: var(--primary-color); /* Use primary color */
 }

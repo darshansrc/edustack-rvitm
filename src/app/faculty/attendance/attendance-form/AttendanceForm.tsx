@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { DatePicker, Select } from "antd";
+import { Alert, Button, DatePicker, Input, Select } from "antd";
 import TopNavbar from "@/app/student/components/topnavbar/TopNavbar";
-import StudentCard from "./studentcard/StudentCard";
+import StudentCard from "./StudentCard";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase-config";
 import styles from "./AttendanceForm.module.css";
@@ -12,6 +12,7 @@ import { IoChevronBackSharp } from "react-icons/io5";
 import { Button as AntButton, Modal as AntModal } from "antd";
 import { onAuthStateChanged } from "firebase/auth";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 interface AttendanceFormData {
   classId: string;
@@ -602,10 +603,17 @@ const AttendanceForm = () => {
                 "0 0 0 1px rgba(0,0,0,.08), 0 -4px 6px rgba(0,0,0,.04)",
             }}
           >
-            <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-6 text-blue-600">
+            <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-4 text-gray-700">
               {" "}
               Mark Attendance
             </h2>
+
+            <Alert
+              message="Please fill all the fields and click on next to mark attendance"
+              type="info"
+              showIcon
+              className="w-[80vw] max-w-[450px]"
+            />
             <div className="flex flex-col items-center">
               <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
                 Class
@@ -679,9 +687,12 @@ const AttendanceForm = () => {
                 value={classDate}
                 onChange={setClassDate}
                 className="w-[80vw] max-w-[450px]  text-[16px] mt-[2px] "
+                disabledDate={(current) =>
+                  current && current.valueOf() > Date.now()
+                }
               />
 
-              <div className=" w-[80vw] max-w-[450px] flex flex-row justify-between mb-4 text-[16px]">
+              <div className=" w-[80vw] max-w-[450px] flex flex-row justify-between  text-[16px]">
                 <div className="w-full">
                   <p className="text-left flex whitespace-nowrap font-[Poppins] mt-5 font-[500] text-[12px] pl-2 text-slate-600  ">
                     Start Time
@@ -713,7 +724,11 @@ const AttendanceForm = () => {
                     className="w-[40vw] max-w-[225px] pl-[5px] text-[16px] mt-[2px] "
                   >
                     {timeOptions.map((option) => (
-                      <Select.Option key={option.value} value={option.value}>
+                      <Select.Option
+                        key={option.value}
+                        value={option.value}
+                        disabled={option.value < classStartTime}
+                      >
                         {option.label}
                       </Select.Option>
                     ))}
@@ -721,18 +736,35 @@ const AttendanceForm = () => {
                 </div>
               </div>
 
-              {step1Error && (
-                <p className="bg-red-100 w-full text-red-500 rounded-lg mx-4  mb-2 font-[Poppins] p-2 ">
-                  {step1Error}
+              <div>
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full ">
+                  Topic of Class (optional)
                 </p>
+                <Input
+                  size="large"
+                  value={classTopic}
+                  onChange={(e) => setClassTopic(e.target.value)}
+                  placeholder="Enter Topic"
+                  className="w-[80vw] max-w-[450px]  text-[16px] mt-[2px] mb-4"
+                />
+              </div>
+
+              {step1Error && (
+                <Alert
+                  message={step1Error}
+                  type="error"
+                  showIcon
+                  className="w-[80vw] max-w-[450px]"
+                />
               )}
 
-              <button
+              <Button
                 onClick={handleStep1Submit}
-                className="bg-blue-500 w-full text-white rounded-lg mx-4 mt-4 mb-4 font-[Poppins] p-2 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
+                type="primary"
+                className="w-full mx-4 rounded-xl h-10 my-4"
               >
                 Next
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -768,24 +800,28 @@ const AttendanceForm = () => {
 
     return (
       <>
-        <div className={styles.cardContainer}>
-          <div className={styles.cardTopBar}>
-            <button
-              onClick={() => setFormStep(1)}
-              className="absolute left-0 p-2 items-center justify-center m-4 flex flex-row bg-slate-50 rounded-[20px]"
-            >
-              <IoChevronBackSharp />{" "}
-              <span className="hidden md:block px-2">Step 1</span>
-            </button>
+        <div className="flex items-center justify-center flex-col w-full max-w-full min-h-[100vh] ">
+          <div className="flex items-center flex-col rounded-xl  w-[95vw] max-w-[450px]  py-4">
+            <div className="flex flex-row items-center justify-between md:pb-4 w-[100vw] md:w-[95vw] md:relative fixed top-0 left-0 bg-white md:bg-transparent z-[1000] md:max-w-[450px] border-b border-solid border-gray-50 md:border-collapse">
+              <button
+                onClick={() => setFormStep(1)}
+                className=" p-2 items-center justify-center m-4 flex flex-row bg-slate-50 rounded-[20px]"
+              >
+                <IoChevronBackSharp />{" "}
+              </button>
 
-            <h4 className="font-[Poppins] text-slate-800 font-[500]  my-4">
-              Mark Attendance
-            </h4>
-          </div>
+              <h4 className="font-[Poppins] text-slate-800 font-[500]  my-4">
+                Mark Attendance
+              </h4>
 
-          <div className="py-[70px] ">
-            <div className="flex flex-col border border-solid border-slate-200 rounded my-2 w-[95vw] p-[10px] max-w-[450px]">
-              <h4 className="pl-1 text-blue-600 font-[Poppins] font-[500] text-[16px] pb-1">
+              <button
+                onClick={() => setFormStep(1)}
+                className=" p-2 items-center justify-center m-4 flex flex-row bg-transparent "
+              ></button>
+            </div>
+
+            <div className="flex flex-col border border-solid border-slate-200 rounded-lg my-2 w-[95vw] p-[10px] mt-16 md:mt-0 max-w-[450px]">
+              <h4 className="pl-1 text-[#0577fb;] font-[Poppins] font-[500] text-[16px] pb-1">
                 Class Details
               </h4>
               <p className="pl-1 text-slate-700 font-[Poppins] text-[12px]">
@@ -823,39 +859,34 @@ const AttendanceForm = () => {
             </div>
 
             <div className="flex flex-col rounded my-2 w-[95vw] max-w-[450px]">
-              <h6 className="text-center font-[Poppins] font-[500] text-[12px] mt-5 text-slate-600">
-                By Default All the Students are Marked as Present, Please tap on
+              <Alert
+                message=" By Default All the Students are Marked as Present, Please tap on
                 the cards to make changes, confirm the Absentees and submit the
-                form.{" "}
-              </h6>
-              <h6 className="text-center font-[Poppins] font-[500] text-[12px] mt-2 mb-2 text-slate-600">
-                [&nbsp;
-                <span className="bg-[green] text-white rounded-[50%] min-w-[20px] min-h-[20px]">
-                  {" "}
-                  P{" "}
-                </span>
-                &nbsp;- Present,&nbsp;&nbsp;
-                <span className="text-absent"> A </span>&nbsp;- Absent&nbsp;]{" "}
-              </h6>
+                form."
+                type="info"
+                showIcon
+              />
             </div>
-
-            {!labBatch && filteredStudentCards}
-            {labBatch && batchFilteredStudentCards(labBatch)}
+            <div className="w-full">
+              {!labBatch && filteredStudentCards}
+              {labBatch && batchFilteredStudentCards(labBatch)}
+            </div>
           </div>
 
-          <div className={styles.submitButtonContainer}>
-            <button
+          <div className="flex items-center flex-row gap-[2%] justify-center md:min-w-0 md:bg-transparent md:relative md:w-[95vw] z-[1000] bg-white max-w-[450px] md:pt-2 md:pb-8 fixed bottom-0 left-0 min-w-[100vw] w-screen  py-4 border-t border-solid border-gray-50 md:border-collapse">
+            <Button
               onClick={() => setFormStep(1)}
-              className="bg-slate-100 w-[40vw]  max-w-[180px] text-blue-500 rounded-[15px] mx-2 mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-slate-200 focus:outline-none focus:ring focus:ring-blue-300"
+              className="h-10 flex items-center w-[45%] md:w-[48%] rounded-xl justify-center"
             >
               Back
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleStep2Submit}
-              className="bg-blue-500 w-[40vw] max-w-[180px] text-white rounded-[15px] mx-2  mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
+              type="primary"
+              className="h-10 flex items-center w-[45%] md:w-[48%] rounded-xl  justify-center "
             >
               Submit
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -873,7 +904,7 @@ const AttendanceForm = () => {
             </AntButton>,
             <AntButton
               key="submit"
-              className="bg-blue-600 text-white border-white border-solid border-[1px]"
+              className="bg-[#0577fb] text-white border-white border-solid border-[1px]"
               onClick={handleSubmitAttendanceForm}
             >
               {confirmLoading ? "Submitting..." : "Submit"}
@@ -881,46 +912,49 @@ const AttendanceForm = () => {
           ]}
         >
           <p className="pl-1 text-slate-700 font-[Poppins] text-[14px]">
-            <span className="font-[500] text-blue-600 "> Class: </span>{" "}
+            <span className="font-[500] text-[#0577fb] "> Class: </span>{" "}
             {classId} {subjectSemester}-SEM
           </p>
           <p className="pl-1 text-slate-700 font-[Poppins] text-[14px]">
             {" "}
-            <span className="font-[500] text-blue-600"> Subject: </span>
+            <span className="font-[500] text-[#0577fb]"> Subject: </span>
             {subjectName} ({subjectCode}){" "}
           </p>
           <p className="pl-1 text-slate-700 font-[Poppins] text-[14px]">
             {" "}
-            <span className="font-[500] text-blue-600"> Date: </span>
+            <span className="font-[500] text-[#0577fb]"> Date: </span>
             {classDate.format("DD MMM, YYYY")}
           </p>
           <p className="pl-1 text-slate-700 font-[Poppins] text-[14px]">
             {" "}
-            <span className="font-[500] text-blue-600"> time: </span>
+            <span className="font-[500] text-[#0577fb]"> time: </span>
             {convertTo12HourFormat(classStartTime) +
               "-" +
               convertTo12HourFormat(classEndTime)}
           </p>
           <p className="pl-1 text-slate-700 font-[Poppins] text-[14px]">
             {" "}
-            <span className="font-[500] text-blue-600"> Subject Type: </span>
+            <span className="font-[500] text-[#0577fb]"> Subject Type: </span>
             {subjectType}
           </p>
           {labBatch && (
             <p className="pl-1 text-slate-700 font-[Poppins] text-[14px]">
               {" "}
-              <span className="font-[500] text-blue-600"> Lab Batch: </span>B-
+              <span className="font-[500] text-[#0577fb]"> Lab Batch: </span>
+              B-
               {labBatch}
             </p>
           )}
           <p className="pl-1 text-slate-700 font-[Poppins] text-[14px]">
             {" "}
-            <span className="font-[500] text-blue-600">Students Present: </span>
+            <span className="font-[500] text-[#0577fb]">
+              Students Present:{" "}
+            </span>
             {presentCount}
           </p>
           <p className="pl-1 text-slate-700 font-[Poppins] text-[14px]">
             {" "}
-            <span className="font-[500] text-blue-600">Students Absent: </span>
+            <span className="font-[500] text-[#0577fb]">Students Absent: </span>
             {absentCount}
           </p>
 
@@ -928,7 +962,7 @@ const AttendanceForm = () => {
             <div className="font-[Poppins] text-[12px] overflow-auto">
               {attendance.filter((student) => !student.Present) && (
                 <div>
-                  <span className="pl-1 text-blue-600 font-[Poppins] font-[500] text-[14px]">
+                  <span className="pl-1 text-[#0577fb] font-[Poppins] font-[500] text-[14px]">
                     Absent Students:
                   </span>
                   {attendance
@@ -974,10 +1008,10 @@ const AttendanceForm = () => {
             />
             <h2 className="text-center  font-[Poppins] font-[500] text-[16px] p-2 text-slate-800">
               {" "}
-              Attendance Recorded Successfully
+              Attendance Recorded Successfully!
             </h2>
-            <div className="flex flex-col border border-solid border-slate-200 rounded my-2 w-[85vw] max-w-[450px] p-[10px] ">
-              <h4 className="pl-1 text-blue-600 font-[Poppins] font-[500] text-[12px] pb-1">
+            <div className="flex flex-col border border-solid border-slate-200 rounded-lg my-2 w-[85vw] max-w-[450px] p-[10px] ">
+              <h4 className="pl-1 text-[#0577fb] font-[Poppins] font-[500] text-[12px] pb-1">
                 Attendance Information
               </h4>
               <p className="pl-1 text-slate-700 font-[Poppins] text-[12px]">
@@ -1035,19 +1069,21 @@ const AttendanceForm = () => {
                 </p>
               )}
             </div>
+            <Link href="/faculty/attendance">
+              <Button
+                type="primary"
+                className=" w-[85vw] max-w-[450px] h-10 rounded-[10px] flex items-center justify-center mx-2  mt-2 mb-2 font-[Poppins] p-2 px-4 "
+              >
+                Back to Home
+              </Button>
+            </Link>
 
-            <button
+            <Button
               onClick={handleEditAttendance}
-              className="bg-slate-100 w-[85vw]  max-w-[450px] text-blue-500 rounded-[10px] mx-2 mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-slate-200 focus:outline-none focus:ring focus:ring-blue-300"
+              className=" w-[85vw]  max-w-[450px] h-10 flex items-center justify-center rounded-[10px] mx-2 mt-2 mb-2 font-[Poppins] p-2 px-4 "
             >
               Edit Attendance
-            </button>
-            <button
-              onClick={clearAllStateVariables}
-              className="bg-blue-500 w-[85vw] max-w-[450px] text-white rounded-[10px] mx-2  mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
-            >
-              Back to Home
-            </button>
+            </Button>
           </div>
         </div>
       </>
@@ -1055,11 +1091,11 @@ const AttendanceForm = () => {
   };
 
   return (
-    <div>
+    <>
       {formStep === 1 && stepOne()}
       {formStep === 2 && stepTwo()}
       {formStep === 3 && stepThree()}
-    </div>
+    </>
   );
 };
 

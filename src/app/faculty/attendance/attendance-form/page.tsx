@@ -6,9 +6,9 @@ import DesktopNavbar from "../../components/DesktopNavBar/DesktopNavbar";
 
 const page = () => {
   return (
-    <div>
+    <>
       <AttendanceForm />
-    </div>
+    </>
   );
 };
 

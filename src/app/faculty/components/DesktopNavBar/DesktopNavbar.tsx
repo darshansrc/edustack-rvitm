@@ -60,6 +60,7 @@ const DesktopNavbar = () => {
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
           className="h-full "
+          theme="dark"
         >
           <Menu
             mode="inline"
@@ -67,16 +68,20 @@ const DesktopNavbar = () => {
             theme="dark"
             defaultSelectedKeys={[pathname]}
           >
-            <div className="min-h-[15px]"></div>
+            <div className="min-h-[10px]"></div>
 
-            <Menu.Item
-              key="icon"
-              icon={<BsStack style={{ fontSize: "20px" }} />}
-            >
-              <p className="font-[Poppins] text-[20px] font-[500]">Edustack</p>
-            </Menu.Item>
+            <Menu selectable={false}>
+              <Menu.Item
+                key="icon"
+                icon={<BsStack style={{ fontSize: "20px" }} />}
+              >
+                <p className="font-[Poppins] text-[20px] font-[500]">
+                  Edustack
+                </p>
+              </Menu.Item>
+            </Menu>
 
-            <div className="min-h-[15px] mb-4 border-b border-solid border-slate-800"></div>
+            <div className="min-h-[10px] mb-4 border-b border-solid border-slate-800"></div>
 
             <Menu.Item key="/faculty/home" icon={<AiFillHome />}>
               <Link href={"/faculty/home"}>Home</Link>
