@@ -122,19 +122,19 @@ const AttendanceForm = () => {
   // form required data states
   const [classSubjectPairList, setClassSubjectPairList] = useState<any[]>([]);
 
-  useEffect(() => {
-    try {
-      const storedClassSubjectPairListString = localStorage.getItem(
-        "classSubjectPairList"
-      );
-      if (storedClassSubjectPairListString !== null) {
-        const storedList = JSON.parse(storedClassSubjectPairListString);
-        setClassSubjectPairList(storedList);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     const storedClassSubjectPairListString = localStorage.getItem(
+  //       "classSubjectPairList"
+  //     );
+  //     if (storedClassSubjectPairListString !== null) {
+  //       const storedList = JSON.parse(storedClassSubjectPairListString);
+  //       setClassSubjectPairList(storedList);
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }, []);
 
   const [subjectType, setSubjectType] = useState<string>("theory");
   const [step1Error, setStep1Error] = useState<string>("");
@@ -597,13 +597,13 @@ const AttendanceForm = () => {
         <TopNavbar name="Mark Attendance" />
         <div className="flex items-center justify-center flex-col w-full min-h-[100vh] ">
           <div
-            className="flex items-center flex-col bg-white rounded-xl  w-[90vw] max-w-[500px]  p-4"
+            className="flex items-center flex-col bg-white rounded-xl mb-[50px] mt-[50px] w-[90vw] max-w-[500px]  p-4"
             style={{
               boxShadow:
                 "0 0 0 1px rgba(0,0,0,.08), 0 -4px 6px rgba(0,0,0,.04)",
             }}
           >
-            <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-4 text-gray-700">
+            <h2 className="text-center font-[Poppins] font-[500] text-xl p-2 my-2 text-gray-700">
               {" "}
               Mark Attendance
             </h2>
@@ -615,7 +615,7 @@ const AttendanceForm = () => {
               className="w-[80vw] max-w-[450px]"
             />
             <div className="flex flex-col items-center">
-              <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+              <p className="text-left font-[Poppins] font-[500] text-[12px] mt-4 pl-2 text-slate-600 w-full">
                 Class
               </p>
               <Select
@@ -639,7 +639,7 @@ const AttendanceForm = () => {
 
               {classId && (
                 <>
-                  <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+                  <p className="text-left font-[Poppins] font-[500] text-[12px] mt-4 pl-2 text-slate-600 w-full">
                     Subject
                   </p>
                   <Select
@@ -658,7 +658,7 @@ const AttendanceForm = () => {
 
               {isLabSubject && (
                 <>
-                  <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+                  <p className="text-left font-[Poppins] font-[500] text-[12px] mt-4 pl-2 text-slate-600 w-full">
                     Lab Batch
                   </p>
                   <Select
@@ -677,7 +677,7 @@ const AttendanceForm = () => {
                 </>
               )}
 
-              <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
+              <p className="text-left font-[Poppins] font-[500] text-[12px] mt-4 pl-2 text-slate-600 w-full">
                 Date
               </p>
               <DatePicker
@@ -694,7 +694,7 @@ const AttendanceForm = () => {
 
               <div className=" w-[80vw] max-w-[450px] flex flex-row justify-between  text-[16px]">
                 <div className="w-full">
-                  <p className="text-left flex whitespace-nowrap font-[Poppins] mt-5 font-[500] text-[12px] pl-2 text-slate-600  ">
+                  <p className="text-left flex whitespace-nowrap font-[Poppins] mt-4 font-[500] text-[12px] pl-2 text-slate-600  ">
                     Start Time
                   </p>
                   <Select
@@ -713,7 +713,7 @@ const AttendanceForm = () => {
                 </div>
 
                 <div className="w-full">
-                  <p className="text-left whitespace-nowrap font-[Poppins] font-[500] text-[12px] mt-5 pl-3  text-slate-600 ">
+                  <p className="text-left whitespace-nowrap font-[Poppins] font-[500] text-[12px] mt-4 pl-3  text-slate-600 ">
                     End Time
                   </p>
                   <Select
@@ -737,7 +737,7 @@ const AttendanceForm = () => {
               </div>
 
               <div>
-                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full ">
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-4 pl-2 text-slate-600 w-full ">
                   Topic of Class (optional)
                 </p>
                 <Input
