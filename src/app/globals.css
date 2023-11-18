@@ -30,3 +30,7 @@ html {
 .ant-btn-primary {
   background-color: var(--primary-color); /* Use primary color */
 }
+
+.MuiTabs-scrollButtons.Mui-disabled {
+  opacity: 0.3;
+}

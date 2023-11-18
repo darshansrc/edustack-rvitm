@@ -20,7 +20,7 @@ import { Timeline } from "keep-react";
 import { CiViewList } from "react-icons/ci";
 import { TbEdit } from "react-icons/tb";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import { Button, Checkbox, Modal } from "antd";
+import { Affix, Button, Checkbox, Modal } from "antd";
 import { BsChatSquareText } from "react-icons/bs";
 import { CSVLink } from "react-csv";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
@@ -130,6 +130,8 @@ const AttendanceDashboard = () => {
   const [subjectCode, setSubjectCode] = useState<string>("");
   const [isLabSubject, setIsLabSubject] = useState<boolean>(false);
   const [labBatch, setLabBatch] = useState<string>("");
+
+  const [top, setTop] = useState<number>(46);
 
   // form required data states
   // form required data states
@@ -916,7 +918,7 @@ const AttendanceDashboard = () => {
 
   return (
     <>
-      <div className="w-full flex flex-col justify-center items-center bg-[#F9FAFB] md:mt-20 ">
+      <div className="w-full flex flex-col justify-center items-center bg-[#F9FAFB] ">
         <div className="w-[95vw] max-w-[550px] mt-16 md:mt-0  ">
           <Link href="/faculty/attendance/attendance-form" shallow={true}>
             <button className="bg-blue-600 w-full  max-w-[550px] text-white rounded-[10px]  mt-2 mb-2 font-[Poppins] p-2 px-4 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 md:hidden">
@@ -928,9 +930,17 @@ const AttendanceDashboard = () => {
               Export Attendance
             </button>
           </Link>
+        </div>
 
-          <div className="md:fixed md:top-0 md:left-52  z-50 bg-white md:pt-[13px] ">
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <div className=" sticky z-[50] bg-white w-full max-w-full">
+          <h4 className="ml-16 mt-4 font-poppins text-primary font-semibold text-gray-800  text-[18px]">
+            Your Subjects
+          </h4>
+          <Affix offsetTop={0}>
+            <Box
+              sx={{ borderBottom: 1, borderColor: "divider" }}
+              className="md:bg-white"
+            >
               <StyledTabs value={selectedPair} onChange={handleChangeTab}>
                 {classSubjectPairList.map((pair, index) => (
                   <StyledTab
@@ -941,8 +951,10 @@ const AttendanceDashboard = () => {
                 ))}
               </StyledTabs>
             </Box>
-          </div>
+          </Affix>
+        </div>
 
+        <div>
           <Card
             sx={{
               width: "100%",
@@ -953,6 +965,7 @@ const AttendanceDashboard = () => {
               backgroundColor: "white",
               borderRadius: "10px",
               marginBottom: "12px",
+              maxWidth: "550px",
             }}
           >
             {classId && subjectName ? (

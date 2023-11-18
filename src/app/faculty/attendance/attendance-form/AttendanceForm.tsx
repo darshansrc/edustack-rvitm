@@ -6,7 +6,6 @@ import TopNavbar from "@/app/student/components/topnavbar/TopNavbar";
 import StudentCard from "./StudentCard";
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase-config";
-import styles from "./AttendanceForm.module.css";
 import { IoChevronBackSharp } from "react-icons/io5";
 
 import { Button as AntButton, Modal as AntModal } from "antd";
@@ -597,7 +596,7 @@ const AttendanceForm = () => {
         <TopNavbar name="Mark Attendance" />
         <div className="flex items-center justify-center flex-col w-full min-h-[100vh] ">
           <div
-            className="flex items-center flex-col bg-white rounded-xl mb-[50px] mt-[50px] w-[90vw] max-w-[500px]  p-4"
+            className="flex items-center flex-col bg-white rounded-xl mb-[60px] mt-[60px] w-[90vw] max-w-[500px]  p-4"
             style={{
               boxShadow:
                 "0 0 0 1px rgba(0,0,0,.08), 0 -4px 6px rgba(0,0,0,.04)",
