@@ -10,6 +10,8 @@ import type { InputRef } from "antd";
 import type { ColumnType, ColumnsType } from "antd/es/table";
 import type { FilterConfirmProps } from "antd/es/table/interface";
 
+import { CSVLink } from "react-csv";
+
 import styles from "./AttendanceTable.module.css";
 
 const { RangePicker } = DatePicker;
@@ -56,9 +58,17 @@ const AttendanceTable = () => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-  const handleReset = (clearFilters) => {
+  const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
+  };
+
+  const csvLink = useRef<CSVLink | null>(null);
+
+  const handleExportCSV = () => {
+    if (csvLink.current) {
+      csvLink.current.link.click();
+    }
   };
 
   useEffect(() => {
@@ -110,7 +120,11 @@ const AttendanceTable = () => {
             );
           });
 
-          setAttendanceData(filteredData);
+          const attendanceDoc = labBatch
+            ? filteredData.filter((data) => data.labBatch === labBatch)
+            : filteredData;
+
+          setAttendanceData(attendanceDoc);
         }
       } catch (error) {
         console.error("Error fetching attendance data from Firestore", error);
@@ -312,15 +326,16 @@ const AttendanceTable = () => {
 
   const columns = [
     {
-      className: "text-[10px] font-[Poppins] z-0 ",
+      className: "text-[12px] font-[Poppins] z-0 ",
       title: "Name",
       dataIndex: "name",
       key: "name",
-      width: 100,
+      width: 150,
+      fixed: "left",
       ...getColumnSearchProps("name"),
     },
     {
-      className: "text-[10px] font-[Poppins] ",
+      className: "text-[12px] font-[Poppins] ",
       title: "USN",
       dataIndex: "usn",
       width: 100,
@@ -328,7 +343,7 @@ const AttendanceTable = () => {
       ...getColumnSearchProps("usn"),
     },
     {
-      className: "text-[10px] font-[Poppins] ",
+      className: "text-[12px] font-[Poppins] ",
       align: "center",
       title: "Classes Held",
       dataIndex: "classesHeld",
@@ -337,7 +352,7 @@ const AttendanceTable = () => {
       sorter: (a, b) => a.classesHeld - b.classesHeld,
     },
     {
-      className: "text-[10px] font-[Poppins] ",
+      className: "text-[12px] font-[Poppins] ",
       align: "center",
       title: "Classes Attended",
       dataIndex: "classesAttended",
@@ -346,7 +361,7 @@ const AttendanceTable = () => {
       sorter: (a, b) => a.classesAttended - b.classesAttended,
     },
     {
-      className: "text-[10px] font-[Poppins] ",
+      className: "text-[12px] font-[Poppins] ",
       align: "center",
       title: "Attendance Percentage",
       dataIndex: "attendancePercentage",
@@ -357,29 +372,35 @@ const AttendanceTable = () => {
     // Add columns for each date in attendanceData
     ...(attendanceData
       ? attendanceData.map((data) => ({
-          title:
-            new Date(data.classDate).toLocaleDateString("en-GB", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-            }) +
-            " (" +
-            convertTo12HourFormat(data.classStartTime) +
-            "-" +
-            convertTo12HourFormat(data.classEndTime) +
-            ")",
+          title: (
+            <div>
+              {new Date(data.classDate).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
+              <br />({convertTo12HourFormat(data.classStartTime)}-
+              {convertTo12HourFormat(data.classEndTime)})
+            </div>
+          ),
           width: 100,
-          className: "text-[10px] font-[Poppins] ",
+          className: "text-[12px] font-[Poppins] ",
           align: "center",
           dataIndex: `attendance_${data.classStartTime}`, // Adjust accordingly
-          key: `attendance_${data.classStartTime}`, // Adjust accordingly
+          key: `${new Date(data.classDate).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}_${convertTo12HourFormat(
+            data.classStartTime
+          )}-${convertTo12HourFormat(data.classEndTime)}`, // Adjust accordingly
         }))
       : []),
   ];
 
   const data = mergedAttendanceData?.map((student) => {
     const rowData = {
-      className: "text-[10px] font-[Poppins] ",
+      className: "text-[12px] font-[Poppins] ",
       key: student.usn,
       name: student.name,
       usn: student.usn,
@@ -407,14 +428,84 @@ const AttendanceTable = () => {
     return rowData;
   });
 
+  const csvData = mergedAttendanceData?.map((student) => {
+    const rowData = {
+      className: "text-[12px] font-[Poppins] ",
+      key: student.usn,
+      name: student.name,
+      usn: student.usn,
+      classesHeld: getClassCount(),
+      classesAttended: getAttendanceCount(student.usn),
+      attendancePercentage: getAttendancePercentage(
+        getAttendanceCount(student.usn),
+        getClassCount()
+      ),
+    };
+
+    // Add attendance data for each date
+    if (attendanceData) {
+      attendanceData.forEach((data) => {
+        const attendanceKey = `${new Date(data.classDate).toLocaleDateString(
+          "en-GB",
+          {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }
+        )}_${convertTo12HourFormat(
+          data.classStartTime
+        )}-${convertTo12HourFormat(data.classEndTime)}`; // Adjust accordingly
+        rowData[attendanceKey] =
+          student.attendance[data.classStartTime] !== undefined
+            ? student.attendance[data.classStartTime]
+              ? "P"
+              : "A"
+            : "-";
+      });
+    }
+
+    return rowData;
+  });
+
+  const handleDateFilterChange = (value) => {
+    // Get the current date
+    const today = new Date();
+
+    // Handle different date filter options
+    switch (value) {
+      case "today":
+        setFromDate(today);
+        setToDate(today);
+        break;
+      case "lastWeek":
+        const lastWeek = new Date(today);
+        lastWeek.setDate(today.getDate() - 7);
+        setFromDate(lastWeek);
+        setToDate(today);
+        break;
+      case "lastMonth":
+        const lastMonth = new Date(today);
+        lastMonth.setMonth(today.getMonth() - 1);
+        setFromDate(lastMonth);
+        setToDate(today);
+        break;
+      case "allTime":
+        // Set the earliest and latest possible dates
+        setFromDate(new Date(0)); // January 1, 1970
+        setToDate(new Date("9999-12-31")); // December 31, 9999
+        break;
+      default:
+        // Custom date or any other cases
+        break;
+    }
+  };
+
   return (
     <>
-      <div className="flex flex-col items-center justify-center mt-[80px] w-full max-w-full md:flex-row md:justify-between md:px-[2.5vw] md:ml-[80px] md:mt-0">
-        <div className="flex flex-row items-center justify-center w-[430px] max-w-[80vw] md:max-w-[424px] mt-4">
-          <div className="flex flex-col items-center">
-            <p className="text-left w-11/12 font-[Poppins] font-[500] max-w-[40vw] ml-1 text-[12px]  text-slate-600 ">
-              Class
-            </p>
+      <div className="flex flex-col items-center justify-center w-full ">
+        <div className="flex flex-row items-center w-full max-w-[95vw] md:max-w-[80vw] overflow-x-auto overflow-y-auto rounded-md border border-solid border-gray-100">
+          <div className="">
+            <p className=" ">Class</p>
             <Select
               size="large"
               value={classId || undefined}
@@ -436,10 +527,8 @@ const AttendanceTable = () => {
           </div>
 
           {classId && (
-            <div className="flex flex-col">
-              <p className="text-left ml-[12px] max-w-[40vw] font-[Poppins] font-[500] text-[12px]  text-slate-600 ">
-                Subject
-              </p>
+            <div className="">
+              <p className=" ">Subject</p>
               <Select
                 size="large"
                 value={subjectCode || undefined}
@@ -453,62 +542,81 @@ const AttendanceTable = () => {
               />
             </div>
           )}
-        </div>
 
-        {isLabSubject && (
-          <div className="flex flex-row items-center justify-center w-[430px] max-w-[83vw] mt-4">
-            <div className="flex flex-col items-center">
-              <p className="text-left w-[83vw] max-w-[416px] md:w-[200px]  md:max-w-[40vw] font-[Poppins] font-[500]  ml-2 text-[12px]  text-slate-600 ">
-                Lab Batch
-              </p>
-              <Select
-                size="large"
-                value={labBatch || undefined}
-                onChange={(value) => setLabBatch(value)}
-                placeholder="Select Lab Batch"
-                className="w-[83vw] max-w-[416px] md:w-[200px]  md:max-w-[40vw] "
-              >
-                {batchOptions.map((option) => (
-                  <Select.Option key={option.value} value={option.value}>
-                    {option.label}
-                  </Select.Option>
-                ))}
-              </Select>
+          {isLabSubject && (
+            <div className="">
+              <div className="">
+                <p className=" ">Lab Batch</p>
+                <Select
+                  size="large"
+                  value={labBatch || undefined}
+                  onChange={(value) => setLabBatch(value)}
+                  placeholder="Select Lab Batch"
+                  className=" "
+                >
+                  {batchOptions.map((option) => (
+                    <Select.Option key={option.value} value={option.value}>
+                      {option.label}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </div>
             </div>
-          </div>
-        )}
-
-        {/* <div>
-
-          <p className='w-[80vw] max-w-[450px] font-[Poppins] font-[500] text-[12px]  mt-5 pl-2 text-slate-600 '>
-              Date Range
-          </p>
-          <RangePicker
-              size='large'
-              value={[fromDate, toDate]}
-              onChange={(dates) => {
-                  setFromDate(dates?.[0]);
-                  setToDate(dates?.[1]);
-              } }
-              inputReadOnly
-
-              className='w-[80vw] max-w-[450px] text-[16px] mt-[2px]' />
-          </div>
-         */}
+          )}
+        </div>
       </div>
 
-      <div>
+      <div className="flex flex-col items-center justify-center w-full ">
+        <div className="flex flex-row items-center w-full max-w-[95vw] md:max-w-[80vw] overflow-x-auto overflow-y-auto rounded-md border border-solid border-gray-100">
+          <div>
+            <p className="">Date Range</p>
+            <RangePicker
+              size="large"
+              value={[fromDate, toDate]}
+              onChange={(dates) => {
+                setFromDate(dates?.[0]);
+                setToDate(dates?.[1]);
+              }}
+              inputReadOnly
+              className=""
+            />
+          </div>
+
+          <Select defaultValue="allTime">
+            <Select.Option value="today">Today</Select.Option>
+            <Select.Option value="lastWeek">Last Week</Select.Option>
+            <Select.Option value="lastMonth">Last Month</Select.Option>
+            <Select.Option value="allTime">All Time</Select.Option>
+          </Select>
+
+          <Button
+            type="primary"
+            onClick={handleExportCSV}
+            style={{ marginBottom: 16 }}
+          >
+            Export to CSV
+          </Button>
+
+          <CSVLink
+            ref={csvLink}
+            data={csvData || []} // Make sure data is defined or provide a default value
+            filename={"attendance_data.csv"}
+            target="_blank"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-col items-center justify-center w-full ">
         {attendanceData && (
-          <div className="md:pl-[80px] flex items-center justify-center mt-4 mb-[150px]">
-            <div className="max-h-[60vh] max-w-[95vw]  md:max-w-[80vw]">
-              <Table
-                columns={columns}
-                dataSource={data}
-                size="small"
-                className={styles.table}
-                scroll={{ x: "95vw", y: "60vh" }}
-              />
-            </div>
+          <div className=" max-w-[95vw] md:max-w-[80vw] overflow-x-auto overflow-y-auto rounded-md border border-solid border-gray-100">
+            <Table
+              columns={columns}
+              dataSource={data}
+              size="small"
+              className="-z-10"
+              scroll={{ x: "100vw", y: "60vh" }}
+              pagination={false}
+            />
           </div>
         )}
       </div>
