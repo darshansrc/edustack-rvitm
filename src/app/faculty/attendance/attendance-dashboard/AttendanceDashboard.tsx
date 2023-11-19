@@ -895,7 +895,7 @@ const AttendanceDashboard = () => {
               className="mt-1 p-2 border rounded-md w-full focus:border-blue-300 border-1px"
             />
           ) : (
-            <div className="mt-1 p-2 border rounded-md w-full ">
+            <div className="mt-1 p-2 border h-12 rounded-md w-full ">
               {editedDescription}
             </div>
           )}
@@ -950,13 +950,14 @@ const AttendanceDashboard = () => {
               Export Attendance
             </button>
           </Link>
-        </div>
 
-        <Alert
-          message="Welcome! Manage attendance, topics, and class details easily. Students can view their attendance on their dashboards."
-          type="info"
-          showIcon
-        />
+          <Alert
+            message="Welcome! Manage attendance, topics, and class details easily. Students can view their attendance on their dashboards."
+            type="info"
+            showIcon
+            className="my-3"
+          />
+        </div>
 
         <div className=" sticky z-[50] bg-white w-full max-w-full">
           <h4 className="md:ml-16 ml-2 mt-4 font-poppins  font-semibold  text-gray-800  text-[14px] md:text-[18px]">

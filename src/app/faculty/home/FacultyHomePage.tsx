@@ -204,7 +204,7 @@ const FacultyHomePage = () => {
             </div>
           </Link>
 
-          <Link href="/student/attendance" shallow={true}>
+          <Link href="/faculty/attendance" shallow={true}>
             <div className={styles.menuItem}>
               <div className={styles.menuItemIcon}>
                 <BsPersonCheck
