@@ -668,7 +668,7 @@ const AttendanceForm = () => {
                     placeholder="Select Subject"
                     options={uniqueClassOptions[classId].map((pair, index) => ({
                       value: pair.code,
-                      label: pair.subjectName,
+                      label: pair.subjectName + " (" + pair.code + ")",
                     }))}
                   />
                 </>
@@ -885,7 +885,7 @@ const AttendanceForm = () => {
                 showIcon
               />
             </div>
-            <div className="w-full">
+            <div className="w-full mb-[60px]">
               {!labBatch && filteredStudentCards}
               {labBatch && batchFilteredStudentCards(labBatch)}
             </div>

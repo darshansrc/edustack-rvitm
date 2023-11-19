@@ -539,6 +539,8 @@ const ScheduleDashboard = () => {
                                 ),
                                 classStartTime: fullformatTime(event.startTime),
                                 classEndTime: fullformatTime(event.endTime),
+                                classTopic: event.classTopic,
+                                classDescription: event.classDescription,
                               },
                             }}
                           >

@@ -956,7 +956,7 @@ const AttendanceDashboard = () => {
             message="Welcome! Manage attendance, topics, and class details easily. Students can view their attendance on their dashboards."
             type="info"
             showIcon
-            className="my-3"
+            className="my-3 md:hidden"
           />
         </div>
 
