@@ -4,7 +4,7 @@ import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase-config";
 import dayjs from "dayjs";
 import {
-  Alert,
+  // Alert,
   Box,
   Card,
   ListItem,
@@ -20,7 +20,7 @@ import { Timeline } from "keep-react";
 import { CiViewList } from "react-icons/ci";
 import { TbEdit } from "react-icons/tb";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import { Affix, Button, Checkbox, Modal, message } from "antd";
+import { Affix, Alert, Button, Checkbox, Modal, message } from "antd";
 import { BsChatSquareText } from "react-icons/bs";
 import { CSVLink } from "react-csv";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
@@ -503,15 +503,15 @@ const AttendanceDashboard = () => {
         </div>
         <div className="max-h-[50vh] h-[50vh] overflow-y-auto table-auto border border-slate-200 rounded mt-2">
           <table className="w-full">
-            <thead className="bg-gray-100 z-50">
+            <thead className="bg-[#fafafa] z-50">
               <tr>
-                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left z-50  py-[5px]">
+                <th className="sticky top-0 bg-[#fafafa]  text-[12px] px-4 text-left z-50  py-[5px]">
                   Name
                 </th>
-                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left z-50  py-[5px]">
+                <th className="sticky top-0 bg-[#fafafa]  text-[12px] px-4 text-left z-50  py-[5px]">
                   USN
                 </th>
-                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left z-50  py-[5px]">
+                <th className="sticky top-0 bg-[#fafafa]  text-[12px] px-4 text-left z-50  py-[5px]">
                   Attendance
                 </th>
               </tr>
@@ -568,7 +568,7 @@ const AttendanceDashboard = () => {
 
     return (
       <Modal
-        title="View Attedendance"
+        title="View Attendance"
         open={viewModalOpen}
         centered
         onOk={() => setViewModalOpen(false)}
@@ -647,15 +647,15 @@ const AttendanceDashboard = () => {
         </div>
         <div className="max-h-[50vh] h-[50vh] overflow-y-auto table-auto  border border-slate-200 rounded mt-2">
           <table className="w-full ">
-            <thead className="bg-slate-100 ">
+            <thead className="bg-[#fafafa] ">
               <tr>
-                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left py-[5px]">
+                <th className="sticky top-0 bg-[#fafafa]  text-[12px] px-4 text-left py-[5px]">
                   Name
                 </th>
-                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left py-[5px]">
+                <th className="sticky top-0 bg-[#fafafa]  text-[12px] px-4 text-left py-[5px]">
                   USN
                 </th>
-                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left py-[5px]">
+                <th className="sticky top-0 bg-[#fafafa]  text-[12px] px-4 text-left py-[5px]">
                   Attendance
                 </th>
               </tr>
@@ -951,6 +951,12 @@ const AttendanceDashboard = () => {
             </button>
           </Link>
         </div>
+
+        <Alert
+          message="Welcome! Manage attendance, topics, and class details easily. Students can view their attendance on their dashboards."
+          type="info"
+          showIcon
+        />
 
         <div className=" sticky z-[50] bg-white w-full max-w-full">
           <h4 className="md:ml-16 ml-2 mt-4 font-poppins  font-semibold  text-gray-800  text-[14px] md:text-[18px]">
@@ -1258,22 +1264,7 @@ const AttendanceDashboard = () => {
 
       <ClassTopicModal />
 
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={successMessageOpen}
-        autoHideDuration={2000}
-        onClose={() => setSuccessMessageOpen(false)}
-        style={{ boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)" }}
-      >
-        <Alert
-          onClose={() => setSuccessMessageOpen(false)}
-          severity="success"
-          sx={{ width: "100%" }}
-          style={{ border: "1px solid green" }}
-        >
-          Attendance Updated Successfully
-        </Alert>
-      </Snackbar>
+      {contextHolder}
     </>
   );
 };
