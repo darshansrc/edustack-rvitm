@@ -507,10 +507,10 @@ const AttendanceTable = () => {
           style={{
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
           }}
-          className="flex w-[100%] flex-wrap items-end justify-around max-md:justify-evenly p-3 rounded-md border border-solid border-gray-100 mt-10 max-md:mt-[60px]  mb-7"
+          className="flex w-[95%] flex-wrap items-end justify-around max-md:justify-left p-3 rounded-md border border-solid border-gray-100 mt-10 max-md:mt-[60px]  mb-7"
         >
           <div className="w-[20%] max-md:w-[30%]">
-            <p className=" font-bold ">Class</p>
+            <p className=" font-semibold ">Class</p>
             <Select
               size="large"
               value={classId || undefined}
@@ -532,7 +532,7 @@ const AttendanceTable = () => {
           </div>
           {classId && (
             <div className="flex flex-col w-[40%] max-md:w-[50%]">
-              <p className="ml-2 font-bold ">Subject</p>
+              <p className="ml-2 font-semibold ">Subject</p>
               <Select
                 size="large"
                 value={subjectCode || undefined}
@@ -548,7 +548,7 @@ const AttendanceTable = () => {
           )}
           {isLabSubject && (
             <div className="flex flex-col w-[20%] max-md:w-[40%]">
-              <p className=" font-bold ml-4 whitespace-nowrap">Lab Batch</p>
+              <p className=" font-semibold ml-4 whitespace-nowrap">Lab Batch</p>
               <Select
                 size="large"
                 value={labBatch || undefined}
@@ -564,7 +564,7 @@ const AttendanceTable = () => {
               </Select>
             </div>
           )}
-          <button
+          {/* <button
             type="submit"
             className=" w-[15%] max-md:w-[40%] inline-flex items-center py-2 px-3 h-[75%] mt-4 text-sm font-medium text-white bg-primary-500 rounded-lg border border-primary-300 hover:bg-primary-400 focus:ring-4 focus:outline-none focus:ring-primary-300"
           >
@@ -584,7 +584,7 @@ const AttendanceTable = () => {
               />
             </svg>
             Search
-          </button>
+          </button> */}
         </div>
 
         <div
@@ -593,9 +593,11 @@ const AttendanceTable = () => {
           }}
           className="border-solid border-gray-100 p-4 border rounded-md w-auto max-w-[90vw] h-auto"
         >
-          <div className="flex flex-row flex-wrap justify-evenly max-md:justify-evenly items-end w-full ">
-            <div className="mr-10 max-md:mr-0 max-md:w-[100%]">
-              <p className="font-bold mb-2 whitespace-nowrap">Date Range</p>
+          <div className="flex flex-row flex-wrap justify-end max-md:justify-end items-center w-full ">
+            {/* <div className="mr-10 max-md:mr-0 max-md:w-[100%]">
+              <p className="text-[12px] font-poppins whitespace-nowrap">
+                Date Range
+              </p>
               <RangePicker
                 size="large"
                 value={[fromDate, toDate]}
@@ -603,18 +605,53 @@ const AttendanceTable = () => {
                   setFromDate(dates?.[0]);
                   setToDate(dates?.[1]);
                 }}
+                format={"ddd, MMM D"}
                 inputReadOnly
                 className="w-[100%]"
               />
+            </div> */}
+
+            <div className="flex flex-row gap-2 items-center justify-center">
+              <div className="flex flex-col">
+                <p className="text-[12px] font-poppins whitespace-nowrap">
+                  From
+                </p>
+                <DatePicker
+                  inputReadOnly
+                  size="large"
+                  format={"ddd, MMM D"}
+                  value={fromDate}
+                  onChange={setFromDate}
+                  className=" text-[16px] mt-[2px] "
+                  disabledDate={(current) =>
+                    current && current.valueOf() > Date.now()
+                  }
+                />
+              </div>
+              <div className="flex flex-col">
+                <p className="text-[12px] font-poppins whitespace-nowrap">To</p>
+                <DatePicker
+                  inputReadOnly
+                  size="large"
+                  format={"ddd, MMM D"}
+                  value={toDate}
+                  onChange={setToDate}
+                  className=" text-[16px] mt-[2px] "
+                  disabledDate={(current) =>
+                    current && current.valueOf() > Date.now()
+                  }
+                />
+              </div>
             </div>
-            <div className="mr-10 w-[10%] mt-6 min-w-[100px] max-md:mr-3">
-              <Select defaultValue="allTime" className="w-[100%]">
+
+            {/* <div className="mr-10 w-[10%] mt-6 min-w-[100px] max-md:mr-3">
+              <Select defaultValue="allTime" size="large" className="w-[100%]">
                 <Select.Option value="today">Today</Select.Option>
                 <Select.Option value="lastWeek">Last Week</Select.Option>
                 <Select.Option value="lastMonth">Last Month</Select.Option>
                 <Select.Option value="allTime">All Time</Select.Option>
               </Select>
-            </div>
+            </div> */}
             <Button
               className=" mt-6 ml-8 max-md:ml-5 max-[325px]:ml-2"
               type="primary"
@@ -632,25 +669,13 @@ const AttendanceTable = () => {
             />
           </div>
           {attendanceData && (
-            <div className=" w-[100%] max-md:hidden overflow-x-auto overflow-y-auto">
+            <div className=" w-[80vw] overflow-x-auto overflow-y-auto">
               <Table
                 columns={columns}
                 dataSource={data}
                 size="small"
                 className="-z-1"
-                scroll={{ x: "90vw", y: "60vh" }}
-                pagination={false}
-              />
-            </div>
-          )}
-          {attendanceData && (
-            <div className=" w-[100%] hidden max-md:block overflow-x-auto overflow-y-auto">
-              <Table
-                columns={columns}
-                dataSource={data}
-                size="small"
-                className="-z-1"
-                scroll={{ x: "90vw", y: "32svh" }}
+                scroll={{ x: "90vw", y: "50vh" }}
                 pagination={false}
               />
             </div>

@@ -24,6 +24,7 @@
     "dayjs": "^1.11.10",
     "firebase": "^10.5.2",
     "firebase-admin": "^11.11.0",
+    "flowbite": "^2.1.1",
     "framer-motion": "^10.16.4",
     "keep-react": "^1.0.1",
     "mui": "^0.0.1",
