@@ -81,7 +81,7 @@ const TopNavbar = ({ name }) => {
             paddingRight: "20px",
           }}
         >
-          <BsStack className="w-6 h-6 text-blue-600 pr-2" />
+          <BsStack className="w-6 h-6 text-primary pr-2" />
           <div
             style={{
               fontWeight: "500",

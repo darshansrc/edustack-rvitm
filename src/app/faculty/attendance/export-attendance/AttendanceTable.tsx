@@ -257,7 +257,7 @@ const AttendanceTable = () => {
             style={{
               width: 90,
             }}
-            className="bg-blue-500"
+            className="bg-primary"
           >
             Search
           </Button>

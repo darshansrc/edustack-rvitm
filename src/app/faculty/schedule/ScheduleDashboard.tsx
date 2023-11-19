@@ -484,13 +484,13 @@ const ScheduleDashboard = () => {
 
                 <div className="border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[12px] mt-2 pr-[30px]">
                   <div className="text-slate-500 font-[Poppins] text-[12px]  ">
-                    <span className="text-blue-500 font-[Poppins] text-[12px]">
+                    <span className="text-primary font-[Poppins] text-[12px]">
                       Subject:{" "}
                     </span>
                     {event.subjectName}
                   </div>
                   <div className="text-slate-500 font-[Poppins] text-[12px]">
-                    <span className="text-blue-500 font-[Poppins] text-[12px]  ">
+                    <span className="text-primary font-[Poppins] text-[12px]  ">
                       Class:{" "}
                     </span>
                     {event.selectedClassName}
@@ -498,7 +498,7 @@ const ScheduleDashboard = () => {
 
                   {event.isLabSubject && (
                     <div className="text-slate-500 font-[Poppins] text-[12px]">
-                      <span className="text-blue-500 font-[Poppins] text-[12px]  ">
+                      <span className="text-primary font-[Poppins] text-[12px]  ">
                         Lab Batch:{" "}
                       </span>
                       B-{event?.selectedBatch}
@@ -506,7 +506,7 @@ const ScheduleDashboard = () => {
                   )}
 
                   <div className="text-slate-500 font-[Poppins] text-[12px]">
-                    <span className="text-blue-500 font-[Poppins] text-[12px]  ">
+                    <span className="text-primary font-[Poppins] text-[12px]  ">
                       Topic:{" "}
                     </span>
                     {event?.classTopic ? event?.classTopic : "N/A"}
@@ -514,7 +514,7 @@ const ScheduleDashboard = () => {
 
                   {event.classDescription && (
                     <div className="text-slate-500 font-[Poppins] text-[12px]">
-                      <span className="text-blue-500 font-[Poppins] text-[12px]  ">
+                      <span className="text-primary font-[Poppins] text-[12px]  ">
                         Description:{" "}
                       </span>
                       {event?.classDescription}
@@ -670,7 +670,7 @@ const ScheduleDashboard = () => {
           <Button
             key="submit"
             onClick={handleSubmit}
-            className="bg-blue-600 text-white border-white border-solid border-[1px]"
+            className="bg-primary text-white border-white border-solid border-[1px]"
           >
             Schedule
           </Button>,
@@ -861,7 +861,7 @@ const ScheduleDashboard = () => {
             <div>
               <button
                 onClick={clearState}
-                className="bg-blue-500 w-full text-white rounded-lg  mt-4 mb-4 font-[Poppins] p-2 hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
+                className="bg-primary w-full text-white rounded-lg  mt-4 mb-4 font-[Poppins] p-2 hover:bg-primary focus:outline-none focus:ring focus:ring-blue-300"
               >
                 Schedule Another Class
               </button>
