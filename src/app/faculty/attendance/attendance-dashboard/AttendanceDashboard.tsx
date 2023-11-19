@@ -20,7 +20,7 @@ import { Timeline } from "keep-react";
 import { CiViewList } from "react-icons/ci";
 import { TbEdit } from "react-icons/tb";
 import { FaChalkboardTeacher } from "react-icons/fa";
-import { Affix, Button, Checkbox, Modal } from "antd";
+import { Affix, Button, Checkbox, Modal, message } from "antd";
 import { BsChatSquareText } from "react-icons/bs";
 import { CSVLink } from "react-csv";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
@@ -80,7 +80,7 @@ const StyledTabs = styled((props: StyledTabsProps) => (
   },
   "& .MuiTabs-indicatorSpan": {
     width: "100%",
-    backgroundColor: "rgb(29 78 216)",
+    backgroundColor: "#0577fb",
   },
 });
 
@@ -93,7 +93,7 @@ const StyledTab = styled(({ ...props }: StyledTabProps) => (
   fontSize: theme.typography.pxToRem(12),
   color: "#666666",
   "&.Mui-selected": {
-    color: "rgb(29 78 216)",
+    color: "#0577fb",
   },
   "&.Mui-focusVisible": {
     backgroundColor: "#666666",
@@ -101,6 +101,8 @@ const StyledTab = styled(({ ...props }: StyledTabProps) => (
 }));
 
 const AttendanceDashboard = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [attendanceFormData, setAttendanceFormData] =
     useState<AttendanceFormData>({
       classId: "",
@@ -390,6 +392,10 @@ const AttendanceDashboard = () => {
           setEditedClassData(selectedClassData);
 
           setSuccessMessageOpen(true);
+          messageApi.open({
+            type: "success",
+            content: "Attendance edited Successfully",
+          });
           setUpdateData(true);
           setEditModalOpen(false);
         }
@@ -397,6 +403,12 @@ const AttendanceDashboard = () => {
         if (!res.ok) {
           setEditedClassData(selectedClassData);
           setErrorMessageOpen(true);
+
+          messageApi.open({
+            type: "error",
+            content: "Failed to editAttendance",
+          });
+
           setEditModalOpen(false);
           throw new Error("Failed to submit form data");
         }
@@ -491,15 +503,15 @@ const AttendanceDashboard = () => {
         </div>
         <div className="max-h-[50vh] h-[50vh] overflow-y-auto table-auto border border-slate-200 rounded mt-2">
           <table className="w-full">
-            <thead className="bg-slate-100 z-50">
+            <thead className="bg-gray-100 z-50">
               <tr>
-                <th className="sticky top-0 bg-slate-50 text-[#0577fb] text-[12px] px-4 text-left z-50  py-[5px]">
+                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left z-50  py-[5px]">
                   Name
                 </th>
-                <th className="sticky top-0 bg-slate-50 text-[#0577fb] text-[12px] px-4 text-left z-50  py-[5px]">
+                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left z-50  py-[5px]">
                   USN
                 </th>
-                <th className="sticky top-0 bg-slate-50 text-[#0577fb] text-[12px] px-4 text-left z-50  py-[5px]">
+                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left z-50  py-[5px]">
                   Attendance
                 </th>
               </tr>
@@ -637,13 +649,13 @@ const AttendanceDashboard = () => {
           <table className="w-full ">
             <thead className="bg-slate-100 ">
               <tr>
-                <th className="sticky top-0 bg-slate-50 text-[#0577fb] text-[12px] px-4 text-left py-[5px]">
+                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left py-[5px]">
                   Name
                 </th>
-                <th className="sticky top-0 bg-slate-50 text-[#0577fb] text-[12px] px-4 text-left py-[5px]">
+                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left py-[5px]">
                   USN
                 </th>
-                <th className="sticky top-0 bg-slate-50 text-[#0577fb] text-[12px] px-4 text-left py-[5px]">
+                <th className="sticky top-0 bg-gray-50  text-[12px] px-4 text-left py-[5px]">
                   Attendance
                 </th>
               </tr>
@@ -732,11 +744,19 @@ const AttendanceDashboard = () => {
         if (res.ok) {
           console.log("Form data submitted successfully");
           setSuccessMessageOpen(true);
+          messageApi.open({
+            type: "success",
+            content: "Topic Updated Successfully",
+          });
           setUpdateData(true);
           setTopicModalOpen(false);
           setTopicEditedSuccessfully(true);
         } else {
           setErrorMessageOpen(true);
+          messageApi.open({
+            type: "error",
+            content: "Failed to Update",
+          });
           setTopicModalOpen(false);
           setTopicEditedSuccessfully(true);
           throw new Error("Failed to submit form data");
@@ -933,7 +953,7 @@ const AttendanceDashboard = () => {
         </div>
 
         <div className=" sticky z-[50] bg-white w-full max-w-full">
-          <h4 className="md:ml-16 ml-2 mt-4 font-poppins text-[#0577fb] font-semibold  text-gray-800  text-[14px] md:text-[18px]">
+          <h4 className="md:ml-16 ml-2 mt-4 font-poppins  font-semibold  text-gray-800  text-[14px] md:text-[18px]">
             Your Subjects
           </h4>
           <Affix offsetTop={0}>
@@ -1114,7 +1134,7 @@ const AttendanceDashboard = () => {
                           </Timeline.Time>
                           <div className="border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px]">
                             <div className="text-slate-500 font-[Poppins] text-[12px] ">
-                              <span className="text-[#0577fb] font-[Poppins] text-[12px] font-semibold">
+                              <span className=" font-[Poppins] text-[12px] font-semibold">
                                 Time:{" "}
                               </span>
                               {formatTime(sessionObj.data.classStartTime) +
@@ -1122,7 +1142,7 @@ const AttendanceDashboard = () => {
                                 formatTime(sessionObj.data.classEndTime)}
                             </div>
                             <div className="text-slate-500 font-[Poppins] text-[12px] ">
-                              <span className="text-[#0577fb] font-[Poppins] text-[12px] font-semibold">
+                              <span className=" font-[Poppins] text-[12px] font-semibold">
                                 Attendance:{" "}
                               </span>
                               {sessionObj.data.students
@@ -1136,14 +1156,14 @@ const AttendanceDashboard = () => {
                             </div>
 
                             <div className="text-slate-500 font-[Poppins] text-[12px] ">
-                              <span className="text-[#0577fb] font-[Poppins] text-[12px] font-semibold">
+                              <span className=" font-[Poppins] text-[12px] font-semibold">
                                 Recorded by:{" "}
                               </span>
                               {sessionObj.data.recordedByName}
                             </div>
 
                             <div className="text-slate-500 font-[Poppins] text-[12px] ">
-                              <span className="text-[#0577fb] font-[Poppins] text-[12px] font-semibold">
+                              <span className=" font-[Poppins] text-[12px] font-semibold">
                                 Recorded on:{" "}
                               </span>
                               {sessionObj.data.recordedTime &&
@@ -1153,7 +1173,7 @@ const AttendanceDashboard = () => {
                             </div>
 
                             <div className="text-slate-500 font-[Poppins] text-[12px] ">
-                              <span className="text-[#0577fb] font-[Poppins] text-[12px] font-semibold">
+                              <span className=" font-[Poppins] text-[12px] font-semibold">
                                 Topic of Class:{" "}
                               </span>
                               {sessionObj.data.classTopic
@@ -1167,30 +1187,39 @@ const AttendanceDashboard = () => {
                                   handleViewClick(sessionObj.id);
                                   setSelectedClassData(sessionObj.data);
                                 }}
-                                className="p-2 bg-slate-100 text-[#0577fb] rounded mx-2 mt-2"
+                                className=" flex flex-row p-2 bg-slate-100 text-[#0577fb] rounded mx-2 mt-2"
                               >
-                                <MdOutlineRemoveRedEye />
+                                <MdOutlineRemoveRedEye />{" "}
+                                <p className="pl-1 marker:font-poppins text-[10px]">
+                                  View
+                                </p>
                               </button>
                               <button
                                 onClick={() => {
                                   handleEditClick(sessionObj.id);
                                   setSelectedClassData(sessionObj.data);
                                 }}
-                                className="p-2 bg-slate-100 text-[#0577fb] rounded mx-2 mt-2"
+                                className="p-2 flex flex-row bg-slate-100 text-[#0577fb] rounded mx-2 mt-2"
                               >
                                 <TbEdit />
+                                <p className="pl-1 font-poppins text-[10px]">
+                                  Edit
+                                </p>
                               </button>
                               <button
                                 onClick={() => {
                                   setTopicModalOpen(true);
                                   setSelectedClassData(sessionObj.data);
                                 }}
-                                className="p-2 bg-slate-100 text-[#0577fb] rounded mx-2 mt-2"
+                                className="p-2 flex flex-row bg-slate-100 text-[#0577fb] rounded mx-2 mt-2"
                               >
-                                <BsChatSquareText />
+                                <BsChatSquareText />{" "}
+                                <p className="pl-1 font-poppins text-[10px]">
+                                  Topic
+                                </p>
                               </button>
 
-                              <CSVLink
+                              {/* <CSVLink
                                 onClick={() => {
                                   setSelectedClassData(sessionObj.data);
                                 }}
@@ -1210,7 +1239,7 @@ const AttendanceDashboard = () => {
                                 className="p-2 bg-slate-100 text-[#0577fb] rounded mx-2 mt-2"
                               >
                                 <FiDownload />
-                              </CSVLink>
+                              </CSVLink> */}
                             </div>
                           </div>
                         </Timeline.Content>
@@ -1243,22 +1272,6 @@ const AttendanceDashboard = () => {
           style={{ border: "1px solid green" }}
         >
           Attendance Updated Successfully
-        </Alert>
-      </Snackbar>
-
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={errorMessageOpen}
-        autoHideDuration={2000}
-        onClose={() => setErrorMessageOpen(false)}
-        style={{ boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)" }}
-      >
-        <Alert
-          onClose={() => setErrorMessageOpen(false)}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Failed to update Data
         </Alert>
       </Snackbar>
     </>

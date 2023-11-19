@@ -7,7 +7,7 @@ function FloatingMarkAttendaceActionButton() {
       <Link href="/faculty/attendance/attendance-form" shallow={true}>
         <div className="md:hidden fixed bottom-[15svh] right-6 flex flex-col items-center justify-center text-center">
           <div
-            className="rounded-full bg-white w-12 h-12 flex items-center justify-center m-1 transition duration-200"
+            className="rounded-full bg-[#0577fb] w-12 h-12 flex items-center justify-center m-1 transition duration-200"
             style={{
               boxShadow: "0px 3px 6px #00000029",
               cursor: "pointer",
@@ -18,6 +18,7 @@ function FloatingMarkAttendaceActionButton() {
               style={{
                 margin: "0 10px",
                 backgorundColor: "#475569",
+                color: "#fff",
               }}
             />
           </div>

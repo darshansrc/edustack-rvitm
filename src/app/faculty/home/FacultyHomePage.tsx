@@ -290,6 +290,7 @@ const FacultyHomePage = () => {
         open={isModalOpen}
         onOk={() => setIsModalOpen(false)}
         onCancel={() => setIsModalOpen(false)}
+        centered={true}
       >
         {" "}
         This feature is still under Development.
