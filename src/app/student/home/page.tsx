@@ -19,7 +19,7 @@ function Page() {
     <div className={styles.pageContainer}>    
         <StudentHomePage/>
     </div>
-    <Navbar />
+
 
 
     </>

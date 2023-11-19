@@ -86,13 +86,16 @@ const AttendanceTable = () => {
           setSubjectName(subjectName);
           setSubjectType(subjectType);
           setSubjectSemester(subjectSemester);
+
+          // Move the fetchAttendanceData call here
+          fetchAttendanceData(classId, subjectCode, subjectSemester);
         }
       }
     };
     getSubjectData();
   }, [classId, subjectCode]);
 
-  async function fetchAttendanceData() {
+  async function fetchAttendanceData(classId, subjectCode, subjectSemester) {
     try {
       if (classId && subjectCode) {
         const attendanceRef = collection(
@@ -128,8 +131,8 @@ const AttendanceTable = () => {
   }
 
   useEffect(() => {
-    fetchAttendanceData();
-  }, [classId, labBatch, subjectCode, fromDate, toDate]);
+    fetchAttendanceData(classId, subjectCode, subjectSemester);
+  }, [classId, labBatch, subjectCode,subjectSemester, fromDate, toDate]);
 
   useEffect(() => {
     const fetchClassSubjectPairs = async () => {

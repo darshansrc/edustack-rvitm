@@ -56,6 +56,16 @@ interface studentDetails {
 
 } 
 
+function convertTo12HourFormat(time) {
+  const date = new Date(time);
+
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+}
+
 const StyledTabs = styled((props: StyledTabsProps) => (
   <Tabs
     {...props}
@@ -201,7 +211,7 @@ function StudentAttendanceTable() {
     const subjectData = attendanceData[subjectIndex];
     if (Array.isArray(subjectData)) {
       return subjectData.reduce((total, data) => {
-        const student = data.attendance?.find((student) => student.usn === studentDetails.studentUSN);
+        const student = data.students?.find((student) => student.usn === studentDetails.studentUSN);
         return total + (student && student.Present ? 1 : 0);
       }, 0);
     }
@@ -214,7 +224,7 @@ function StudentAttendanceTable() {
     const subjectData = attendanceData[subjectIndex];
     if (Array.isArray(subjectData)) {
       subjectData.forEach((data) => {
-        const student = data.attendance?.find((student) => student.usn === studentDetails.studentUSN);
+        const student = data.students?.find((student) => student.usn === studentDetails.studentUSN);
         if (student) {
           count++;
         }
@@ -486,12 +496,12 @@ function StudentAttendanceTable() {
                   <div className={styles.connector}>
                       <div className={styles.circle}></div>
                     <Typography style={{ fontFamily: 'Poppins', fontSize: '14px', fontWeight: '500', color: 'rgb(29 78 216)',marginLeft: '10px' }}>
-                    {' '}{new Date(classData.date).toLocaleDateString('en-US', {
+                    {' '}{new Date(classData.classDate).toLocaleDateString('en-US', {
                           year: 'numeric',
                           month: 'short',
                           day: 'numeric',
                         })}{' '}
-                        ({getDayOfWeek(new Date(classData.date))})
+                        ({getDayOfWeek(new Date(classData.classDate))})
                       </Typography>
                   </div>                  
 
@@ -507,7 +517,7 @@ function StudentAttendanceTable() {
                         width: '25px',
                         height: '25px',
                         borderRadius: '50%',
-                        backgroundColor: classData.attendance.find((student) => student.usn === studentDetails.studentUSN)?.Present
+                        backgroundColor: classData.students.find((student) => student.usn === studentDetails.studentUSN)?.Present
                           ? 'green' // Set the background color to green if present
                           : 'red', // Set the background color to red if absent
                         display: 'flex',
@@ -517,7 +527,7 @@ function StudentAttendanceTable() {
                         fontFamily: 'Poppins'
                       }}
                     >
-                      {classData.attendance.find((student) => student.usn === studentDetails.studentUSN)?.Present ? 'P' : 'A'}
+                      {classData.students.find((student) => student.usn === studentDetails.studentUSN)?.Present ? 'P' : 'A'}
                     </div>
                     <CardContent style={{ padding: '10px' }}>
                       <div
@@ -531,7 +541,7 @@ function StudentAttendanceTable() {
                       >
                         <div style={{ cursor: 'pointer', marginRight: '12px' }}>
                           <Typography style={{fontSize: '14px',fontFamily: 'Poppins',fontWeight: '500',color: '#555',display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
-                            <BiTime style={{marginRight: '5px'}}/>{classData.sessionTime}
+                            <BiTime style={{marginRight: '5px'}}/>{convertTo12HourFormat(classData.classStartTime)} - {convertTo12HourFormat(classData.classEndTime)}
                           </Typography>
                         </div>
                         {/* <AiOutlineRightCircle

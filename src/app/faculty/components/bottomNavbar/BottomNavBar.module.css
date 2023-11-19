@@ -40,9 +40,6 @@
     display: none;
   }
 
-  .pageContainer {
-    margin-left: 80px;
-  }
 
   .navItem {
     flex-direction: column;
