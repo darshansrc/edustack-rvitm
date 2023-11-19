@@ -502,10 +502,15 @@ const AttendanceTable = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center w-full ">
-        <div className="flex flex-row items-center w-full max-w-[95vw] md:max-w-[80vw] overflow-x-auto overflow-y-auto rounded-md border border-solid border-gray-100">
-          <div className="">
-            <p className=" ">Class</p>
+      <div className="flex flex-col items-center p-4 w-full h-auto">
+        <div
+          style={{
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+          }}
+          className="flex w-[100%] flex-wrap items-end justify-around max-md:justify-evenly p-3 rounded-md border border-solid border-gray-100 mt-10 max-md:mt-[60px]  mb-7"
+        >
+          <div className="w-[20%] max-md:w-[30%]">
+            <p className=" font-bold ">Class</p>
             <Select
               size="large"
               value={classId || undefined}
@@ -516,7 +521,7 @@ const AttendanceTable = () => {
                 setLabBatch("");
               }}
               placeholder="Select Class"
-              className="w-[200px] mr-2 max-w-[40vw]"
+              className="w-[100%]"
               options={Object.keys(uniqueClassOptions).map(
                 (ClassId, index) => ({
                   value: ClassId,
@@ -525,15 +530,14 @@ const AttendanceTable = () => {
               )}
             />
           </div>
-
           {classId && (
-            <div className="">
-              <p className=" ">Subject</p>
+            <div className="flex flex-col w-[40%] max-md:w-[50%]">
+              <p className="ml-2 font-bold ">Subject</p>
               <Select
                 size="large"
                 value={subjectCode || undefined}
                 onChange={handleSubjectChange}
-                className="w-[200px] ml-2 max-w-[40vw]"
+                className="w-[100%]"
                 placeholder="Select Subject"
                 options={uniqueClassOptions[classId].map((pair, index) => ({
                   value: pair.code,
@@ -542,83 +546,116 @@ const AttendanceTable = () => {
               />
             </div>
           )}
-
           {isLabSubject && (
-            <div className="">
-              <div className="">
-                <p className=" ">Lab Batch</p>
-                <Select
-                  size="large"
-                  value={labBatch || undefined}
-                  onChange={(value) => setLabBatch(value)}
-                  placeholder="Select Lab Batch"
-                  className=" "
-                >
-                  {batchOptions.map((option) => (
-                    <Select.Option key={option.value} value={option.value}>
-                      {option.label}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </div>
+            <div className="flex flex-col w-[20%] max-md:w-[40%]">
+              <p className=" font-bold ml-4 whitespace-nowrap">Lab Batch</p>
+              <Select
+                size="large"
+                value={labBatch || undefined}
+                onChange={(value) => setLabBatch(value)}
+                placeholder="Select Lab Batch"
+                className="w-[100%]"
+              >
+                {batchOptions.map((option) => (
+                  <Select.Option key={option.value} value={option.value}>
+                    {option.label}
+                  </Select.Option>
+                ))}
+              </Select>
+            </div>
+          )}
+          <button
+            type="submit"
+            className=" w-[15%] max-md:w-[40%] inline-flex items-center py-2 px-3 h-[75%] mt-4 text-sm font-medium text-white bg-primary-500 rounded-lg border border-primary-300 hover:bg-primary-400 focus:ring-4 focus:outline-none focus:ring-primary-300"
+          >
+            <svg
+              className="w-4 h-4 me-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+            Search
+          </button>
+        </div>
+
+        <div
+          style={{
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+          }}
+          className="border-solid border-gray-100 p-4 border rounded-md w-auto max-w-[90vw] h-auto"
+        >
+          <div className="flex flex-row flex-wrap justify-evenly max-md:justify-evenly items-end w-full ">
+            <div className="mr-10 max-md:mr-0 max-md:w-[100%]">
+              <p className="font-bold mb-2 whitespace-nowrap">Date Range</p>
+              <RangePicker
+                size="large"
+                value={[fromDate, toDate]}
+                onChange={(dates) => {
+                  setFromDate(dates?.[0]);
+                  setToDate(dates?.[1]);
+                }}
+                inputReadOnly
+                className="w-[100%]"
+              />
+            </div>
+            <div className="mr-10 w-[10%] mt-6 min-w-[100px] max-md:mr-3">
+              <Select defaultValue="allTime" className="w-[100%]">
+                <Select.Option value="today">Today</Select.Option>
+                <Select.Option value="lastWeek">Last Week</Select.Option>
+                <Select.Option value="lastMonth">Last Month</Select.Option>
+                <Select.Option value="allTime">All Time</Select.Option>
+              </Select>
+            </div>
+            <Button
+              className=" mt-6 ml-8 max-md:ml-5 max-[325px]:ml-2"
+              type="primary"
+              onClick={handleExportCSV}
+              // style={{ marginBottom: 16 }}
+            >
+              Export to CSV
+            </Button>
+
+            <CSVLink
+              ref={csvLink}
+              data={csvData || []} // Make sure data is defined or provide a default value
+              filename={"attendance_data.csv"}
+              target="_blank"
+            />
+          </div>
+          {attendanceData && (
+            <div className=" w-[100%] max-md:hidden overflow-x-auto overflow-y-auto">
+              <Table
+                columns={columns}
+                dataSource={data}
+                size="small"
+                className="-z-1"
+                scroll={{ x: "90vw", y: "60vh" }}
+                pagination={false}
+              />
+            </div>
+          )}
+          {attendanceData && (
+            <div className=" w-[100%] hidden max-md:block overflow-x-auto overflow-y-auto">
+              <Table
+                columns={columns}
+                dataSource={data}
+                size="small"
+                className="-z-1"
+                scroll={{ x: "90vw", y: "32svh" }}
+                pagination={false}
+              />
             </div>
           )}
         </div>
-      </div>
-
-      <div className="flex flex-col items-center justify-center w-full ">
-        <div className="flex flex-row items-center w-full max-w-[95vw] md:max-w-[80vw] overflow-x-auto overflow-y-auto rounded-md border border-solid border-gray-100">
-          <div>
-            <p className="">Date Range</p>
-            <RangePicker
-              size="large"
-              value={[fromDate, toDate]}
-              onChange={(dates) => {
-                setFromDate(dates?.[0]);
-                setToDate(dates?.[1]);
-              }}
-              inputReadOnly
-              className=""
-            />
-          </div>
-
-          <Select defaultValue="allTime">
-            <Select.Option value="today">Today</Select.Option>
-            <Select.Option value="lastWeek">Last Week</Select.Option>
-            <Select.Option value="lastMonth">Last Month</Select.Option>
-            <Select.Option value="allTime">All Time</Select.Option>
-          </Select>
-
-          <Button
-            type="primary"
-            onClick={handleExportCSV}
-            style={{ marginBottom: 16 }}
-          >
-            Export to CSV
-          </Button>
-
-          <CSVLink
-            ref={csvLink}
-            data={csvData || []} // Make sure data is defined or provide a default value
-            filename={"attendance_data.csv"}
-            target="_blank"
-          />
-        </div>
-      </div>
-
-      <div className="flex flex-col items-center justify-center w-full ">
-        {attendanceData && (
-          <div className=" max-w-[95vw] md:max-w-[80vw] overflow-x-auto overflow-y-auto rounded-md border border-solid border-gray-100">
-            <Table
-              columns={columns}
-              dataSource={data}
-              size="small"
-              className="-z-10"
-              scroll={{ x: "100vw", y: "60vh" }}
-              pagination={false}
-            />
-          </div>
-        )}
       </div>
     </>
   );
