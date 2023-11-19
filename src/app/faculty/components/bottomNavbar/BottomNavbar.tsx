@@ -84,7 +84,8 @@ const BottomNavbar = () => {
         <div
           className={
             pathname.endsWith("/attendance") ||
-            pathname.endsWith("/attendance-form")
+            pathname.endsWith("/attendance-form") ||
+            pathname.endsWith("/export-attendance")
               ? styles.navItemActive
               : styles.navItem
           }
@@ -94,7 +95,9 @@ const BottomNavbar = () => {
           </i>
           <div
             className={
-              pathname.endsWith("/attendance")
+              pathname.endsWith("/attendance") ||
+              pathname.endsWith("/attendance-form") ||
+              pathname.endsWith("/export-attendance")
                 ? styles.navTextActive
                 : styles.navText
             }
@@ -140,7 +143,7 @@ const BottomNavbar = () => {
           </i>
           <div
             className={
-              pathname.endsWith("/grades")
+              pathname.endsWith("/marks-entry")
                 ? styles.navTextActive
                 : styles.navText
             }

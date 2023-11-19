@@ -933,7 +933,7 @@ const AttendanceDashboard = () => {
         </div>
 
         <div className=" sticky z-[50] bg-white w-full max-w-full">
-          <h4 className="ml-16 mt-4 font-poppins text-primary font-semibold text-gray-800  text-[18px]">
+          <h4 className="md:ml-16 ml-2 mt-4 font-poppins text-primary font-semibold  text-gray-800  text-[14px] md:text-[18px]">
             Your Subjects
           </h4>
           <Affix offsetTop={0}>

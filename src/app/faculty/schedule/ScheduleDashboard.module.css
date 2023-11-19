@@ -30,21 +30,21 @@
 .todayButton {
   background-color: #fafafa;
   color: #ffffff;
-  border: 1px solid rgb(29 78 216);
+  border: 1px solid #0577fb;
   padding: 3px;
   border-radius: 5px;
   align-items: center;
   justify-content: center;
   display: flex;
   font-family: "Poppins";
-  background-color: rgb(29 78 216);
+  background-color: #0577fb;
   font-size: 12px;
   cursor: pointer;
 }
 .todayButtonDisabled {
   background-color: #fafafa;
-  color: rgb(29 78 216);
-  border: 1px solid rgb(29 78 216);
+  color: #0577fb;
+  border: 1px solid #0577fb;
   padding: 3px;
   border-radius: 5px;
   align-items: center;
@@ -104,14 +104,14 @@
 }
 
 .selectedDateDiv {
-  background-color: rgb(29 78 216);
+  background-color: #0577fb;
   color: #ffffff;
 }
 
 .currentDateDiv {
   background-color: rgb(255, 255, 255);
-  color: rgb(29 78 216);
-  border: 1px solid rgb(29 78 216);
+  color: #0577fb;
+  border: 1px solid #0577fb;
 }
 
 .noClassContainer {

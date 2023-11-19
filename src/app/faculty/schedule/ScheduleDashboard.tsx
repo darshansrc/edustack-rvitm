@@ -17,6 +17,7 @@ import { auth } from "@/lib/firebase-config";
 import TextArea from "antd/es/input/TextArea";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { FaPlus } from "react-icons/fa6";
 
 interface ClassSubjectPair {
   branch: string;
@@ -519,44 +520,48 @@ const ScheduleDashboard = () => {
                       {event?.classDescription}
                     </div>
                   )}
+                  <div className="flex flex-row gap-2 max-w-[70%] my-2">
+                    {event &&
+                      event.selectedClassName &&
+                      event.selectedSubject &&
+                      event.date &&
+                      event.startTime &&
+                      event.endTime && (
+                        <Button type="primary" size="small">
+                          <Link
+                            href={{
+                              pathname: "/faculty/attendance/attendance-form",
+                              query: {
+                                classId: event.selectedClassName,
+                                subjectCode: event.selectedSubject,
+                                classDate: dayjs(event.date).format(
+                                  "YYYY-MM-DD"
+                                ),
+                                classStartTime: fullformatTime(event.startTime),
+                                classEndTime: fullformatTime(event.endTime),
+                              },
+                            }}
+                          >
+                            Mark Attendance
+                          </Link>
+                        </Button>
+                      )}
 
-                  {event &&
-                    event.selectedClassName &&
-                    event.selectedSubject &&
-                    event.date &&
-                    event.startTime &&
-                    event.endTime && (
-                      <Link
-                        href={{
-                          pathname: "/faculty/attendance/attendance-form",
-                          query: {
-                            classId: event.selectedClassName,
-                            subjectCode: event.selectedSubject,
-                            classDate: dayjs(event.date).format("YYYY-MM-DD"),
-                            classStartTime: fullformatTime(event.startTime),
-                            classEndTime: fullformatTime(event.endTime),
-                          },
-                        }}
-                        className="bg-blue-500 px-2 text-white border border-blue-600 p-1 rounded flex items-center justify-center font-poppins text-xs cursor-pointer max-w-[100px]"
+                    <Button
+                      size="small"
+                      className="border border-solid border-red-500 text-red-500"
+                    >
+                      <Popconfirm
+                        title="Delete Schedule"
+                        description="Are you sure to delete this Schedule?"
+                        onConfirm={() => handleDeleteSession(index)}
+                        okText="Yes"
+                        cancelText="No"
                       >
-                        Mark Attendance
-                      </Link>
-                    )}
-                </div>
-
-                <div className="top-[35%] right-3 absolute">
-                  <Popconfirm
-                    title="Delete the task"
-                    description="Are you sure to delete this task?"
-                    onConfirm={() => handleDeleteSession(index)}
-                    okText="Yes"
-                    cancelText="No"
-                  >
-                    <TiDeleteOutline
-                      size={20}
-                      className="text-red-500 cursor-pointer"
-                    />
-                  </Popconfirm>
+                        Delete
+                      </Popconfirm>
+                    </Button>
+                  </div>
                 </div>
               </Timeline.Content>
             </Timeline.Item>
@@ -572,7 +577,7 @@ const ScheduleDashboard = () => {
         <div className={styles.scheduleContainer}>
           <div className={styles.schedulePage}>
             <div className="mt-14 md:mt-0">
-              <div className="font-poppins pl-4 pt-2 pb-4 font-[400] text-blue-600 text-[20px]">
+              <div className="md:block hidden font-poppins pl-4 pt-2 pb-4 font-[400] text-[#0577fb] text-[20px]">
                 Your Schedule
               </div>
               <div className={styles.selectedDateBar}>
@@ -587,9 +592,9 @@ const ScheduleDashboard = () => {
                 <div className="flex flex-row gap-2">
                   <div
                     onClick={() => setScheduleClassModalOpen(true)}
-                    className="bg-blue-600 px-2 text-white border border-blue-600 p-1 rounded flex items-center justify-center font-poppins text-xs cursor-pointer"
+                    className="bg-[#0577fb] px-2 text-white border border-[#0577fb] p-1 rounded flex items-center justify-center font-poppins text-xs cursor-pointer"
                   >
-                    Schedule
+                    <FaPlus /> New Schedule
                   </div>
 
                   <div

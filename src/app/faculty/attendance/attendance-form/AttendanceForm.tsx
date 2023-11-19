@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { Alert, Button, DatePicker, Input, Select } from "antd";
+import { Alert, Button, DatePicker, Input, Select, message } from "antd";
 import TopNavbar from "@/app/student/components/topnavbar/TopNavbar";
 import StudentCard from "./StudentCard";
 import { doc, getDoc } from "firebase/firestore";
@@ -87,6 +87,8 @@ const generateTimeOptions = (): TimeOption[] => {
 const timeOptions = generateTimeOptions();
 
 const AttendanceForm = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [attendanceFormData, setAttendanceFormData] =
     useState<AttendanceFormData>({
       classId: "",
@@ -575,7 +577,10 @@ const AttendanceForm = () => {
 
       if (res.ok) {
         setIsDataRecorded(true);
-        console.log("Form data submitted successfully");
+        messageApi.open({
+          type: "success",
+          content: "Attendance recorded Successfully",
+        });
         setConfirmLoading(false);
         setFormStep(3);
       }
@@ -1091,6 +1096,7 @@ const AttendanceForm = () => {
 
   return (
     <>
+      {contextHolder}
       {formStep === 1 && stepOne()}
       {formStep === 2 && stepTwo()}
       {formStep === 3 && stepThree()}
