@@ -26,9 +26,6 @@ function convertTo12HourFormat(time) {
   });
 }
 
-const formattedTime = convertTo12HourFormat("2023-11-15T04:30:00.000Z");
-console.log(formattedTime);
-
 const batchOptions = [
   { value: "1", label: "Batch 1" },
   { value: "2", label: "Batch 2" },
@@ -95,44 +92,45 @@ const AttendanceTable = () => {
     getSubjectData();
   }, [classId, subjectCode]);
 
-  useEffect(() => {
-    async function fetchAttendanceData() {
-      try {
-        if (classId && subjectCode) {
-          const attendanceRef = collection(
-            db,
-            "database",
-            classId,
-            "attendance",
-            subjectSemester + "SEM",
-            subjectCode
+  async function fetchAttendanceData() {
+    try {
+      if (classId && subjectCode) {
+        const attendanceRef = collection(
+          db,
+          "database",
+          classId,
+          "attendance",
+          subjectSemester + "SEM",
+          subjectCode
+        );
+
+        const snapshot = await getDocs(attendanceRef);
+        const attendanceDocs = snapshot.docs.map((doc) => doc.data());
+
+        // Filter data based on the selected date range
+        const filteredData = attendanceDocs.filter((data) => {
+          const classDate = new Date(data.classDate);
+          return (
+            (!fromDate || classDate >= fromDate) &&
+            (!toDate || classDate <= toDate)
           );
+        });
 
-          const snapshot = await getDocs(attendanceRef);
-          const attendanceDocs = snapshot.docs.map((doc) => doc.data());
+        const attendanceDoc = labBatch
+          ? filteredData.filter((data) => data.labBatch === labBatch)
+          : filteredData;
 
-          // Filter data based on the selected date range
-          const filteredData = attendanceDocs.filter((data) => {
-            const classDate = new Date(data.classDate);
-            return (
-              (!fromDate || classDate >= fromDate) &&
-              (!toDate || classDate <= toDate)
-            );
-          });
-
-          const attendanceDoc = labBatch
-            ? filteredData.filter((data) => data.labBatch === labBatch)
-            : filteredData;
-
-          setAttendanceData(attendanceDoc);
-        }
-      } catch (error) {
-        console.error("Error fetching attendance data from Firestore", error);
+        setAttendanceData(attendanceDoc);
       }
+    } catch (error) {
+      console.error("Error fetching attendance data from Firestore", error);
     }
+  }
 
+  useEffect(() => {
     fetchAttendanceData();
   }, [classId, labBatch, subjectCode, fromDate, toDate]);
+
   useEffect(() => {
     const fetchClassSubjectPairs = async () => {
       try {
@@ -507,7 +505,7 @@ const AttendanceTable = () => {
           style={{
             boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
           }}
-          className="flex w-[95%] flex-wrap items-end justify-around max-md:justify-left p-3 rounded-md border border-solid border-gray-100 mt-10 max-md:mt-[60px]  mb-7"
+          className="flex w-[95%] gap-2 flex-wrap items-end justify-left max-md:justify-left p-3 rounded-md border border-solid border-gray-100 mt-10 max-md:mt-[60px]  mb-7"
         >
           <div className="w-[20%] max-md:w-[30%]">
             <p className=" font-semibold ">Class</p>
@@ -653,10 +651,9 @@ const AttendanceTable = () => {
               </Select>
             </div> */}
             <Button
-              className=" mt-6 ml-8 max-md:ml-5 max-[325px]:ml-2"
+              className=" my-2 ml-8 max-md:ml-5 max-[325px]:ml-2"
               type="primary"
               onClick={handleExportCSV}
-              // style={{ marginBottom: 16 }}
             >
               Export to CSV
             </Button>
@@ -668,7 +665,7 @@ const AttendanceTable = () => {
               target="_blank"
             />
           </div>
-          {attendanceData && (
+          {
             <div className=" w-[80vw] overflow-x-auto overflow-y-auto">
               <Table
                 columns={columns}
@@ -679,7 +676,7 @@ const AttendanceTable = () => {
                 pagination={false}
               />
             </div>
-          )}
+          }
         </div>
       </div>
     </>
