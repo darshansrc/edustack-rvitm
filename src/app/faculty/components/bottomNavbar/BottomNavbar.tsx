@@ -135,7 +135,9 @@ const BottomNavbar = () => {
       <Link href="/faculty/marks-entry">
         <div
           className={
-            pathname.endsWith("/grades") ? styles.navItemActive : styles.navItem
+            pathname.endsWith("/marks-entry")
+              ? styles.navItemActive
+              : styles.navItem
           }
         >
           <i>

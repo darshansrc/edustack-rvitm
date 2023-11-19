@@ -358,6 +358,20 @@ const AttendanceForm = () => {
     getSubjectData();
   }, [classId, subjectCode, isParamsPresent]);
 
+  useEffect(() => {
+    try {
+      const storedClassSubjectPairListString = localStorage.getItem(
+        "classSubjectPairList"
+      );
+      if (storedClassSubjectPairListString !== null) {
+        const storedList = JSON.parse(storedClassSubjectPairListString);
+        setClassSubjectPairList(storedList);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
   function setAllDefaultAttendance() {
     setAttendance((prevAttendance) => {
       return prevAttendance.map((student) => {

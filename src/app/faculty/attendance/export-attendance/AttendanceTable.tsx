@@ -95,6 +95,37 @@ const AttendanceTable = () => {
     getSubjectData();
   }, [classId, subjectCode]);
 
+  useEffect(() => {
+    try {
+      const storedClassSubjectPairListString = localStorage.getItem(
+        "classSubjectPairList"
+      );
+      if (storedClassSubjectPairListString !== null) {
+        const storedList = JSON.parse(storedClassSubjectPairListString);
+        setClassSubjectPairList(storedList);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchClassSubjectPairs = async () => {
+      try {
+        const res = await fetch(
+          `${window.location.origin}/api/faculty/attendance`,
+          {}
+        );
+        const fetchedData = await res.json();
+        setClassSubjectPairList(fetchedData?.classSubjectPairList || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchClassSubjectPairs();
+  }, []);
+
   async function fetchAttendanceData(classId, subjectCode, subjectSemester) {
     try {
       if (classId && subjectCode) {
@@ -133,23 +164,6 @@ const AttendanceTable = () => {
   useEffect(() => {
     fetchAttendanceData(classId, subjectCode, subjectSemester);
   }, [classId, labBatch, subjectCode, fromDate, toDate]);
-
-  useEffect(() => {
-    const fetchClassSubjectPairs = async () => {
-      try {
-        const res = await fetch(
-          `${window.location.origin}/api/faculty/attendance`,
-          {}
-        );
-        const fetchedData = await res.json();
-        setClassSubjectPairList(fetchedData?.classSubjectPairList || []);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchClassSubjectPairs();
-  }, []);
 
   const uniqueClassOptions = classSubjectPairList.reduce((acc, pair) => {
     if (!acc[pair.className]) {

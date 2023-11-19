@@ -214,6 +214,7 @@ const AttendanceDashboard = () => {
           "classSubjectPairList",
           JSON.stringify(fetchedData?.classSubjectPairList)
         );
+        setClassSubjectPairList(fetchedData?.classSubjectPairList || []);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
