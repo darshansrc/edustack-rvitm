@@ -1,17 +1,17 @@
-'use client';
-import React, {  useState } from 'react'
-import Navbar from '../components/navbar/Navbar'
-import styles1 from '../components/navbar/Navbar.module.css'
-import TopNavbar from '../components/topnavbar/TopNavbar'
-import styles from '../course/Course.module.css'
+"use client";
+import React, { useState } from "react";
+import Navbar from "../components/navbar/Navbar";
+import styles1 from "../components/navbar/Navbar.module.css";
+import TopNavbar from "../components/topnavbar/TopNavbar";
+import styles from "../course/Course.module.css";
 
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
-import InternalAssessment from './internal-assessment/InternalAssessment';
-import CgpaCalculator from './cgpa/CgpaCalculator';
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
+import InternalAssessment from "./internal-assessment/InternalAssessment";
+import CgpaCalculator from "./cgpa/CgpaCalculator";
 
 interface StyledTabProps {
   label: string;
@@ -23,104 +23,85 @@ interface StyledTabsProps {
   onChange: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
-
-const Page =({searchParams, } : {
+const Page = ({
+  searchParams,
+}: {
   searchParams: {
-    tab: any
-  }
+    tab: any;
+  };
 }) => {
- 
-  
-  const currentTab = parseInt(searchParams.tab)
+  const currentTab = parseInt(searchParams.tab);
 
-  
-  const [selectedTab, setSelectedTab] = useState( currentTab ?  currentTab : 0);
+  const [selectedTab, setSelectedTab] = useState(currentTab ? currentTab : 0);
 
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
 
+  const StyledTabs = styled((props: StyledTabsProps) => (
+    <Tabs
+      {...props}
+      variant={window.innerWidth > 768 ? "standard" : "fullWidth"}
+      scrollButtons="auto"
+      TabIndicatorProps={{
+        children: <span className="MuiTabs-indicatorSpan" />,
+      }}
+    />
+  ))({
+    "& .MuiTabs-indicator": {
+      display: "flex",
+      justifyContent: "center",
+      backgroundColor: "transparent",
+    },
+    "& .MuiTabs-indicatorSpan": {
+      width: "100%",
+      backgroundColor: "#0577fb",
+    },
+    width: "100%",
+  });
 
-const StyledTabs = styled((props: StyledTabsProps) => (
-  <Tabs
-    {...props}
-    variant={window.innerWidth > 768 ? 'standard' : 'fullWidth'}
-    scrollButtons="auto"
-    TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
-  />
-))({
-  '& .MuiTabs-indicator': {
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  '& .MuiTabs-indicatorSpan': {
-    width: '100%',
-    backgroundColor: 'rgb(29 78 216)',
-  },
-  width: '100%',
-})
+  const StyledTab = styled((props: StyledTabProps) => (
+    <Tab disableRipple {...props} />
+  ))(({ theme }) => ({
+    textTransform: "none",
+    fontFamily: "Poppins",
+    fontWeight: "400",
+    fontSize: theme.typography.pxToRem(14),
+    color: "#666666",
+    "&.Mui-selected": {
+      color: "#0577fb",
+    },
+    "&.Mui-focusVisible": {
+      backgroundColor: "#666666",
+    },
+  }));
 
-
-const StyledTab = styled((props: StyledTabProps) => (
-  <Tab disableRipple {...props} />
-))(({ theme }) => ({
-  textTransform: 'none',
-  fontFamily: 'Poppins',
-  fontWeight: '400',
-  fontSize: theme.typography.pxToRem(14),
-  color: '#666666',
-  '&.Mui-selected': {
-    color: 'rgb(29 78 216)',
-  },
-  '&.Mui-focusVisible': {
-    backgroundColor: '#666666',
-  },
-}));
-
-const TabPanel = ({ value, index, children }) => {
-  return (
-    <div hidden={value !== index}>
-      {value === index && children}
-    </div>
-  );
-};
-
-
+  const TabPanel = ({ value, index, children }) => {
+    return <div hidden={value !== index}>{value === index && children}</div>;
+  };
 
   return (
     <>
-    <TopNavbar name={'Grades'}/>
+      <TopNavbar name={"Grades"} />
 
-    <div className={styles.courseNavbar}>
-    <StyledTabs
-        value={selectedTab}
-        onChange={handleTabChange}
-      >
-        <StyledTab label="IA Marks" />
-        <StyledTab label="SEE & CGPA" />
-      </StyledTabs>
+      <div className={styles.courseNavbar}>
+        <StyledTabs value={selectedTab} onChange={handleTabChange}>
+          <StyledTab label="IA Marks" />
+          <StyledTab label="SEE & CGPA" />
+        </StyledTabs>
+      </div>
 
-    </div>
-        
-    <div className={styles1.pageContainer} style={{paddingTop: '110px'}}>
-    <TabPanel value={selectedTab} index={0}>
-        <InternalAssessment/>
+      <div className={styles1.pageContainer} style={{ paddingTop: "110px" }}>
+        <TabPanel value={selectedTab} index={0}>
+          <InternalAssessment />
+        </TabPanel>
 
-      </TabPanel>
-
-      <TabPanel value={selectedTab} index={1}>
-
-        <CgpaCalculator/> 
-
-      </TabPanel>
-
-
-
-
-    </div>
+        <TabPanel value={selectedTab} index={1}>
+          <CgpaCalculator />
+        </TabPanel>
+      </div>
     </>
-  )
-}
+  );
+};
 
-export default Page
+export default Page;

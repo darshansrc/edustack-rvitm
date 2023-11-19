@@ -1163,6 +1163,15 @@ const AttendanceDashboard = () => {
                               {" Present"}
                             </div>
 
+                            {sessionObj.data.labBatch && (
+                              <div className="text-slate-500 font-[Poppins] text-[12px] ">
+                                <span className=" font-[Poppins] text-[12px] font-semibold">
+                                  Lab Batch:{" "}
+                                </span>
+                                {sessionObj.data.labBatch}
+                              </div>
+                            )}
+
                             <div className="text-slate-500 font-[Poppins] text-[12px] ">
                               <span className=" font-[Poppins] text-[12px] font-semibold">
                                 Recorded by:{" "}

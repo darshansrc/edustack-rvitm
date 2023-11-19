@@ -84,7 +84,7 @@ const StyledTabs = styled((props: StyledTabsProps) => (
   },
   "& .MuiTabs-indicatorSpan": {
     width: "100%",
-    backgroundColor: "rgb(29 78 216)",
+    backgroundColor: "#0577fb",
   },
 });
 
@@ -97,7 +97,7 @@ const StyledTab = styled((props: StyledTabProps) => (
   fontSize: theme.typography.pxToRem(12),
   color: "#666666",
   "&.Mui-selected": {
-    color: "rgb(29 78 216)",
+    color: "#0577fb",
   },
   "&.Mui-focusVisible": {
     backgroundColor: "#666666",
@@ -696,7 +696,7 @@ function StudentAttendanceTable() {
                                 fontFamily: "Poppins",
                                 fontSize: "14px",
                                 fontWeight: "500",
-                                color: "rgb(29 78 216)",
+                                color: "#0577fb",
                                 marginLeft: "10px",
                               }}
                             >

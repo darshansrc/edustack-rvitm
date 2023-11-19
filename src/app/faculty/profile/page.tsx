@@ -336,7 +336,7 @@ const StudentProfile = () => {
             <button
               className={styles.openNavbarButton}
               onClick={handlePhotoUpload}
-              style={{ color: "rgb(29 78 216)", margin: "0", padding: "10px" }}
+              style={{ color: "#0577fb", margin: "0", padding: "10px" }}
             >
               Upload
             </button>

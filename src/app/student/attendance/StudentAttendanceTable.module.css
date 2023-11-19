@@ -1,43 +1,38 @@
-.attendanceCard{
-    padding: 10px;
-    background-color: rgb(255, 255, 255);
-    display: flex;
-    align-items: center;
-    border-radius: 10px;
-    margin-top: 20px;
-    box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04);
-    transition: 0.2s;
-  }
-
-  .contentContainer {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    transition: 0.2s;
-    
-  }  
-
-  .container{
-
-    width: 600px;
-    max-width: 95vw;
-    transition: 0.2s;
-  }
-
-
-.attendanceTable{
-  background-color: white;
-  box-shadow: 0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04);
-  border-radius:10px;
+.attendanceCard {
   padding: 10px;
-  font-family: 'Poppins';
+  background-color: rgb(255, 255, 255);
+  display: flex;
   align-items: center;
+  border-radius: 10px;
+  margin-top: 20px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
   transition: 0.2s;
-
-  
 }
 
-.tableHead{
+.contentContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  transition: 0.2s;
+}
+
+.container {
+  width: 600px;
+  max-width: 95vw;
+  transition: 0.2s;
+}
+
+.attendanceTable {
+  background-color: white;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
+  border-radius: 10px;
+  padding: 10px;
+  font-family: "Poppins";
+  align-items: center;
+  transition: 0.2s;
+}
+
+.tableHead {
   text-align: center;
   background-color: rgb(255, 255, 255);
   font-size: 12px;
@@ -48,32 +43,31 @@
   transition: 0.2s;
 }
 
-.tableData{
+.tableData {
   text-align: center;
   padding: 5px;
   border-bottom: 1px solid #f3f3f3;
-  font-family: 'Poppins';
+  font-family: "Poppins";
   font-size: 11px;
   transition: 0.2s;
 }
 
-.tableSubject{
-   padding: 5px;
-   padding-left: 10px;
-   text-align: left;
-   border-bottom: 1px solid #f3f3f3;
-   font-family: 'Poppins';
-   font-size: 11px;
-   width: 40vw;
-   max-width: 40vw;
-   transition: 0.2s;
-
+.tableSubject {
+  padding: 5px;
+  padding-left: 10px;
+  text-align: left;
+  border-bottom: 1px solid #f3f3f3;
+  font-family: "Poppins";
+  font-size: 11px;
+  width: 40vw;
+  max-width: 40vw;
+  transition: 0.2s;
 }
 
 .cardContainer {
   display: flex;
   flex-direction: column;
-  
+
   margin-bottom: 12px;
   width: 100%;
 }
@@ -91,7 +85,7 @@
 .circle {
   width: 10px;
   height: 10px;
-  background-color: #1B4DFF;
+  background-color: #0577fb;
   border-radius: 50%;
   transition: 0.2s;
 }
@@ -100,7 +94,7 @@
   width: 2px;
   min-width: 2px;
   height: 100%;
-  background-color: #1B4DFF;
+  background-color: #0577fb;
   margin-left: 15px;
   transition: 0.2s;
 }
@@ -110,15 +104,12 @@
   margin-left: 10px;
 }
 
-
-
-.lineCard{
+.lineCard {
   display: flex;
   flex-direction: row;
 }
 
-
-.card{
+.card {
   margin: 10px;
   width: 100%;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04);
@@ -128,20 +119,17 @@
   transition: 0.2s;
 }
 
-
-.pageContainer{
+.pageContainer {
   background-color: #fafafa;
   min-height: 100vh;
   padding-bottom: 60px;
 }
 
-
-
-    @media (max-width: 768px) {
-    
-      .pageContainer{
-          background-color: #fafafa;
-          min-height: 100vh;
-          padding-bottom: 60px;
-          padding-top: 55px;
-      } }
+@media (max-width: 768px) {
+  .pageContainer {
+    background-color: #fafafa;
+    min-height: 100vh;
+    padding-bottom: 60px;
+    padding-top: 55px;
+  }
+}

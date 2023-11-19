@@ -1,142 +1,130 @@
-.scheduleContainer{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-
+.scheduleContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .schedulePage {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-    width: 550px;
-    max-width: 95vw;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  width: 550px;
+  max-width: 95vw;
 }
 
-  .button {
-    background-color: #fafafa;
-    color: #fff;
-    border: none;
-    padding: 3px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 0px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    font-family: 'Poppins';
-    color: #333;
-  }
-  
-  .todayButton {
-    background-color: #fafafa;
-    color: #ffffff;
-    border: 1px solid rgb(29 78 216);
-    padding: 3px;
-    border-radius: 5px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    font-family: 'Poppins';
-    background-color: rgb(29 78 216);
-    font-size: 12px;
-    cursor: pointer;
-  }
-  .todayButtonDisabled{
-    background-color: #fafafa;
-    color: rgb(29 78 216);
-    border: 1px solid rgb(29 78 216);
-    padding: 3px;
-    border-radius: 5px;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    font-family: 'Poppins';
-    background-color: rgb(255, 255, 255);
-    font-size: 12px;
-    cursor: pointer;
-  }
+.button {
+  background-color: #fafafa;
+  color: #fff;
+  border: none;
+  padding: 3px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-family: "Poppins";
+  color: #333;
+}
 
-  .selectedDateBar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 10px 0;
-  }
-  
+.todayButton {
+  background-color: #fafafa;
+  color: #ffffff;
+  border: 1px solid #0577fb;
+  padding: 3px;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-family: "Poppins";
+  background-color: #0577fb;
+  font-size: 12px;
+  cursor: pointer;
+}
+.todayButtonDisabled {
+  background-color: #fafafa;
+  color: #0577fb;
+  border: 1px solid #0577fb;
+  padding: 3px;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-family: "Poppins";
+  background-color: rgb(255, 255, 255);
+  font-size: 12px;
+  cursor: pointer;
+}
 
-  .selectedDate {
-    font-size: 16px;
-    font-weight: 500;
-    font-family: 'Poppins';
-    color: #333;
-    padding-left: 15px;
-  }
-  
-  .dateGrid {
-    display: flex;
-    padding: 10px 0;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-  
-  .dateContainer {
+.selectedDateBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 0;
+}
 
-    display: flex;
-    align-items: center;
-    text-align: center;
-    
-  }
-  
-  .date {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-    padding: 5px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-    width: 10vw;
-    max-width: 50px;
-  }
-  
-  .day {
-    font-size: 12px;
-    margin-top: 5px;
+.selectedDate {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: "Poppins";
+  color: #333;
+  padding-left: 15px;
+}
 
-  }
-  
-  .selectedDateDiv{
-    background-color: rgb(29 78 216);
-    color: #ffffff;
-    
-  }
+.dateGrid {
+  display: flex;
+  padding: 10px 0;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 
-  .currentDateDiv{
-    background-color: rgb(255, 255, 255);
-    color: rgb(29 78 216);
-    border: 1px solid rgb(29 78 216);
-  }
+.dateContainer {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
 
-  
+.date {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  padding: 5px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  width: 10vw;
+  max-width: 50px;
+}
 
+.day {
+  font-size: 12px;
+  margin-top: 5px;
+}
 
-  .noClassContainer{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 30px;
+.selectedDateDiv {
+  background-color: #0577fb;
+  color: #ffffff;
+}
 
-    border-radius: 10px;
-    width: 90%;
-    background-color: white;
-    max-width: 550px;
-    height: calc(100vh - 350px);
-    border: 1px dashed #00000037;
-  }
+.currentDateDiv {
+  background-color: rgb(255, 255, 255);
+  color: #0577fb;
+  border: 1px solid #0577fb;
+}
 
+.noClassContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
 
-
+  border-radius: 10px;
+  width: 90%;
+  background-color: white;
+  max-width: 550px;
+  height: calc(100vh - 350px);
+  border: 1px dashed #00000037;
+}

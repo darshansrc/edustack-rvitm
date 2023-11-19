@@ -152,7 +152,7 @@ const TopNavbar = ({ name }) => {
             <Link href={"/student/profile"} shallow={true}>
               <div
                 className={styles.openNavbarButton}
-                style={{ marginTop: "40px", color: "rgb(29 78 216)" }}
+                style={{ marginTop: "40px", color: "#0577fb" }}
               >
                 {userEmail ? (
                   userEmail
@@ -216,7 +216,7 @@ const TopNavbar = ({ name }) => {
           <div
             className={styles.openNavbarButton}
             onClick={handleClose}
-            style={{ color: "rgb(29 78 216)", margin: "0", padding: "10px" }}
+            style={{ color: "#0577fb", margin: "0", padding: "10px" }}
           >
             Cancel
           </div>
