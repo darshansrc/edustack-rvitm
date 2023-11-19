@@ -23,10 +23,28 @@ interface StyledTabsProps {
   onChange: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
+
+const Page =({searchParams, } : {
+  searchParams: {
+    tab: any
+  }
+}) => {
+ 
+  
+  const currentTab = parseInt(searchParams.tab)
+
+  
+  const [selectedTab, setSelectedTab] = useState( currentTab ?  currentTab : 0);
+
+  const handleTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
+  };
+
+
 const StyledTabs = styled((props: StyledTabsProps) => (
   <Tabs
     {...props}
-    variant="fullWidth"
+    variant={window.innerWidth > 768 ? 'standard' : 'fullWidth'}
     scrollButtons="auto"
     TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
   />
@@ -69,28 +87,11 @@ const TabPanel = ({ value, index, children }) => {
 };
 
 
-const Page =({searchParams, } : {
-  searchParams: {
-    tab: any
-  }
-}) => {
- 
-  
-  const currentTab = parseInt(searchParams.tab)
-
-  
-  const [selectedTab, setSelectedTab] = useState( currentTab ?  currentTab : 0);
-
-  const handleTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
-  };
-
-
 
   return (
     <>
     <TopNavbar name={'Grades'}/>
-    <Navbar/>
+
     <div className={styles.courseNavbar}>
     <StyledTabs
         value={selectedTab}

@@ -1,5 +1,5 @@
 'use client';
-import React, {  useState } from 'react'
+import React, {  useEffect, useState } from 'react'
 import Navbar from '../components/navbar/Navbar'
 import styles1 from '../components/navbar/Navbar.module.css'
 import TopNavbar from '../components/topnavbar/TopNavbar'
@@ -24,50 +24,8 @@ interface StyledTabsProps {
   onChange: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
-const StyledTabs = styled((props: StyledTabsProps) => (
-  <Tabs
-    {...props}
-    variant="fullWidth"
-    scrollButtons="auto"
-    TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
-  />
-))({
-  '& .MuiTabs-indicator': {
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  '& .MuiTabs-indicatorSpan': {
-    width: '100%',
-    backgroundColor: 'rgb(29 78 216)',
-  },
-  width: '100%',
-})
 
 
-const StyledTab = styled((props: StyledTabProps) => (
-  <Tab disableRipple {...props} />
-))(({ theme }) => ({
-  textTransform: 'none',
-  fontFamily: 'Poppins',
-  fontWeight: '400',
-  fontSize: theme.typography.pxToRem(14),
-  color: '#666666',
-  '&.Mui-selected': {
-    color: 'rgb(29 78 216)',
-  },
-  '&.Mui-focusVisible': {
-    backgroundColor: '#666666',
-  },
-}));
-
-const TabPanel = ({ value, index, children }) => {
-  return (
-    <div hidden={value !== index}>
-      {value === index && children}
-    </div>
-  );
-};
 
 
 const Page = ({searchParams, } : {
@@ -75,6 +33,54 @@ const Page = ({searchParams, } : {
     tab: any
   }
 }) => {
+
+  const StyledTabs = styled((props: StyledTabsProps) => (
+    <Tabs
+      {...props}
+      variant={window.innerWidth > 768 ? 'standard' : 'fullWidth'}
+      scrollButtons="auto"
+      TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+    />
+  ))({
+    '& .MuiTabs-indicator': {
+      display: 'flex',
+      justifyContent: 'center',
+      backgroundColor: 'transparent',
+    },
+    '& .MuiTabs-indicatorSpan': {
+      width: '100%',
+      backgroundColor: 'rgb(29 78 216)',
+    },
+    width: '100%',
+  });
+
+
+
+  const StyledTab = styled((props: StyledTabProps) => (
+    <Tab disableRipple {...props} />
+  ))(({ theme }) => ({
+    textTransform: 'none',
+    fontFamily: 'Poppins',
+    fontWeight: '400',
+    fontSize: theme.typography.pxToRem(14),
+    color: '#666666',
+    '&.Mui-selected': {
+      color: 'rgb(29 78 216)',
+    },
+    '&.Mui-focusVisible': {
+      backgroundColor: '#666666',
+    },
+  }));
+  
+  const TabPanel = ({ value, index, children }) => {
+    return (
+      <div hidden={value !== index}>
+        {value === index && children}
+      </div>
+    );
+  };
+  
+  
  
   
   const currentTab = parseInt(searchParams.tab)
@@ -91,7 +97,7 @@ const Page = ({searchParams, } : {
   return (
     <>
     <TopNavbar name={'Course'}/>
-    <Navbar/>
+
     <div className={styles.courseNavbar}>
     <div className={styles.desktopNav}>
     <StyledTabs

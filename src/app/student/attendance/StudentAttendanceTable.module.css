@@ -135,13 +135,6 @@
   padding-bottom: 60px;
 }
 
-@media (min-width: 768px) {
-
-
-      .pageContainer{
-          margin-left: 80px;
-      }
-    }
 
 
     @media (max-width: 768px) {

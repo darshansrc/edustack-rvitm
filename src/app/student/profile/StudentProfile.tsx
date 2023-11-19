@@ -159,7 +159,7 @@ const StudentProfile = () => {
 
 
   return (
-    <><div className='flex flex-col items-center bg-neutral-50'>
+    <><div className='flex flex-col items-center '>
           <div className='w-[95vw] max-w-xl flex flex-col  items-center border border-solid rounded-md bg-white border-slate-300 mt-4'>
               <div className='relative flex flex-row justify-between items-center'>
                 {

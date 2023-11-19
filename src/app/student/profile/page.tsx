@@ -8,7 +8,7 @@ const page = () => {
   return (
     <>
     <TopNavbar name='Profile'/>
-    <Navbar/>
+
     <div className={styles.pageContainer}>
         <StudentProfile />
     </div>
