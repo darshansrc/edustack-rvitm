@@ -257,7 +257,7 @@ const AttendanceTable = () => {
             style={{
               width: 90,
             }}
-            className="bg-primary"
+            className="bg-[#0577fb]"
           >
             Search
           </Button>
@@ -567,7 +567,7 @@ const AttendanceTable = () => {
           )}
           {/* <button
             type="submit"
-            className=" w-[15%] max-md:w-[40%] inline-flex items-center py-2 px-3 h-[75%] mt-4 text-sm font-medium text-white bg-primary-500 rounded-lg border border-primary-300 hover:bg-primary-400 focus:ring-4 focus:outline-none focus:ring-primary-300"
+            className=" w-[15%] max-md:w-[40%] inline-flex items-center py-2 px-3 h-[75%] mt-4 text-sm font-medium text-white bg-[#0577fb]-500 rounded-lg border border-primary-300 hover:bg-[#0577fb]-400 focus:ring-4 focus:outline-none focus:ring-primary-300"
           >
             <svg
               className="w-4 h-4 me-2"

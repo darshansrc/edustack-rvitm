@@ -191,7 +191,7 @@ const StudentProfile = () => {
           </div>
 
           <div className="flex flex-col  p-4 font-sans  my-4 w-11/12 border border-dashed rounded-md bg-white border-slate-300 mt-2">
-            <p className="text-primary font-bold text-xs pb-1">Your Name</p>
+            <p className="text-[#0577fb] font-bold text-xs pb-1">Your Name</p>
             <p className="text-sm font-medium text-neutral-700 font-[Poppins] pb-4">
               {dataFetched ? (
                 studentDetails?.studentName
@@ -204,7 +204,7 @@ const StudentProfile = () => {
               )}
             </p>
 
-            <p className="text-primary font-bold text-xs pb-1">Your USN</p>
+            <p className="text-[#0577fb] font-bold text-xs pb-1">Your USN</p>
             <p className="text-sm font-medium text-neutral-700 font-[Poppins] pb-4">
               {dataFetched ? (
                 studentDetails?.studentUSN
@@ -217,7 +217,7 @@ const StudentProfile = () => {
               )}
             </p>
 
-            <p className="text-primary font-bold text-xs pb-1">Your Email</p>
+            <p className="text-[#0577fb] font-bold text-xs pb-1">Your Email</p>
             <p className="text-sm font-medium text-neutral-700 font-[Poppins] pb-4">
               {dataFetched && studentDetails.studentEmail ? (
                 studentDetails.studentEmail
@@ -230,7 +230,7 @@ const StudentProfile = () => {
               )}
             </p>
 
-            <p className="text-primary font-bold text-xs pb-1">Your Class</p>
+            <p className="text-[#0577fb] font-bold text-xs pb-1">Your Class</p>
             <p className="text-sm font-medium text-neutral-700 font-[Poppins] pb-4">
               {dataFetched ? (
                 studentDetails.className +
@@ -246,7 +246,7 @@ const StudentProfile = () => {
               )}
             </p>
 
-            <p className="text-primary font-bold text-xs pb-1">Lab Batch</p>
+            <p className="text-[#0577fb] font-bold text-xs pb-1">Lab Batch</p>
             <p className="text-sm font-medium text-neutral-700 font-[Poppins] pb-4">
               {dataFetched ? (
                 "B-" + studentDetails.studentLabBatch

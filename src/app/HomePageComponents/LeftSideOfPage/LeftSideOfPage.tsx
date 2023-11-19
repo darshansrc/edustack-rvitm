@@ -9,7 +9,7 @@ const LeftSideOfPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.5, delay: 2 }}
-          className="font-extrabold text-9xl text-primary"
+          className="font-extrabold text-9xl text-[#0577fb]"
           style={{
             WebkitTextStroke: "0.5px white",
             fontFamily: "poppins",

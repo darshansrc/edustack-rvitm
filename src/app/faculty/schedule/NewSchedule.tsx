@@ -427,7 +427,7 @@ const NewSchedule = () => {
 
             <button
               onClick={handleSubmit}
-              className="bg-primary w-full text-white rounded-lg mx-4 mt-4 mb-4 font-[Poppins] p-2 hover:bg-primary focus:outline-none focus:ring focus:ring-blue-300"
+              className="bg-[#0577fb] w-full text-white rounded-lg mx-4 mt-4 mb-4 font-[Poppins] p-2 hover:bg-[#0577fb] focus:outline-none focus:ring focus:ring-blue-300"
             >
               Submit
             </button>
@@ -460,7 +460,7 @@ const NewSchedule = () => {
           <div>
             <button
               onClick={clearState}
-              className="bg-primary w-full text-white rounded-lg  mt-4 mb-4 font-[Poppins] p-2 hover:bg-primary focus:outline-none focus:ring focus:ring-blue-300"
+              className="bg-[#0577fb] w-full text-white rounded-lg  mt-4 mb-4 font-[Poppins] p-2 hover:bg-[#0577fb] focus:outline-none focus:ring focus:ring-blue-300"
             >
               Schedule Another Class
             </button>
