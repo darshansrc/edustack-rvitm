@@ -495,6 +495,14 @@ const AttendanceDashboard = () => {
               : ""}{" "}
             {" Present"}
           </div>
+          {selectedClassData.labBatch && (
+            <div className="text-slate-500 font-[Poppins] text-[12px] ">
+              <span className="text-[#0577fb] font-[Poppins] text-[12px] font-semibold">
+                Lab Batch:{"B-"}
+              </span>
+              {selectedClassData.labBatch}
+            </div>
+          )}
           <div className="text-slate-500 font-[Poppins] text-[12px] ">
             <span className="text-[#0577fb] font-[Poppins] text-[12px] font-semibold">
               Taken by:{" "}
@@ -639,6 +647,14 @@ const AttendanceDashboard = () => {
               : ""}{" "}
             {" Present"}
           </div>
+          {selectedClassData.labBatch && (
+            <div className="text-slate-500 font-[Poppins] text-[12px] ">
+              <span className="text-[#0577fb] font-[Poppins] text-[12px] font-semibold">
+                Lab Batch:{"B-"}
+              </span>
+              {selectedClassData.labBatch}
+            </div>
+          )}
           <div className="text-slate-500 font-[Poppins] text-[12px] ">
             <span className="text-[#0577fb] font-[Poppins] text-[12px] font-semibold">
               Taken by:{" "}
@@ -953,7 +969,7 @@ const AttendanceDashboard = () => {
           </Link>
 
           <Alert
-            message="Welcome! Manage attendance, topics, and class details easily. Students can view their attendance on their dashboards."
+            message="Welcome! Manage attendance, Modules teached, Class topic and class details easily. Students can also view their attendance on their dashboards."
             type="info"
             showIcon
             className="my-3 md:hidden"
@@ -1166,7 +1182,7 @@ const AttendanceDashboard = () => {
                             {sessionObj.data.labBatch && (
                               <div className="text-slate-500 font-[Poppins] text-[12px] ">
                                 <span className=" font-[Poppins] text-[12px] font-semibold">
-                                  Lab Batch:{" "}
+                                  Lab Batch:{"B-"}
                                 </span>
                                 {sessionObj.data.labBatch}
                               </div>
