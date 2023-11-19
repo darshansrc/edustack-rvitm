@@ -1,60 +1,20 @@
-'use client';
-import React, { useEffect, useRef, useState } from 'react';
-import DonutChart from './DonutChart';
-import { Chart } from 'chart.js/auto';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import { AiOutlineRightCircle } from 'react-icons/ai';
-import AppBar from '@mui/material/AppBar';
-import { Tab as MyTab, Tabs as MyTabs, TabList as MyTabList, TabPanel as MyTabPanel } from 'react-tabs';
-import 'react-datepicker/dist/react-datepicker.css';
-import './StudentAttendanceTable.css';
-import { Box, Card, CardContent, Typography } from '@mui/material';
-import styles from './StudentAttendanceTable.module.css'
-import Skeleton from '@mui/material/Skeleton';
-import { BsCheckCircleFill, BsXCircleFill } from 'react-icons/bs'
-import { styled } from '@mui/material/styles';
-import { BiTime } from 'react-icons/bi';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/lib/firebase-config';
+"use client";
+import { db } from "@/lib/firebase-config";
+import { Select, DatePicker } from "antd";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import React, { useRef, useEffect, useState } from "react";
+import { SearchOutlined } from "@ant-design/icons";
+import { Button, Input, Space, Table } from "antd";
+import Highlighter from "react-highlight-words";
+import type { InputRef } from "antd";
+import type { ColumnType, ColumnsType } from "antd/es/table";
+import type { FilterConfirmProps } from "antd/es/table/interface";
 
-interface SubjectOption {
-  value: string;
-  label: string;
-  subjectType: string;
-}
+import { CSVLink } from "react-csv";
 
-interface AttendanceData {
-  slice: any;
-  attendance: { usn: string; Present: boolean }[];
-  date: string;
-  sessionTime: string;
-  presentCount: number;
-  absentCount: number;
-}
+import styles from "./AttendanceTable.module.css";
 
-interface StyledTabProps {
-  label: string;
-}
-
-interface StyledTabsProps {
-  children?: React.ReactNode;
-  value: number;
-  onChange: (event: React.SyntheticEvent, newValue: number) => void;
-}
-
-
-interface studentDetails {
-  studentName: string;
-  studentEmail: string;
-  studentID: string;
-  studentUSN: string;
-  studentLabBatch: string;
-  classSemester: string;
-  className: string;
-  uid: string;
-
-} 
+const { RangePicker } = DatePicker;
 
 function convertTo12HourFormat(time) {
   const date = new Date(time);
@@ -66,538 +26,664 @@ function convertTo12HourFormat(time) {
   });
 }
 
-const StyledTabs = styled((props: StyledTabsProps) => (
-  <Tabs
-    {...props}
-    variant="scrollable"
-    scrollButtons="auto"
-    TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
-  />
-))({
-  '& .MuiTabs-indicator': {
-    display: 'flex',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  '& .MuiTabs-indicatorSpan': {
-    width: '100%',
-    backgroundColor: 'rgb(29 78 216)',
-  },
-});
+const batchOptions = [
+  { value: "1", label: "Batch 1" },
+  { value: "2", label: "Batch 2" },
+  { value: "3", label: "Batch 3" },
+];
 
+const AttendanceTable = () => {
+  const [fromDate, setFromDate] = useState<any>(null);
+  const [toDate, setToDate] = useState<any>(null);
+  const [classSubjectPairList, setClassSubjectPairList] = useState<any>([]);
+  const [classId, setClassId] = useState<string>("");
+  const [subjectCode, setSubjectCode] = useState<string>("");
+  const [isLabSubject, setIsLabSubject] = useState<boolean>(false);
+  const [labBatch, setLabBatch] = useState<string>("");
+  const [subjectType, setSubjectType] = useState<string>("");
+  const [subjectName, setSubjectName] = useState<string>("");
+  const [subjectSemester, setSubjectSemester] = useState<string>("");
+  const [isSubjectElective, setIsSubjectElective] = useState<boolean>(false);
+  const [electiveStudentUSN, setElectiveStudentUSN] = useState<string[]>([]);
+  const [attendanceData, setAttendanceData] = useState<any>(null);
 
-const StyledTab = styled((props: StyledTabProps) => (
-  <Tab disableRipple {...props} />
-))(({ theme }) => ({
-  textTransform: 'none',
-  fontFamily: 'Poppins',
-  fontWeight: '500',
-  fontSize: theme.typography.pxToRem(12),
-  color: '#666666',
-  '&.Mui-selected': {
-    color: 'rgb(29 78 216)',
-  },
-  '&.Mui-focusVisible': {
-    backgroundColor: '#666666',
-  },
-}));
-
-// Hook Definitions
-function StudentAttendanceTable() {
-  const [value, setValue] = useState(0);
-
-  const [subjectOptions, setSubjectOptions] = useState<SubjectOption[]>([]);
-  const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
-  const [studentDetails, setStudentDetails] = useState<studentDetails>({
-    studentName: '',
-    studentEmail: '',
-    studentID: '',
-    studentUSN: '',
-    studentLabBatch: '',
-    classSemester: '',
-    className: '',
-    uid: '',
-  
-  });
-  const [dataFetched, setDataFetched] = useState(false);
-  const [user , setUser] = useState<any>(null);
-
-  // Function to handle tab changes
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef<any>(null);
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
   };
 
-  function getDayOfWeek(date) {
-    const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    return daysOfWeek[date.getDay()];
-  }
+  const csvLink = useRef<CSVLink | null>(null);
 
-                
-  const customComparator = (a, b) => {
-    const lastCharA = a.value.slice(-1);
-    const lastCharB =  b.value.slice(-1);
-    if (lastCharA < lastCharB) return -1;
-    if (lastCharA > lastCharB) return 1;
-    return 0;
+  const handleExportCSV = () => {
+    if (csvLink.current) {
+      csvLink.current.link.click();
+    }
   };
-
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
-      console.log("Auth", currentuser);
-      setUser(currentuser);
-      console.log(user);
-    });
+    const getSubjectData = async () => {
+      if (classId && subjectCode) {
+        const subjectCollectionRef = doc(
+          db,
+          "database",
+          classId,
+          "subjects",
+          subjectCode
+        );
+        const querySnapshot = await getDoc(subjectCollectionRef);
+        if (querySnapshot?.data()) {
+          const subjectType = querySnapshot.data()?.theoryLab;
+          const subjectSemester = querySnapshot.data()?.semester;
+          const subjectName = querySnapshot.data()?.name;
+          setSubjectName(subjectName);
+          setSubjectType(subjectType);
+          setSubjectSemester(subjectSemester);
 
-    return () => {
-      unsubscribe();
+          // Move the fetchAttendanceData call here
+          fetchAttendanceData(classId, subjectCode, subjectSemester);
+        }
+      }
     };
-  }, []);
+    getSubjectData();
+  }, [classId, subjectCode]);
 
-
-  async function fetchAttendanceData() {
+  async function fetchAttendanceData(classId, subjectCode, subjectSemester) {
     try {
-      const responseAPI = await fetch(`${window.location.origin}/api/student/attendance`, {
-        method: 'GET',
-      });
-      if (responseAPI.status === 200) {
-        const responseBody = await responseAPI.json();
-        setStudentDetails(responseBody.studentDetails);
-        setSubjectOptions(responseBody.subjectOptions.sort(customComparator));
-        setAttendanceData(responseBody.attendanceDocs);
-        setDataFetched(true);
+      if (classId && subjectCode) {
+        const attendanceRef = collection(
+          db,
+          "database",
+          classId,
+          "attendance",
+          subjectSemester + "SEM",
+          subjectCode
+        );
 
-        sessionStorage.setItem('studentDetails', JSON.stringify(responseBody.studentDetails));
-        sessionStorage.setItem('subjectOptions', JSON.stringify(responseBody.subjectOptions));
-        sessionStorage.setItem('attendanceData', JSON.stringify(responseBody.attendanceDocs));
+        const snapshot = await getDocs(attendanceRef);
+        const attendanceDocs = snapshot.docs.map((doc) => doc.data());
 
-      } else {
-        console.log('Cannot fetch data');
+        // Filter data based on the selected date range
+        const filteredData = attendanceDocs.filter((data) => {
+          const classDate = new Date(data.classDate);
+          return (
+            (!fromDate || classDate >= fromDate) &&
+            (!toDate || classDate <= toDate)
+          );
+        });
+
+        const attendanceDoc = labBatch
+          ? filteredData.filter((data) => data.labBatch === labBatch)
+          : filteredData;
+
+        setAttendanceData(attendanceDoc);
       }
     } catch (error) {
-      console.error('An error occurred:', error);
+      console.error("Error fetching attendance data from Firestore", error);
     }
   }
-   
+
   useEffect(() => {
-     
-    const storedStudentDetails = sessionStorage.getItem('studentDetails');
-    const storedSubjectOptions = sessionStorage.getItem('subjectOptions');
-    const storedAttendanceData = sessionStorage.getItem('attendanceData');
+    fetchAttendanceData(classId, subjectCode, subjectSemester);
+  }, [classId, labBatch, subjectCode, fromDate, toDate]);
 
-    if (storedStudentDetails && storedSubjectOptions && storedAttendanceData) {
-     
-      const parsedStudentDetails = JSON.parse(storedStudentDetails);
-      const parsedSubjectOptions = JSON.parse(storedSubjectOptions);
-      const parsedAttendanceData = JSON.parse(storedAttendanceData);
-
-      const userUidMatch = parsedStudentDetails.uid === user?.uid;
-
-      if(userUidMatch){
-        setStudentDetails(parsedStudentDetails);
-        setSubjectOptions(parsedSubjectOptions.sort(customComparator));
-        setAttendanceData(parsedAttendanceData);
-        setDataFetched(true);
+  useEffect(() => {
+    const fetchClassSubjectPairs = async () => {
+      try {
+        const res = await fetch(
+          `${window.location.origin}/api/faculty/attendance`,
+          {}
+        );
+        const fetchedData = await res.json();
+        setClassSubjectPairList(fetchedData?.classSubjectPairList || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
-      
-    } 
+    };
 
-      fetchAttendanceData();
-   
+    fetchClassSubjectPairs();
+  }, []);
 
-  }, [user]);
-
-  const getAttendanceCount = (subjectIndex: number): number => {
-    const subjectData = attendanceData[subjectIndex];
-    if (Array.isArray(subjectData)) {
-      return subjectData.reduce((total, data) => {
-        const student = data.students?.find((student) => student.usn === studentDetails.studentUSN);
-        return total + (student && student.Present ? 1 : 0);
-      }, 0);
+  const uniqueClassOptions = classSubjectPairList.reduce((acc, pair) => {
+    if (!acc[pair.className]) {
+      acc[pair.className] = [];
     }
-    return 0; // Return 0 if subjectData is not an array
+    acc[pair.className].push(pair);
+    return acc;
+  }, {});
+
+  const handleSubjectChange = (value: any) => {
+    const selectedSubjectCode = value;
+
+    setSubjectCode(selectedSubjectCode);
+    setLabBatch("");
+
+    const selectedSubjectPair = classSubjectPairList.find(
+      (pair) => pair.code === selectedSubjectCode
+    );
+    if (selectedSubjectPair) {
+      setSubjectType(selectedSubjectPair.subjectType);
+      setIsLabSubject(selectedSubjectPair.subjectType === "lab");
+    }
   };
 
-  // Function to get class count for a subject
-  const getClassCount = (subjectIndex: number): number => {
-    let count = 0;
-    const subjectData = attendanceData[subjectIndex];
-    if (Array.isArray(subjectData)) {
-      subjectData.forEach((data) => {
-        const student = data.students?.find((student) => student.usn === studentDetails.studentUSN);
-        if (student) {
-          count++;
-        }
+  useEffect(() => {
+    if (subjectType === "lab") {
+      setIsLabSubject(true);
+    } else if (subjectType === "theory") {
+      setIsLabSubject(false);
+    }
+  }, [classId, subjectType]);
+
+  const mergedAttendanceData = attendanceData?.reduce((mergedData, data) => {
+    data?.students?.forEach((student) => {
+      const existingStudentIndex = mergedData.findIndex(
+        (mergedStudent) => mergedStudent.usn === student.usn
+      );
+
+      if (existingStudentIndex !== -1) {
+        mergedData[existingStudentIndex].attendance[data.classStartTime] =
+          student.Present;
+      } else {
+        const newStudent = {
+          usn: student.usn,
+          name: student.name,
+          attendance: { [data.classStartTime]: student.Present },
+        };
+        mergedData.push(newStudent);
+      }
+    });
+
+    return mergedData;
+  }, []);
+
+  const getAttendancePercentage = (attendanceCount, classCount) => {
+    return classCount > 0
+      ? ((attendanceCount / classCount) * 100).toFixed(0)
+      : "N/A";
+  };
+
+  const getClassCount = () => {
+    return attendanceData.length;
+  };
+
+  const getAttendanceCount = (usn) => {
+    return attendanceData.reduce((total, data) => {
+      const student = data?.students?.find((student) => student.usn === usn);
+      return total + (student && student.Present ? 1 : 0);
+    }, 0);
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: "block",
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+            className="bg-blue-500"
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1677ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: "#ffc069",
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  const columns = [
+    {
+      className: "text-[12px] font-[Poppins] z-0 ",
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      width: 150,
+      fixed: "left",
+      ...getColumnSearchProps("name"),
+    },
+    {
+      className: "text-[12px] font-[Poppins] ",
+      title: "USN",
+      dataIndex: "usn",
+      width: 100,
+      key: "usn",
+      ...getColumnSearchProps("usn"),
+    },
+    {
+      className: "text-[12px] font-[Poppins] ",
+      align: "center",
+      title: "Classes Held",
+      dataIndex: "classesHeld",
+      key: "classesHeld",
+      width: 100,
+      sorter: (a, b) => a.classesHeld - b.classesHeld,
+    },
+    {
+      className: "text-[12px] font-[Poppins] ",
+      align: "center",
+      title: "Classes Attended",
+      dataIndex: "classesAttended",
+      key: "classesAttended",
+      width: 100,
+      sorter: (a, b) => a.classesAttended - b.classesAttended,
+    },
+    {
+      className: "text-[12px] font-[Poppins] ",
+      align: "center",
+      title: "Attendance Percentage",
+      dataIndex: "attendancePercentage",
+      key: "attendancePercentage",
+      width: 100,
+      sorter: (a, b) => a.attendancePercentage - b.attendancePercentage,
+    },
+    // Add columns for each date in attendanceData
+    ...(attendanceData
+      ? attendanceData.map((data) => ({
+          title: (
+            <div>
+              {new Date(data.classDate).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
+              <br />({convertTo12HourFormat(data.classStartTime)}-
+              {convertTo12HourFormat(data.classEndTime)})
+            </div>
+          ),
+          width: 100,
+          className: "text-[12px] font-[Poppins] ",
+          align: "center",
+          dataIndex: `attendance_${data.classStartTime}`, // Adjust accordingly
+          key: `${new Date(data.classDate).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}_${convertTo12HourFormat(
+            data.classStartTime
+          )}-${convertTo12HourFormat(data.classEndTime)}`, // Adjust accordingly
+        }))
+      : []),
+  ];
+
+  const data = mergedAttendanceData?.map((student) => {
+    const rowData = {
+      className: "text-[12px] font-[Poppins] ",
+      key: student.usn,
+      name: student.name,
+      usn: student.usn,
+      classesHeld: getClassCount(),
+      classesAttended: getAttendanceCount(student.usn),
+      attendancePercentage: getAttendancePercentage(
+        getAttendanceCount(student.usn),
+        getClassCount()
+      ),
+    };
+
+    // Add attendance data for each date
+    if (attendanceData) {
+      attendanceData.forEach((data) => {
+        const attendanceKey = `attendance_${data.classStartTime}`; // Adjust accordingly
+        rowData[attendanceKey] =
+          student.attendance[data.classStartTime] !== undefined
+            ? student.attendance[data.classStartTime]
+              ? "P"
+              : "A"
+            : "-";
       });
     }
-    return count;
+
+    return rowData;
+  });
+
+  const csvData = mergedAttendanceData?.map((student) => {
+    const rowData = {
+      className: "text-[12px] font-[Poppins] ",
+      key: student.usn,
+      name: student.name,
+      usn: student.usn,
+      classesHeld: getClassCount(),
+      classesAttended: getAttendanceCount(student.usn),
+      attendancePercentage: getAttendancePercentage(
+        getAttendanceCount(student.usn),
+        getClassCount()
+      ),
+    };
+
+    // Add attendance data for each date
+    if (attendanceData) {
+      attendanceData.forEach((data) => {
+        const attendanceKey = `${new Date(data.classDate).toLocaleDateString(
+          "en-GB",
+          {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }
+        )}_${convertTo12HourFormat(
+          data.classStartTime
+        )}-${convertTo12HourFormat(data.classEndTime)}`; // Adjust accordingly
+        rowData[attendanceKey] =
+          student.attendance[data.classStartTime] !== undefined
+            ? student.attendance[data.classStartTime]
+              ? "P"
+              : "A"
+            : "-";
+      });
+    }
+
+    return rowData;
+  });
+
+  const handleDateFilterChange = (value) => {
+    // Get the current date
+    const today = new Date();
+
+    // Handle different date filter options
+    switch (value) {
+      case "today":
+        setFromDate(today);
+        setToDate(today);
+        break;
+      case "lastWeek":
+        const lastWeek = new Date(today);
+        lastWeek.setDate(today.getDate() - 7);
+        setFromDate(lastWeek);
+        setToDate(today);
+        break;
+      case "lastMonth":
+        const lastMonth = new Date(today);
+        lastMonth.setMonth(today.getMonth() - 1);
+        setFromDate(lastMonth);
+        setToDate(today);
+        break;
+      case "allTime":
+        // Set the earliest and latest possible dates
+        setFromDate(new Date(0)); // January 1, 1970
+        setToDate(new Date("9999-12-31")); // December 31, 9999
+        break;
+      default:
+        // Custom date or any other cases
+        break;
+    }
   };
-
-  // Function to calculate attendance percentage for a subject
-  const getAttendancePercentage = (subjectIndex: number): number => {
-    const attendanceCount = getAttendanceCount(subjectIndex);
-    const classCount = getClassCount(subjectIndex);
-    const percentage = classCount > 0 ? (attendanceCount / classCount) * 100 : 0;
-    return parseFloat(percentage.toFixed(2));
-  };
-
-  // Calculate total classes held and total classes attended
-  const totalClassesHeld = attendanceData.reduce((total, data, index) => total + getClassCount(index), 0);
-  const totalClassesAttended = attendanceData.reduce((total, data, index) => total + getAttendanceCount(index), 0);
-
-  // Calculate total attendance percentage
-  const totalAttendancePercentage = Math.round((totalClassesAttended / totalClassesHeld) * 100);
-
-  // Filter theory and lab subjects
-  const theorySubjects = subjectOptions.filter((subject) => subject.subjectType === 'theory');
-  const labSubjects = subjectOptions.filter((subject) => subject.subjectType === 'lab');
-
-  console.log(labSubjects)
-  console.log(theorySubjects)
 
   return (
-   
     <>
-  
-      <div className={styles.contentContainer}>
-
-      <div className={styles.container}>
-
-          <div className={styles.attendanceCard}>
-            {dataFetched ? (
-              <DonutChart totalAttendancePercentage={totalAttendancePercentage} />
-            ) : (
-              <Skeleton variant="circular" width={120} height={120} />
-            )}
-           
-            <div style={{ alignItems: 'center' }}>
-            <h5 style={{ marginLeft: '10px', fontSize: '16px', marginBottom: '10px' ,width: '200px', maxWidth: '40%',whiteSpace: 'nowrap',fontFamily: 'Poppins',fontWeight: '500',color: '#111' }}>
-              {dataFetched ? (
-                <>
-                  Attendance Summary
-                </>
-              ) : (
-                <Skeleton variant="text" sx={{ fontSize: '1.3rem', width: '100%' }} />
+      <div className="flex flex-col items-center p-4 w-full h-auto">
+        <div
+          style={{
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+          }}
+          className="flex w-[95%] gap-2 flex-wrap items-end justify-left max-md:justify-left p-3 rounded-md border border-solid border-gray-100 mt-10 max-md:mt-[60px]  mb-7"
+        >
+          <div className="w-[20%] max-md:w-[30%]">
+            <p className=" font-semibold ">Class</p>
+            <Select
+              size="large"
+              value={classId || undefined}
+              onChange={(value) => {
+                setClassId(value);
+                setSubjectCode("");
+                setIsLabSubject(false);
+                setLabBatch("");
+              }}
+              placeholder="Select Class"
+              className="w-[100%]"
+              options={Object.keys(uniqueClassOptions).map(
+                (ClassId, index) => ({
+                  value: ClassId,
+                  label: `${uniqueClassOptions[ClassId][0].classSemester}-SEM ${ClassId}`,
+                })
               )}
-              </h5>
-             
-              <p style={{ marginLeft: '10px', marginBottom: '0px', fontSize: '14px', color: '#333',fontWeight: '500' }}>
-                {dataFetched ? (
-                  <>
-                    Classes Held: {totalClassesHeld} <br />
-                    Classes Attended: {totalClassesAttended} <br />
-                    Classes Absent: {totalClassesHeld - totalClassesAttended}
-                  </>
-                ) : (
-                  <>
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                    <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                  </>
-                  
-                )}
-              </p>
+            />
+          </div>
+          {classId && (
+            <div className="flex flex-col w-[40%] max-md:w-[50%]">
+              <p className="ml-2 font-semibold ">Subject</p>
+              <Select
+                size="large"
+                value={subjectCode || undefined}
+                onChange={handleSubjectChange}
+                className="w-[100%]"
+                placeholder="Select Subject"
+                options={uniqueClassOptions[classId].map((pair, index) => ({
+                  value: pair.code,
+                  label: pair.subjectName,
+                }))}
+              />
             </div>
-          </div>
-
-          <div>
-          <h6 style={{ marginTop: '15px', marginLeft: '10px', color: 'grey', fontFamily: 'Poppins', fontWeight: '500',fontSize: '14px' }}>SUBJECTS </h6>
-            <MyTabs style={{ marginTop: '10px' }}>
-              <MyTabList style={{borderRadius: '10px', marginBottom: '15px'}}>
-                <MyTab style={{ width: '50%', textAlign: 'center' }}>Theory</MyTab>
-                <MyTab style={{ width: '50%', textAlign: 'center' }}>Lab</MyTab>
-              </MyTabList>
-
-              <MyTabPanel>
-              <table className={styles.attendanceTable}>
-                <thead>
-                  <tr >
-                    <th className={styles.tableHead} style={{ borderTopLeftRadius: '10px' }}>
-                      Subject 
-                    </th>
-                    <th className={styles.tableHead}>
-                      Classes Held
-                    </th>
-                    <th className={styles.tableHead}>
-                      Classes Attended
-                    </th>
-                    <th className={styles.tableHead} style={{ borderTopRightRadius: '10px',paddingRight: '10px' }}>
-                      Attendance Percentage
-                    </th>
-                  </tr>
-                </thead>
-              
-                <tbody>
-                {subjectOptions && studentDetails.classSemester && studentDetails.className ? (
-                  subjectOptions
-                    .filter((subject) => subject.subjectType === 'theory')
-                    .map((theorySubject, filteredIndex) => {
-                      // Find the original index in the unfiltered array
-                      const originalIndex = subjectOptions.findIndex(subject => subject === theorySubject);
-                      
-                      return (
-                        <tr key={filteredIndex}>
-                          <td className={styles.tableSubject}>
-                            {theorySubject.label + ' (' + theorySubject.value + ')'}
-                          </td>
-                          <td className={styles.tableData}>{getClassCount(originalIndex)}</td>
-                          <td className={styles.tableData}>{getAttendanceCount(originalIndex)}</td>
-                          <td className={styles.tableData}>{Math.round(getAttendancePercentage(originalIndex))}%</td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                    <td className={styles.tableSubject}>
-                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                    </td>
-                    <td className={styles.tableData}>
-                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                    </td>
-                    <td className={styles.tableData}>
-                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                    </td>
-                    <td className={styles.tableData}>
-                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                    </td>
-                  </tr>
-                  )}
-                </tbody>
-              </table>
-              </MyTabPanel>
-              <MyTabPanel>
-              <table className={styles.attendanceTable}>
-                <thead>
-                  <tr>
-                    <th className={styles.tableHead} style={{ borderTopLeftRadius: '10px' }}>
-                      Subject
-                    </th>
-                    <th className={styles.tableHead}>
-                      Classes Held
-                    </th>
-                    <th className={styles.tableHead}>
-                      Classes Attended
-                    </th>
-                    <th className={styles.tableHead} style={{ borderTopRightRadius: '10px' }}>
-                      Attendance Percentage
-                    </th>
-                  </tr>
-                </thead>
-              
-                <tbody>
-                {subjectOptions && studentDetails.classSemester && studentDetails.className ? (
-                  subjectOptions
-                    .filter((subject) => subject.subjectType === 'lab')
-                    .map((labSubject, filteredIndex) => {
-                      // Find the original index in the unfiltered array
-                      const originalIndex = subjectOptions.findIndex(subject => subject === labSubject);
-                      
-                      return (
-                        <tr key={filteredIndex}>
-                          <td className={styles.tableSubject}>
-                            {labSubject.label + ' (' + labSubject.value + ')'}
-                          </td>
-                          <td className={styles.tableData}>{getClassCount(originalIndex)}</td>
-                          <td className={styles.tableData}>{getAttendanceCount(originalIndex)}</td>
-                          <td className={styles.tableData}>{Math.round(getAttendancePercentage(originalIndex))}%</td>
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                    <td className={styles.tableSubject}>
-                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                    </td>
-                    <td className={styles.tableData}>
-                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                    </td>
-                    <td className={styles.tableData}>
-                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                    </td>
-                    <td className={styles.tableData}>
-                      <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
-                    </td>
-                  </tr>
-                  )}
-                </tbody>
-              </table>
-              </MyTabPanel>
-            </MyTabs>
-          </div>
-
-          <h6 style={{ marginTop: '20px', marginBottom: '0px', marginLeft: '10px', color: 'grey', fontFamily: 'Poppins', fontWeight: '500',fontSize: '14px' }}>PREVIOUS CLASSES</h6>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            {dataFetched ? (
-              <StyledTabs value={value} onChange={handleChange}   >
-              {subjectOptions.map((subject, index) => (
-                <StyledTab key={index} label={subject.value} />
-              ))}
-            </StyledTabs>
-            ) : (
-              <Skeleton variant="text" sx={{ fontSize: '1rem', width: '300px', marginBottom: '5px'}}/>
-            )}
-          </Box>
-          {dataFetched ?  subjectOptions.map((subject, index) => (
-            <div key={index} hidden={value !== index}>
-              <Card
-                style={{
-                  width: '100%',
-                  boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04)',
-                  position: 'relative',
-                  marginTop: '12px',
-                  paddingBottom: 0,
-                  backgroundColor: 'white',
-                  borderRadius: '10px',
-                  marginBottom: '12px'
-                }}
+          )}
+          {isLabSubject && (
+            <div className="flex flex-col w-[20%] max-md:w-[40%]">
+              <p className=" font-semibold ml-4 whitespace-nowrap">Lab Batch</p>
+              <Select
+                size="large"
+                value={labBatch || undefined}
+                onChange={(value) => setLabBatch(value)}
+                placeholder="Select Lab Batch"
+                className="w-[100%]"
               >
-                <Typography style={{ marginTop: '10px', marginLeft: '10px', fontWeight: '500', color: '#555', fontFamily: 'Poppins' }}>
-                  {subject.label} ({subject.value})
-                </Typography>
-                {getClassCount(index) ? (
-                  <div>
-                    <Typography style={{ marginTop: '5px', marginLeft: '10px',fontSize: '13px' ,fontFamily: 'Poppins'}}>
-                      You have attended {getAttendanceCount(index)} out of {getClassCount(index)} Classes.
-                    </Typography>
-                    <Typography style={{ marginLeft: '10px' ,fontSize: '13px',fontFamily: 'Poppins'}}>
-                      Attendance Percentage: {Math.round(getAttendancePercentage(index))}%
-                    </Typography>
-                    {getAttendancePercentage(index) > 75 ? (
-                      <Typography style={{ marginLeft: '10px',fontSize: '13px', color: 'rgb(92, 128, 104)', margin: '10px',fontFamily: 'Poppins' }}>
-                        <div style={{ backgroundColor: 'rgb(214, 237, 221)', padding: '5px', borderRadius: '5px', display: 'flex', alignItems: 'center' }}>
-                          <BsCheckCircleFill style={{ marginRight: '5px' }} /> Your Attendance Requirement is Satisfied
-                        </div>
-                        
-                      </Typography>
-                    ) : (
-                      <Typography style={{ marginLeft: '10px',fontSize: '13px', color: 'rgb(139, 78, 78)', margin: '10px',fontFamily: 'Poppins' }}>
-                        <div style={{ backgroundColor: 'rgb(237, 221, 221)', padding: '5px', borderRadius: '5px', display: 'flex', alignItems: 'center' }}>
-                        <BsXCircleFill style={{ marginRight: '5px' }}  /> You need to attend{' '}
-                        {Math.ceil(((0.75 * getClassCount(index)) - getAttendanceCount(index)) / 0.25)} more classes to reach 75%.
-                        </div>
-                      </Typography>
-                    )}
-                  </div>
-                ) : (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '15px' }}>
-                    <div style={{boxShadow: '0 0 0 1px rgba(0,0,0,.08)', width: '100%',marginLeft: '10px',marginRight: '10px',padding: '20px',borderRadius: '5px'}}>
-                    <Typography style={{fontFamily: 'Poppins', fontSize: '14px',color: '#333'}}>No Classes Held</Typography>
-                    </div>
-                    
-                  </div>
-                )}
-              </Card>
-              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                {/* Iterate over attendance data for the selected subject */}
-                {attendanceData[index]?.slice().reverse().map((classData, classIndex) => (
-                  <>
-                  <div key={classIndex} className={styles.cardContainer}>
-                    
-                  <div className={styles.connector}>
-                      <div className={styles.circle}></div>
-                    <Typography style={{ fontFamily: 'Poppins', fontSize: '14px', fontWeight: '500', color: 'rgb(29 78 216)',marginLeft: '10px' }}>
-                    {' '}{new Date(classData.classDate).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        })}{' '}
-                        ({getDayOfWeek(new Date(classData.classDate))})
-                      </Typography>
-                  </div>                  
-
-                  <div className={styles.lineCard}>
-                    <div className={styles.line}></div>
-                    <Card className={styles.card}  style={{boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)'}}>
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '30%',
-                        left: '5%',
-                        color: 'white',
-                        width: '25px',
-                        height: '25px',
-                        borderRadius: '50%',
-                        backgroundColor: classData.students.find((student) => student.usn === studentDetails.studentUSN)?.Present
-                          ? 'green' // Set the background color to green if present
-                          : 'red', // Set the background color to red if absent
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        fontSize: '12px',
-                        fontFamily: 'Poppins'
-                      }}
-                    >
-                      {classData.students.find((student) => student.usn === studentDetails.studentUSN)?.Present ? 'P' : 'A'}
-                    </div>
-                    <CardContent style={{ padding: '10px' }}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          position: 'relative',
-                          marginLeft: '15%',
-                        }}
-                      >
-                        <div style={{ cursor: 'pointer', marginRight: '12px' }}>
-                          <Typography style={{fontSize: '14px',fontFamily: 'Poppins',fontWeight: '500',color: '#555',display: 'flex',flexDirection: 'row',alignItems: 'center'}}>
-                            <BiTime style={{marginRight: '5px'}}/>{convertTo12HourFormat(classData.classStartTime)} - {convertTo12HourFormat(classData.classEndTime)}
-                          </Typography>
-                        </div>
-                        {/* <AiOutlineRightCircle
-                          style={{
-                            cursor: 'pointer',
-                            position: 'absolute',
-                            top: '50%',
-                            right: '10px',
-                            fontSize: '20px',
-                            color: '#333',
-                          }}
-                        /> */}
-                      </div>
-                      <Typography
-                        style={{fontSize: '10px',fontFamily: 'Poppins',fontWeight: '400',color: '#555',marginLeft: '15%',}}
-                      >
-                        {classData.presentCount + ' out of your ' + (classData.presentCount + classData.absentCount) + ' classmates were present'}
-                      </Typography>
-                    </CardContent>
-                    </Card>
-                  </div>  
-                    
-                  </div>
-                  </>
+                {batchOptions.map((option) => (
+                  <Select.Option key={option.value} value={option.value}>
+                    {option.label}
+                  </Select.Option>
                 ))}
+              </Select>
+            </div>
+          )}
+          {/* <button
+            type="submit"
+            className=" w-[15%] max-md:w-[40%] inline-flex items-center py-2 px-3 h-[75%] mt-4 text-sm font-medium text-white bg-primary-500 rounded-lg border border-primary-300 hover:bg-primary-400 focus:ring-4 focus:outline-none focus:ring-primary-300"
+          >
+            <svg
+              className="w-4 h-4 me-2"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+            Search
+          </button> */}
+        </div>
+
+        <div
+          style={{
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+          }}
+          className="border-solid border-gray-100 p-4 border rounded-md w-auto max-w-[90vw] h-auto"
+        >
+          <div className="flex flex-row flex-wrap justify-end max-md:justify-end items-center w-full ">
+            {/* <div className="mr-10 max-md:mr-0 max-md:w-[100%]">
+              <p className="text-[12px] font-poppins whitespace-nowrap">
+                Date Range
+              </p>
+              <RangePicker
+                size="large"
+                value={[fromDate, toDate]}
+                onChange={(dates) => {
+                  setFromDate(dates?.[0]);
+                  setToDate(dates?.[1]);
+                }}
+                format={"ddd, MMM D"}
+                inputReadOnly
+                className="w-[100%]"
+              />
+            </div> */}
+
+            <div className="flex flex-row gap-2 items-center justify-center">
+              <div className="flex flex-col">
+                <p className="text-[12px] font-poppins whitespace-nowrap">
+                  From
+                </p>
+                <DatePicker
+                  inputReadOnly
+                  size="large"
+                  format={"ddd, MMM D"}
+                  value={fromDate}
+                  onChange={setFromDate}
+                  className=" text-[16px] mt-[2px] "
+                  disabledDate={(current) =>
+                    current && current.valueOf() > Date.now()
+                  }
+                />
+              </div>
+              <div className="flex flex-col">
+                <p className="text-[12px] font-poppins whitespace-nowrap">To</p>
+                <DatePicker
+                  inputReadOnly
+                  size="large"
+                  format={"ddd, MMM D"}
+                  value={toDate}
+                  onChange={setToDate}
+                  className=" text-[16px] mt-[2px] "
+                  disabledDate={(current) =>
+                    current && current.valueOf() > Date.now()
+                  }
+                />
               </div>
             </div>
-          )) : (
-            <Card 
-            style={{
-              width: '100%',
-              boxShadow: '0 0 0 1px rgba(0,0,0,.08), 0 4px 6px rgba(0,0,0,.04)',
-              position: 'relative',
-              marginTop: '12px',
-              padding: '15px',
-              backgroundColor: 'white',
-              borderRadius: '10px'
-            }}>
-              <Typography>
-              <Skeleton variant="text" sx={{ fontSize: '1.3rem', width: '90%'}}/>
-              </Typography>
-              <Typography>
-              <Skeleton variant="text" sx={{ fontSize: '0.8rem', width: '80%'}}/>
-              </Typography>
-              <Typography>
-              <Skeleton variant="text" sx={{ fontSize: '0.8rem', width: '80%'}}/>
-              </Typography>
-              <Typography>
-              <Skeleton variant="text" sx={{ fontSize: '0.8rem', width: '80%'}}/>
-              </Typography>
-            </Card>
-          )}
+
+            {/* <div className="mr-10 w-[10%] mt-6 min-w-[100px] max-md:mr-3">
+              <Select defaultValue="allTime" size="large" className="w-[100%]">
+                <Select.Option value="today">Today</Select.Option>
+                <Select.Option value="lastWeek">Last Week</Select.Option>
+                <Select.Option value="lastMonth">Last Month</Select.Option>
+                <Select.Option value="allTime">All Time</Select.Option>
+              </Select>
+            </div> */}
+            <Button
+              className=" my-2 ml-8 max-md:ml-5 max-[325px]:ml-2"
+              type="primary"
+              onClick={handleExportCSV}
+            >
+              Export to CSV
+            </Button>
+
+            <CSVLink
+              ref={csvLink}
+              data={csvData || []} // Make sure data is defined or provide a default value
+              filename={"attendance_data.csv"}
+              target="_blank"
+            />
+          </div>
+          {
+            <div className=" w-[80vw] overflow-x-auto overflow-y-auto">
+              <Table
+                columns={columns}
+                dataSource={data}
+                size="small"
+                className="-z-1"
+                scroll={{ x: "90vw", y: "50vh" }}
+                pagination={false}
+              />
+            </div>
+          }
         </div>
       </div>
     </>
   );
-}
+};
 
-export default StudentAttendanceTable;
+export default AttendanceTable;
