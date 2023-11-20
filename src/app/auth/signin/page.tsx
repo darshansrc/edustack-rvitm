@@ -21,6 +21,7 @@ import Image from "next/image";
 import { CgSpinner } from "react-icons/cg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons/faSpinner";
+import { BsStack } from "react-icons/bs";
 
 const SignIn = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -164,18 +165,7 @@ const SignIn = () => {
             flexDirection: "row",
           }}
         >
-          <Image
-            priority
-            alt=""
-            src="/logo.png"
-            width={60}
-            height={60}
-            style={{
-              maxWidth: "60px",
-              maxHeight: "60px",
-              alignItems: "center",
-            }}
-          />
+          <BsStack className="w-[60px] h-[60px] text-[#0577fb] items-center" />
           <h1 style={{ fontSize: "25px", padding: "10px" }}> | </h1>
           <Image
             priority
@@ -240,7 +230,7 @@ const SignIn = () => {
             <HiOutlineLockClosed />
           </div>
         </div>
-        <Link href="auth/forgot-password">
+        <Link href="/auth/forgot-password">
           <div className={styles.forgotPassword}>Forgot Password?</div>
         </Link>
 

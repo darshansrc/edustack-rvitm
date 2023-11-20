@@ -6,6 +6,10 @@ export async function middleware(request: NextRequest, response: NextResponse) {
   const session = request.cookies.get("session");
   const { pathname } = request.nextUrl;
 
+  if (pathname === "/" && !session) {
+    return NextResponse.redirect(new URL("/auth/signin", request.url));
+  }
+
   if (pathname === "/" && session) {
     const responseAPI = await fetch(`${request.nextUrl.origin}/api/auth`, {
       headers: {

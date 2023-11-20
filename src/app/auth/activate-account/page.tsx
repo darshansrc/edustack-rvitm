@@ -10,13 +10,15 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import {
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
   sendEmailVerification,
 } from "firebase/auth";
 import { BsStack } from "react-icons/bs";
+import { useRouter } from "next/navigation";
 
 interface facultyDetails {
   facultyType: string;
@@ -34,6 +36,7 @@ interface studentDetails {
 }
 
 const ActivatePage = () => {
+  const router = useRouter();
   const [messageApi, contextHolder] = message.useMessage();
 
   const [enteredEmail, setEnteredEmail] = useState<string>("");
@@ -58,6 +61,18 @@ const ActivatePage = () => {
   const [accountCreated, setAccountCreated] = useState<boolean>(false);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isEmailVerified, setIsEmailVerified] = useState<boolean>(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user && user.emailVerified) {
+        setIsEmailVerified(true);
+        router.push("/");
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
 
   const handleFormSubmit = async () => {
     console.log(enteredEmail);
@@ -156,7 +171,6 @@ const ActivatePage = () => {
       );
       const user = res.user;
       console.log(user);
-      console.log("nigga");
 
       if (userType === "student") {
         const userDocRef = doc(db, "users", user.uid);
@@ -187,7 +201,7 @@ const ActivatePage = () => {
         type: "success",
         duration: 20,
         content:
-          "A Verification link has been sent to your email, please click on it to activate you account and then you can sign in...",
+          "A Verification link has been sent to your email, please click on it to activate you account.",
       });
       setAccountCreated(true);
       setIsModalOpen(false);
