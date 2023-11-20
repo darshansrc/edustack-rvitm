@@ -71,7 +71,7 @@ const ForgotPage = () => {
           </Button>
 
           <p className="font-poppins  text-[12px] text-gray-700 mt-3 mb-6">
-            <a href="/auth/login" className="text-[#0577fb]">
+            <a href="/auth/signin" className="text-[#0577fb]">
               Back to Login
             </a>
           </p>
