@@ -33,7 +33,7 @@ interface studentDetails {
   className: string;
 }
 
-const page = () => {
+const ActivatePage = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const [enteredEmail, setEnteredEmail] = useState<string>("");
@@ -341,4 +341,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ActivatePage;

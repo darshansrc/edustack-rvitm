@@ -240,7 +240,9 @@ const SignIn = () => {
             <HiOutlineLockClosed />
           </div>
         </div>
-        <div className={styles.forgotPassword}>Forgot Password?</div>
+        <Link href="auth/forgot-password">
+          <div className={styles.forgotPassword}>Forgot Password?</div>
+        </Link>
 
         <div className={error ? styles.errorMessage : ""}>
           {error ? error : null}
