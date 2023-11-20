@@ -15,15 +15,23 @@ const ForgotPage = () => {
       return;
     }
 
-    sendPasswordResetEmail(auth, enteredEmail).then(() => {
+    try {
+      sendPasswordResetEmail(auth, enteredEmail).then(() => {
+        messageApi.open({
+          type: "success",
+          content:
+            "Password reset link sent to your email, please check your inbox!",
+          duration: 15,
+        });
+        setEnteredEmail("");
+      });
+    } catch (error) {
       messageApi.open({
-        type: "success",
-        content:
-          "Password reset link sent to your email, please check your inbox!",
+        type: "error",
+        content: "Email/Username not found",
         duration: 15,
       });
-      setEnteredEmail("");
-    });
+    }
   };
   return (
     <div className="flex flex-col items-center justify-center w-[100vw] h-[100vh]">
