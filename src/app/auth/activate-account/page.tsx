@@ -192,7 +192,7 @@ const ActivatePage = () => {
           type: "faculty",
           name: facultyDetails.facultyName,
           department: facultyDetails.facultyDepartment,
-          facultyType: facultyDetails.facultyType,
+          // facultyType: facultyDetails.facultyType,
         });
       }
 
