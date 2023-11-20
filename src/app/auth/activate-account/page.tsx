@@ -141,7 +141,7 @@ const ActivatePage = () => {
         })
       );
     } else if (enteredEmail && userType === "faculty") {
-      const getRef = doc(db, "facultyUsers", enteredEmail);
+      const getRef = doc(db, "faculty", enteredEmail);
       const userDoc = await getDoc(getRef);
 
       if (userDoc.exists()) {
