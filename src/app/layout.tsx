@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
-import { StudentContextProvider } from "./context/StudentContext";
-
+import { Analytics } from "@vercel/analytics/react";
 export const metadata: Metadata = {
   title: "EduStack",
   description: "",
@@ -43,7 +42,8 @@ export default function RootLayout({
         </script>
       </head>
       <body>
-        <StudentContextProvider>{children}</StudentContextProvider>
+        {children}
+        <Analytics />
       </body>
     </html>
   );
