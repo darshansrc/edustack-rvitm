@@ -413,6 +413,75 @@ const AttendanceTable = () => {
       : []),
   ];
 
+  const columnsCsv = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      width: 150,
+      fixed: "left",
+      ...getColumnSearchProps("name"),
+    },
+    {
+      title: "USN",
+      dataIndex: "usn",
+      width: 100,
+      key: "usn",
+      ...getColumnSearchProps("usn"),
+    },
+    {
+      align: "center",
+      title: "Classes Held",
+      dataIndex: "classesHeld",
+      key: "classesHeld",
+      width: 100,
+      sorter: (a, b) => a.classesHeld - b.classesHeld,
+    },
+    {
+      align: "center",
+      title: "Classes Attended",
+      dataIndex: "classesAttended",
+      key: "classesAttended",
+      width: 100,
+      sorter: (a, b) => a.classesAttended - b.classesAttended,
+    },
+    {
+      align: "center",
+      title: "Attendance Percentage",
+      dataIndex: "attendancePercentage",
+      key: "attendancePercentage",
+      width: 100,
+      sorter: (a, b) => a.attendancePercentage - b.attendancePercentage,
+    },
+    // Add columns for each date in attendanceData
+    ...(attendanceData
+      ? attendanceData.map((data) => ({
+          title: (
+            <div>
+              {new Date(data.classDate).toLocaleDateString("en-GB", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+              })}
+              <br />({convertTo12HourFormat(data.classStartTime)}-
+              {convertTo12HourFormat(data.classEndTime)})
+            </div>
+          ),
+          width: 100,
+
+          align: "center",
+          dataIndex: `attendance_${data.classStartTime}`, // Adjust accordingly
+          key: `${new Date(data.classDate).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          })}_${convertTo12HourFormat(
+            data.classStartTime
+          )}-${convertTo12HourFormat(data.classEndTime)}`, // Adjust accordingly
+        }))
+      : []),
+  ];
+
   const data = mergedAttendanceData?.map((student) => {
     const rowData = {
       className: "text-[12px] font-[Poppins] ",
@@ -445,8 +514,7 @@ const AttendanceTable = () => {
 
   const csvData = mergedAttendanceData?.map((student) => {
     const rowData = {
-      className: "text-[12px] font-[Poppins] ",
-      key: student.usn,
+      // key: student.usn,
       name: student.name,
       usn: student.usn,
       classesHeld: getClassCount(),
