@@ -56,7 +56,7 @@ const DesktopNavbar = () => {
           : "hidden md:block md:h-screen md:w-[200px] md:min-w-[200px] transition-all "
       }
     >
-      <Layout className="hidden h-screen min-h-screen md:block fixed left-0 z-[2000] top-0">
+      <Layout className="hidden h-screen min-h-screen md:block fixed left-0 z-[50] top-0">
         <Sider
           collapsible
           collapsed={collapsed}
@@ -92,8 +92,6 @@ const DesktopNavbar = () => {
             <Menu.Item key="/student/attendance" icon={<BsFillPeopleFill />}>
               <Link href={"/student/attendance"}>Attendance</Link>
             </Menu.Item>
-
-     
 
             <Menu.Item key="/student/course" icon={<RiGraduationCapLine />}>
               <Link href={"/student/course"}>Course</Link>
