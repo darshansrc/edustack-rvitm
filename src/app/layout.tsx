@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Script from "next/script";
 
 import { Analytics } from "@vercel/analytics/react";
 export const metadata: Metadata = {
@@ -28,18 +29,15 @@ export default function RootLayout({
           rel="stylesheet"
         />
 
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-CBKS8RHR3S"
-        ></script>
-        <script>
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-CBKS8RHR3S" />
+        <Script>
           {`
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-CBKS8RHR3S');
   `}
-        </script>
+        </Script>
       </head>
       <body>
         {children}
