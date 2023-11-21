@@ -1,57 +1,71 @@
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
+import { auth } from "firebase-admin";
+import { customInitApp } from "@/lib/firebase-admin-config";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase-config";
+
+customInitApp();
+
+async function authenticateUser(request: NextRequest) {
+  let userType: string = "";
+  const session = cookies().get("session")?.value || "";
+
+  if (!session) {
+    return { isLogged: false, status: 401 };
+  }
+
+  try {
+    const decodedClaims = await auth().verifySessionCookie(session, true);
+
+    if (!decodedClaims) {
+      return { isLogged: false, status: 401 };
+    }
+
+    const userUID = decodedClaims.uid;
+    const userEmail = decodedClaims.email;
+    const getRef = doc(db, "users", userUID);
+    const userDoc = await getDoc(getRef);
+
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      userType = userData.type;
+    } else {
+      return { isLogged: false, status: 404 };
+    }
+
+    return { isLogged: true, userUID, userEmail, userType, status: 200 };
+  } catch (error) {
+    console.error("Error during user authentication:", error);
+    return { isLogged: false, status: 500 };
+  }
+}
 
 export async function middleware(request: NextRequest, response: NextResponse) {
-  const session = request.cookies.get("session");
   const { pathname } = request.nextUrl;
 
-  if (pathname === "/" && !session) {
-    return NextResponse.redirect(new URL("/auth/signin", request.url));
-  }
+  if (
+    pathname === "/" ||
+    pathname.startsWith("/student") ||
+    pathname.startsWith("/faculty")
+  ) {
+    const authResult = await authenticateUser(request);
 
-  if (pathname === "/" && session) {
-    const responseAPI = await fetch(`${request.nextUrl.origin}/api/auth`, {
-      headers: {
-        Cookie: `session=${session?.value}`,
-      },
-    });
-
-    if (responseAPI.status === 200) {
-      const { userType } = await responseAPI.json();
-
-      if (userType === "student") {
-        return NextResponse.redirect(new URL("/student/home", request.url));
-      } else if (userType === "faculty") {
-        return NextResponse.redirect(new URL("/faculty/home", request.url));
-      }
+    if (!authResult.isLogged) {
+      return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
 
-    return NextResponse.redirect(new URL("/", request.url));
-  }
+    // Additional logic based on user type or other checks can be added here
 
-  if (pathname.startsWith("/student") || pathname.startsWith("/faculty")) {
-    if (!session) {
-      return NextResponse.rewrite(new URL("/auth/signin", request.url));
-    }
-
-    const responseAPI = await fetch(`${request.nextUrl.origin}/api/auth`, {
-      headers: {
-        Cookie: `session=${session?.value}`,
-      },
-    });
-
-    if (responseAPI.status === 200) {
-      const { userType } = await responseAPI.json();
-
-      if (
-        (userType === "student" && pathname.startsWith("/student")) ||
-        (userType === "faculty" && pathname.startsWith("/faculty"))
-      ) {
-        // Allow access.
-      } else {
-        return NextResponse.redirect(new URL("/auth/signin", request.url));
-      }
+    if (pathname === "/" && authResult.userType === "student") {
+      return NextResponse.redirect(new URL("/student/home", request.url));
+    } else if (pathname === "/" && authResult.userType === "faculty") {
+      return NextResponse.redirect(new URL("/faculty/home", request.url));
+    } else if (
+      (pathname.startsWith("/student") && authResult.userType === "student") ||
+      (pathname.startsWith("/faculty") && authResult.userType === "faculty")
+    ) {
+      // Allow access.
     } else {
       return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
