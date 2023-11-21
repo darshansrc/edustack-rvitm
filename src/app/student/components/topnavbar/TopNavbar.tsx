@@ -18,6 +18,9 @@ import { auth } from "@/lib/firebase-config";
 import Link from "next/link";
 import { ModalDialog } from "@mui/joy";
 import { BsStack } from "react-icons/bs";
+import { Modal as AntModal } from "antd";
+import { FaReact } from "react-icons/fa6";
+import { IoLogoFirebase } from "react-icons/io5";
 
 const TopNavbar = ({ name }) => {
   const router = useRouter();
@@ -31,6 +34,8 @@ const TopNavbar = ({ name }) => {
 
   const handleOpen = () => setLogoutModalOpen(true);
   const handleClose = () => setLogoutModalOpen(false);
+
+  const [aboutModalopen, setAboutModalOpen] = useState(false);
 
   const handleSignOut = async () => {
     signOut(auth);
@@ -127,7 +132,7 @@ const TopNavbar = ({ name }) => {
             <Link href="/student/home">
               <div className={styles.openNavbarItem}>Home</div>
             </Link>
-            <div className={styles.openNavbarItem}>
+            {/* <div className={styles.openNavbarItem}>
               <div className={styles.themeSelector}>
                 <div className={styles.themeSelectorTitle}>Theme</div>
                 <div className={styles.themeSelectorButton}>
@@ -144,10 +149,15 @@ const TopNavbar = ({ name }) => {
                   <HiSelector />
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className={styles.openNavbarItem}>Report Bug</div>
-            <div className={styles.openNavbarItem}>About EduStack</div>
+            <div
+              className={styles.openNavbarItem}
+              onClick={() => setAboutModalOpen(true)}
+            >
+              About EduStack
+            </div>
 
             <Link href={"/student/profile"} shallow={true}>
               <div
@@ -222,6 +232,30 @@ const TopNavbar = ({ name }) => {
           </div>
         </ModalDialog>
       </Modal>
+
+      <AntModal
+        open={aboutModalopen}
+        onOk={() => setAboutModalOpen(false)}
+        onCancel={() => setAboutModalOpen(false)}
+        title="About EduStack"
+      >
+        <div className="flex flex-col items-center justify-center">
+          <p className="font-poppins font-semibold text-[20px]">Developed By</p>
+          <p className="font-poppins font-semibold text-[20px] mt-2">
+            Darshan Gowda (5th sem ISE)
+          </p>
+          <p className="font-poppins font-semibold text-[16px] mt-2">
+            Abhijat Dakshesh (5th sem ISE)
+          </p>
+          <p className="font-poppins font-semibold text-[16px] mt-2">and</p>
+          <p className="font-poppins font-semibold text-[16px] mt-2">
+            Dhyaan Kotian (5th sem CSE)
+          </p>
+          <p className="font-poppins font-semibold text-[14px] mt-5">
+            Built with <FaReact /> ReactJS and <IoLogoFirebase /> Firebase
+          </p>
+        </div>
+      </AntModal>
     </div>
   );
 };

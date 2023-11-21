@@ -165,7 +165,7 @@ const SignIn = () => {
             flexDirection: "row",
           }}
         >
-          <BsStack className="w-[60px] h-[60px] text-[#0577fb] items-center" />
+          <BsStack className="w-[55px] h-[55px] text-[#0577fb] p-2 items-center" />
           <h1 style={{ fontSize: "25px", padding: "10px" }}> | </h1>
           <Image
             priority

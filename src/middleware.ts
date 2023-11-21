@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest, response: NextResponse) {
 
   if (pathname.startsWith("/student") || pathname.startsWith("/faculty")) {
     if (!session) {
-      return NextResponse.rewrite(new URL("/", request.url));
+      return NextResponse.rewrite(new URL("/auth/signin", request.url));
     }
 
     const responseAPI = await fetch(`${request.nextUrl.origin}/api/auth`, {
@@ -50,10 +50,10 @@ export async function middleware(request: NextRequest, response: NextResponse) {
       ) {
         // Allow access.
       } else {
-        return NextResponse.redirect(new URL("/", request.url));
+        return NextResponse.redirect(new URL("/auth/signin", request.url));
       }
     } else {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
   }
 }
