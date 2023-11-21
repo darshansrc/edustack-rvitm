@@ -129,7 +129,7 @@ const StudentHomePage = () => {
         <div style={{ marginRight: "14px" }}>
           {dataFetched ? (
             <Image
-              src={photoUrl}
+              src={photoUrl ? photoUrl : "/None.jpg"}
               alt={""}
               height={60}
               width={60}
