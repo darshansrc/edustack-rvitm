@@ -2,8 +2,6 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
 async function redirectToSignIn(request: NextRequest) {
-  // Delete the session cookie
-  request.cookies.delete("session");
   return NextResponse.redirect(new URL("/auth/signin", request.url));
 }
 
@@ -43,6 +41,7 @@ export async function middleware(request: NextRequest, response: NextResponse) {
 
   // Protected routes that require authentication
   if (!session) {
+    response.cookies.delete("session");
     // Redirect to signin if no session exists
     return redirectToSignIn(request);
   }
@@ -77,5 +76,6 @@ export async function middleware(request: NextRequest, response: NextResponse) {
   }
 
   // Redirect to signin if authentication fails
+  response.cookies.delete("session");
   return redirectToSignIn(request);
 }
