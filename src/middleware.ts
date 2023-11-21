@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
 async function redirectToSignIn(request: NextRequest) {
+  // Delete the session cookie
+  request.cookies.delete("session");
   return NextResponse.redirect(new URL("/auth/signin", request.url));
 }
 
@@ -30,6 +32,8 @@ export async function middleware(request: NextRequest, response: NextResponse) {
         }
       } catch (error) {
         console.error("Error checking authentication API:", error);
+        // Delete the session cookie on API error
+        response.cookies.delete("session");
       }
     }
 
@@ -62,9 +66,14 @@ export async function middleware(request: NextRequest, response: NextResponse) {
         // Redirect to home if the user type and route do not match
         return redirectToHome(request, userType);
       }
+    } else {
+      // Delete the session cookie on failed authentication
+      response.cookies.delete("session");
     }
   } catch (error) {
     console.error("Error checking authentication API:", error);
+    // Delete the session cookie on API error
+    response.cookies.delete("session");
   }
 
   // Redirect to signin if authentication fails
