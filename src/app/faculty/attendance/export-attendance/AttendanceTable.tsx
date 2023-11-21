@@ -490,10 +490,10 @@ const AttendanceTable = () => {
       usn: student.usn,
       classesHeld: getClassCount(),
       classesAttended: getAttendanceCount(student.usn),
-      attendancePercentage: getAttendancePercentage(
+      attendancePercentage: `${getAttendancePercentage(
         getAttendanceCount(student.usn),
         getClassCount()
-      ),
+      )}%`,
     };
 
     // Add attendance data for each date
@@ -515,14 +515,14 @@ const AttendanceTable = () => {
   const csvData = mergedAttendanceData?.map((student) => {
     const rowData = {
       // key: student.usn,
-      name: student.name,
-      usn: student.usn,
-      classesHeld: getClassCount(),
-      classesAttended: getAttendanceCount(student.usn),
-      attendancePercentage: getAttendancePercentage(
+      Name: student.name,
+      USN: student.usn,
+      "Classes Held": getClassCount(),
+      "Classes Attended": getAttendanceCount(student.usn),
+      "Attendance Percentage": `${getAttendancePercentage(
         getAttendanceCount(student.usn),
         getClassCount()
-      ),
+      )}%`,
     };
 
     // Add attendance data for each date
@@ -535,9 +535,9 @@ const AttendanceTable = () => {
             month: "short",
             year: "numeric",
           }
-        )}_${convertTo12HourFormat(
+        )} (${convertTo12HourFormat(
           data.classStartTime
-        )}-${convertTo12HourFormat(data.classEndTime)}`; // Adjust accordingly
+        )}-${convertTo12HourFormat(data.classEndTime)})`; // Adjust accordingly
         rowData[attendanceKey] =
           student.attendance[data.classStartTime] !== undefined
             ? student.attendance[data.classStartTime]
