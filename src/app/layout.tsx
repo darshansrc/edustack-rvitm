@@ -28,6 +28,19 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
+
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-CBKS8RHR3S"
+        ></script>
+        <script>
+          {`
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-CBKS8RHR3S');
+  `}
+        </script>
       </head>
       <body>
         <StudentContextProvider>{children}</StudentContextProvider>
