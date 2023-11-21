@@ -55,8 +55,6 @@ export async function middleware(request: NextRequest, response: NextResponse) {
         ) {
           // Continue to the protected route
         } else {
-          // Delete the session cookie on failed authentication
-          response.cookies.delete("session");
           return NextResponse.redirect(new URL("/auth/signin", request.url));
         }
       } else {
