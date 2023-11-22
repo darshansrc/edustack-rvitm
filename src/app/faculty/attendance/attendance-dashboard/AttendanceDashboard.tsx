@@ -977,10 +977,10 @@ const AttendanceDashboard = () => {
         </div>
 
         <div className=" sticky z-[50] bg-white w-full max-w-full">
-          <h4 className="md:ml-16 ml-2 mt-4 font-poppins  font-semibold  text-gray-800  text-[14px] md:text-[18px]">
-            Your Subjects
-          </h4>
           <Affix offsetTop={0}>
+            <h4 className="ml-2 mt-4 font-poppins  font-semibold  text-gray-800  text-[14px] md:text-[18px]">
+              Your Subjects
+            </h4>
             <Box
               sx={{ borderBottom: 1, borderColor: "divider" }}
               className="md:bg-white"
