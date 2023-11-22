@@ -5,7 +5,7 @@ import styles from "./RightSideOfPage.module.css";
 const RightSideOfPage = () => {
   return (
     <>
-      <div className="h-full w-1/2 flex justify-center items-center max-sm:w-full p-3">
+      <div className=" w-1/2 flex justify-center items-center max-[900px]:w-full p-3">
         <div className={styles.pageContainer}>
           <h1
             style={{

@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transform: rotateX(45deg);
+  transform: rotateX(58deg);
 }
 
 .blendingWrapper {
@@ -13,34 +13,31 @@
   flex-direction: column-reverse;
 }
 
-.LogoShapeLayer1 {
+.LogoShapeLayer3 {
   height: 150px;
   width: 150px;
-  border-radius: 38px;
+  border-radius: 7px;
   rotate: 45deg;
-  background-color: #5c77ff;
-  box-shadow: 0px 0px 10px #5c77ff;
-  border: 5px solid white;
+  background-color: #0577fb;
+  box-shadow: 5px 5px 0 20px white;
 }
 
 .LogoShapeLayer2 {
   height: 150px;
   width: 150px;
-  border-radius: 38px;
+  border-radius: 7px;
   rotate: 45deg;
-  margin-bottom: -115px;
-  background-color: #9fafff;
-  border: 5px solid white;
-  box-shadow: 0px 0px 2px #9fafff;
+  margin-bottom: -60px;
+  background-color: #0577fb;
+  box-shadow: 5px 5px 0 20px white;
 }
 
-.LogoShapeLayer3 {
+.LogoShapeLayer1 {
   height: 150px;
   width: 150px;
-  border-radius: 38px;
+  border-radius: 7px;
   rotate: 45deg;
-  margin-bottom: -115px;
-  background-color: #284172;
-  border: 5px solid white;
-  box-shadow: 0px 0px 2px #284172;
+  margin-bottom: -60px;
+  background-color: #0577fb;
+  box-shadow: 5px 5px 0 20px white;
 }

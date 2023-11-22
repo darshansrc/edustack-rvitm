@@ -6,9 +6,11 @@ function LogoAnimation() {
   return (
     <>
       <div className={styles.OuterLayer}>
-        <div className={`${styles.blendingWrapper} scale-150`}>
+        <div
+          className={`${styles.blendingWrapper} scale-150 max-[540px]:scale-125 mt-5 max-[900px]:mb-[-70px]`}
+        >
           <motion.div
-            className={styles.LogoShapeLayer1}
+            className={styles.LogoShapeLayer3}
             initial={{ x: -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{
@@ -32,7 +34,7 @@ function LogoAnimation() {
             }}
           />
           <motion.div
-            className={styles.LogoShapeLayer3}
+            className={styles.LogoShapeLayer1}
             initial={{ x: 300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{
