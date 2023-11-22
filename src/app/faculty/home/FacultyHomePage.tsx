@@ -34,7 +34,7 @@ const FacultyHomePage = () => {
     photoUrl: "",
   });
 
-  const [photoUrl, setPhotoUrl] = useState<string>("/None.jpg");
+  const [photoUrl, setPhotoUrl] = useState<string>("");
   const [dataFetched, setDataFetched] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -126,7 +126,7 @@ const FacultyHomePage = () => {
           <div style={{ marginRight: "14px" }}>
             {dataFetched ? (
               <Image
-                src={photoUrl}
+                src={photoUrl ? photoUrl : "/None.jpg"}
                 alt={""}
                 height={60}
                 width={60}
