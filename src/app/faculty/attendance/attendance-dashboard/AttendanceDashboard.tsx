@@ -977,25 +977,23 @@ const AttendanceDashboard = () => {
         </div>
 
         <div className=" sticky z-[50] bg-white w-full max-w-full">
-          <Affix offsetTop={0}>
-            <h4 className="pl-4 pt-4 font-poppins  font-semibold bg-white w-full  text-gray-800  text-[14px] md:text-[18px]">
-              Your Subjects
-            </h4>
-            <Box
-              sx={{ borderBottom: 1, borderColor: "divider" }}
-              className="md:bg-white"
-            >
-              <StyledTabs value={selectedPair} onChange={handleChangeTab}>
-                {classSubjectPairList.map((pair, index) => (
-                  <StyledTab
-                    key={index}
-                    label={`${pair.classSemester}-SEM ${pair.className} - ${pair.code}`}
-                    value={pair}
-                  />
-                ))}
-              </StyledTabs>
-            </Box>
-          </Affix>
+          <h4 className="pl-4  font-poppins  font-semibold bg-white w-full  text-gray-800  text-[14px] md:text-[18px]">
+            Your Subjects
+          </h4>
+          <Box
+            sx={{ borderBottom: 1, borderColor: "divider" }}
+            className="bg-white"
+          >
+            <StyledTabs value={selectedPair} onChange={handleChangeTab}>
+              {classSubjectPairList.map((pair, index) => (
+                <StyledTab
+                  key={index}
+                  label={`${pair.classSemester}-SEM ${pair.className} - ${pair.code}`}
+                  value={pair}
+                />
+              ))}
+            </StyledTabs>
+          </Box>
         </div>
 
         <div>
