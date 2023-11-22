@@ -218,7 +218,7 @@ const ActivatePage = () => {
   return (
     <>
       <div className="flex flex-col items-center justify-center w-[100vw] min-h-[100vh]">
-        <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px]  bg-white rounded-lg border p-4 border-solid border-gray-50">
+        <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px]  bg-white rounded-lg border p-4 border-solid border-gray-500">
           <h4 className="font-poppins flex flex-row  my-4 font-semibold  text-[22px] text-gray-700 mt-3">
             <BsStack className="w-8 h-8 text-[#0577fb] pr-2" /> Edustack
           </h4>
