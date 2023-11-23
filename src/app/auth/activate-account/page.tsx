@@ -20,6 +20,8 @@ import {
 } from "firebase/auth";
 import { BsStack } from "react-icons/bs";
 import { useRouter } from "next/navigation";
+import { HiOutlineLockClosed, HiOutlineMail } from "react-icons/hi";
+import Link from "next/link";
 
 interface facultyDetails {
   facultyType: string;
@@ -269,13 +271,13 @@ const ActivatePage = () => {
             </>
           ) : (
             <>
-              <h4 className="font-poppins flex flex-row  my-4 font-semibold  text-[22px] text-gray-700 mt-3">
-                <BsStack className="w-8 h-8 text-[#0577fb] pr-2" /> Edustack
+              <h4 className="font-poppins flex flex-row  my-8 font-semibold  text-[24px] text-gray-800 mt-3">
+                <BsStack className="w-10 h-10 text-[#0577fb] pr-2" /> Edustack
               </h4>
 
-              <h4 className="font-poppins  my-4  text-[16px] text-gray-700 mt-3">
+              <h5 className="font-poppins font-semibold pl-3 my-3 text-sm w-full text-left">
                 Activate your Account
-              </h4>
+              </h5>
 
               <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
                 College Mail
@@ -286,6 +288,7 @@ const ActivatePage = () => {
                 type="email"
                 onChange={(e) => setEnteredEmail(e.target.value)}
                 size="large"
+                prefix={<HiOutlineMail />}
               />
 
               <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
@@ -314,6 +317,7 @@ const ActivatePage = () => {
                 iconRender={(visible) =>
                   visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                 }
+                prefix={<HiOutlineLockClosed />}
               />
 
               <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
@@ -328,22 +332,23 @@ const ActivatePage = () => {
                 iconRender={(visible) =>
                   visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                 }
+                prefix={<HiOutlineLockClosed />}
               />
 
               <Button
                 onClick={handleFormSubmit}
                 type="primary"
-                className="w-full h-10 mt-6 mb-2 rounded-lg"
+                className="w-full h-10 mt-6 mb-2 rounded-lg font-poppins"
                 loading={submitButtonLoading}
               >
                 Next
               </Button>
 
-              <p className="font-poppins  text-[12px] text-gray-700 mt-3 mb-6">
+              <p className="font-poppins  text-[14px] text-gray-700 mt-3 mb-6">
                 Already have an account?{" "}
-                <a href="/auth/signin" className="text-[#0577fb]">
+                <Link href="/auth/signin" className="text-[#0577fb]">
                   Login
-                </a>
+                </Link>
               </p>
             </>
           )}
