@@ -25,13 +25,17 @@ export async function middleware(request: NextRequest, response: NextResponse) {
         }
       } else {
         // Delete the session cookie on failed authentication
-        response.cookies.delete("session");
+        if (response.cookies) {
+          response.cookies.delete("session");
+        }
         return NextResponse.redirect(new URL("/", request.url));
       }
     } catch (error) {
       console.error("Error checking authentication API:", error);
       // Delete the session cookie on API error
-      response.cookies.delete("session");
+      if (response.cookies) {
+        response.cookies.delete("session");
+      }
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
@@ -59,13 +63,17 @@ export async function middleware(request: NextRequest, response: NextResponse) {
         }
       } else {
         // Delete the session cookie on failed authentication
-        response.cookies.delete("session");
+        if (response.cookies) {
+          response.cookies.delete("session");
+        }
         return NextResponse.redirect(new URL("/auth/signin", request.url));
       }
     } catch (error) {
       console.error("Error checking authentication API:", error);
       // Delete the session cookie on API error
-      response.cookies.delete("session");
+      if (response.cookies) {
+        response.cookies.delete("session");
+      }
       return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
   }
