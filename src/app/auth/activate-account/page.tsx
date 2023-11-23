@@ -61,6 +61,11 @@ const ActivatePage = () => {
     facultyDesignation: "",
   });
 
+  const [submitButtonLoading, setSubmitButtonLoading] =
+    useState<boolean>(false);
+  const [createAccountLoading, setCreateAccountLoading] =
+    useState<boolean>(false);
+
   const [accountCreated, setAccountCreated] = useState<boolean>(false);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -97,6 +102,8 @@ const ActivatePage = () => {
       return;
     }
 
+    setSubmitButtonLoading(true);
+
     if (enteredEmail && userType === "student") {
       const queryPath = "students";
       const collectionGroupRef = collectionGroup(db, queryPath);
@@ -116,7 +123,7 @@ const ActivatePage = () => {
           if (classDocSnapshot.exists()) {
             messageApi.open({
               type: "success",
-              content: "Student details fetched",
+              content: "Student details fetched!",
             });
             const classSemester = classDocSnapshot.data().currentSemester;
             const studentLabBatch = studentDoc.data().labBatch;
@@ -135,11 +142,13 @@ const ActivatePage = () => {
             console.log(studentDetails);
             setStudentDetails(studentDetails as studentDetails);
             setIsModalOpen(true);
+            setSubmitButtonLoading(false);
           } else {
             messageApi.open({
               type: "error",
               content: "No Records Found", // Explicitly specify the type here
             });
+            setSubmitButtonLoading(false);
           }
         })
       );
@@ -162,17 +171,19 @@ const ActivatePage = () => {
           if (facultyDetails) {
             messageApi.open({
               type: "success",
-              content: "Faculty details fetched",
+              content: "Faculty details fetched!",
             });
 
             console.log(facultyDetails);
             setFacultyDetails(facultyDetails as facultyDetails);
             setIsModalOpen(true);
+            setSubmitButtonLoading(false);
           } else {
             messageApi.open({
               type: "error",
               content: "No Records Found",
             });
+            setSubmitButtonLoading(false);
           }
         })
       );
@@ -181,6 +192,7 @@ const ActivatePage = () => {
 
   const handleCreateAccount = async () => {
     try {
+      setCreateAccountLoading(true);
       const res = await createUserWithEmailAndPassword(
         auth,
         enteredEmail,
@@ -213,13 +225,10 @@ const ActivatePage = () => {
       }
 
       await sendEmailVerification(user);
-      messageApi.open({
-        type: "success",
-        duration: 20,
-        content:
-          "A Verification link has been sent to your email, please click on it to activate you account.",
-      });
+
+      setCreateAccountLoading(false);
       setAccountCreated(true);
+
       setEnteredEmail("");
       setPassword("");
       setConfirmPassword("");
@@ -230,116 +239,118 @@ const ActivatePage = () => {
       if (error.message) {
         messageApi.open({
           type: "error",
-          content: <>{error.message}</>, // Explicitly specify the type here
+          content: <>{error.code}</>, // Explicitly specify the type here
         });
       }
     }
   };
 
-  if (accountCreated) {
-    return (
-      <>
-        <div className="flex flex-col items-center justify-center w-[100vw] min-h-[100vh]">
-          <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px] bg-white rounded-lg border p-4 border-solid border-gray-50">
-            <Result
-              status="success"
-              title="Account Created Successfully!"
-              subTitle="Please check your email for a verification link. Click on it to activate your account."
-              extra={[
-                <Button
-                  key="login"
-                  type="primary"
-                  className="mt-4"
-                  onClick={() => router.push("/auth/signin")}
-                >
-                  Back to Login
-                </Button>,
-              ]}
-            />
-          </div>
-        </div>
-      </>
-    );
-  }
   return (
     <>
       <div className="flex flex-col items-center justify-center w-[100vw] min-h-[100vh]">
         <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px]  bg-white rounded-lg border p-4 border-solid border-gray-50">
-          <h4 className="font-poppins flex flex-row  my-4 font-semibold  text-[22px] text-gray-700 mt-3">
-            <BsStack className="w-8 h-8 text-[#0577fb] pr-2" /> Edustack
-          </h4>
+          {accountCreated ? (
+            <>
+              <div className="flex flex-col items-center justify-center w-[100vw] min-h-[100vh]">
+                <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px] bg-white rounded-lg border p-4 border-solid border-gray-50">
+                  <Result
+                    status="success"
+                    title="Account Created Successfully!"
+                    subTitle="Please check your email for a verification link. Click on it to activate your account."
+                    extra={[
+                      <Button
+                        key="login"
+                        type="primary"
+                        className="mt-4"
+                        onClick={() => router.push("/auth/signin")}
+                      >
+                        Back to Login
+                      </Button>,
+                    ]}
+                  />
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <h4 className="font-poppins flex flex-row  my-4 font-semibold  text-[22px] text-gray-700 mt-3">
+                <BsStack className="w-8 h-8 text-[#0577fb] pr-2" /> Edustack
+              </h4>
 
-          <h4 className="font-poppins  my-4  text-[16px] text-gray-700 mt-3">
-            Activate your Account
-          </h4>
+              <h4 className="font-poppins  my-4  text-[16px] text-gray-700 mt-3">
+                Activate your Account
+              </h4>
 
-          <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
-            College Mail
-          </p>
-          <Input
-            placeholder="Enter your college email"
-            value={enteredEmail}
-            type="email"
-            onChange={(e) => setEnteredEmail(e.target.value)}
-            size="large"
-          />
+              <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
+                College Mail
+              </p>
+              <Input
+                placeholder="Enter your college email"
+                value={enteredEmail}
+                type="email"
+                onChange={(e) => setEnteredEmail(e.target.value)}
+                size="large"
+              />
 
-          <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
-            User Type
-          </p>
-          <Select
-            value={userType || undefined}
-            onChange={setUserType}
-            placeholder="Select user type"
-            className="w-full"
-            size="large"
-          >
-            <Select.Option value="student">Student</Select.Option>
-            <Select.Option value="faculty">Faculty</Select.Option>
-          </Select>
+              <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
+                User Type
+              </p>
+              <Select
+                value={userType || undefined}
+                onChange={setUserType}
+                placeholder="Select user type"
+                className="w-full"
+                size="large"
+              >
+                <Select.Option value="student">Student</Select.Option>
+                <Select.Option value="faculty">Faculty</Select.Option>
+              </Select>
 
-          <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
-            Choose Password
-          </p>
-          <Input.Password
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password"
-            size="large"
-            iconRender={(visible) =>
-              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-            }
-          />
+              <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
+                Choose Password
+              </p>
+              <Input.Password
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
+                size="large"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
 
-          <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
-            Confirm Password
-          </p>
-          <Input.Password
-            id="confirmPassword"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Enter confirm password"
-            size="large"
-            iconRender={(visible) =>
-              visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-            }
-          />
+              <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
+                Confirm Password
+              </p>
+              <Input.Password
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Enter confirm password"
+                size="large"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+              />
 
-          <Button
-            onClick={handleFormSubmit}
-            type="primary"
-            className="w-full h-10 mt-6 mb-2 rounded-lg"
-          >
-            Next
-          </Button>
+              <Button
+                onClick={handleFormSubmit}
+                type="primary"
+                className="w-full h-10 mt-6 mb-2 rounded-lg"
+                loading={submitButtonLoading}
+              >
+                Next
+              </Button>
 
-          <p className="font-poppins  text-[12px] text-gray-700 mt-3 mb-6">
-            Already have an account?{" "}
-            <a href="/auth/signin" className="text-[#0577fb]">
-              Login
-            </a>
-          </p>
+              <p className="font-poppins  text-[12px] text-gray-700 mt-3 mb-6">
+                Already have an account?{" "}
+                <a href="/auth/signin" className="text-[#0577fb]">
+                  Login
+                </a>
+              </p>
+            </>
+          )}
         </div>
       </div>
 
@@ -361,6 +372,7 @@ const ActivatePage = () => {
             key="submit"
             type="primary"
             onClick={handleCreateAccount}
+            loading={createAccountLoading}
             className="rounded-lg"
           >
             Create Account
