@@ -1,19 +1,16 @@
 "use client";
-import { auth, db } from "@/lib/firebase-config";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase-config";
+import { onAuthStateChanged } from "firebase/auth";
 import styles from "./FacultyHomePage.module.css";
 import Image from "next/image";
 import { BsClockHistory, BsFiletypeCsv, BsPersonCheck } from "react-icons/bs";
 import { RxReader } from "react-icons/rx";
 import { TbReportAnalytics } from "react-icons/tb";
-import { RiThreadsLine } from "react-icons/ri";
-import { BiSpreadsheet } from "react-icons/bi";
 import { Skeleton } from "@mui/material";
 import Link from "next/link";
 import { getDownloadURL, getStorage, ref } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import { SiGooglecloud } from "react-icons/si";
 import { LuPresentation } from "react-icons/lu";
 import { Modal } from "antd";
 
@@ -77,7 +74,9 @@ const FacultyHomePage = () => {
           const url = await getDownloadURL(
             ref(storage, `photos/${user.email}.jpg`)
           );
-          setPhotoUrl(url);
+          if (url) {
+            setPhotoUrl(url);
+          }
 
           updatedFacultyDetails.photoUrl = url;
         } catch (error) {
@@ -111,7 +110,9 @@ const FacultyHomePage = () => {
 
       if (userUidMatch) {
         setFacultyDetails(parsedFacultyDetails);
-        setPhotoUrl(facultyDetails.photoUrl);
+        if (facultyDetails.photoUrl) {
+          setPhotoUrl(facultyDetails.photoUrl);
+        }
         setDataFetched(true);
       }
     }

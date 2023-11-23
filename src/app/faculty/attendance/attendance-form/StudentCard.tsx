@@ -12,10 +12,10 @@ export default function StudentCard(props) {
         <h6 className="text-[rgba(0, 0, 0, 0.88)]">{slNo + "."}</h6>
       </div>
 
-      <div className="max-w-[20%]  w-[20%] min-w-[20%] flex justify-center">
+      <div className="max-w-[20%] bg-white w-[20%] min-w-[20%] flex justify-center">
         <img
           src="/Default.svg"
-          className=" w-[70%] h-[70%] rounded-[50%] align-left"
+          className=" w-[70%] bg-white h-[70%] rounded-[50%] align-left"
           alt="StudentImage"
         />
       </div>
