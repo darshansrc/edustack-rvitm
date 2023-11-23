@@ -2,6 +2,7 @@
 import { auth, db } from "@/lib/firebase-config";
 import { Button, Input, Modal, Select, message } from "antd";
 import {
+  collection,
   collectionGroup,
   doc,
   getDoc,
@@ -141,30 +142,36 @@ const ActivatePage = () => {
         })
       );
     } else if (enteredEmail && userType === "faculty") {
-      // Assuming "email" is the name of the field in the document
-      const query = query(
-        collection(db, "faculty"),
-        where("facultyEmail", "==", enteredEmail)
+      const queryPath = "faculty";
+      const facultyQuery = query(
+        collection(db, queryPath),
+        where("email", "==", enteredEmail)
       );
-      const querySnapshot = await getDocs(query);
 
-      if (!isEmpty(querySnapshot.docs)) {
-        // Assuming you want to get the first document that matches the query
-        const userDoc = querySnapshot.docs[0];
-        const facultyDetails = userDoc.data();
-        setFacultyDetails(facultyDetails as facultyDetails);
-        console.log(facultyDetails);
-        setIsModalOpen(true);
-        messageApi.open({
-          type: "success",
-          content: "Faculty details fetched",
-        });
-      } else {
-        messageApi.open({
-          type: "error",
-          content: "No Records Found",
-        });
-      }
+      const facultySnapshot = await getDocs(facultyQuery);
+
+      await Promise.all(
+        facultySnapshot.docs.map(async (facultyDoc) => {
+          // Assuming "facultyDetails" is the field containing details in the document
+          const facultyDetails = facultyDoc.data().facultyDetails;
+
+          if (facultyDetails) {
+            messageApi.open({
+              type: "success",
+              content: "Faculty details fetched",
+            });
+
+            console.log(facultyDetails);
+            setFacultyDetails(facultyDetails as facultyDetails);
+            setIsModalOpen(true);
+          } else {
+            messageApi.open({
+              type: "error",
+              content: "No Records Found",
+            });
+          }
+        })
+      );
     }
   };
 
