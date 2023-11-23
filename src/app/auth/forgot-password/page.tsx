@@ -4,6 +4,7 @@ import { Button, Input, message } from "antd";
 import { sendPasswordResetEmail } from "firebase/auth";
 import React, { useState } from "react";
 import { BsStack } from "react-icons/bs";
+import { HiOutlineMail } from "react-icons/hi";
 
 const ForgotPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -42,13 +43,13 @@ const ForgotPage = () => {
       {contextHolder}
       <div className="flex flex-col items-center justify-center w-[100vw] h-[100vh]">
         <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px]  bg-white rounded-lg border p-4 border-solid border-gray-50">
-          <h4 className="font-poppins flex flex-row  my-4 font-semibold  text-[22px] text-gray-700 mt-3">
-            <BsStack className="w-8 h-8 text-[#0577fb] pr-2" /> Edustack
+          <h4 className="font-poppins flex flex-row  my-4 font-semibold  text-[24px] text-gray-700 mt-3">
+            <BsStack className="w-10 h-10 text-[#0577fb] pr-2" /> Edustack
           </h4>
 
-          <h4 className="font-poppins  my-4  text-[16px] text-gray-700 mt-3">
+          <h5 className="font-poppins font-semibold pl-3 my-3 text-sm w-full text-left">
             Reset your Password
-          </h4>
+          </h5>
 
           <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-6">
             College Mail
@@ -60,6 +61,7 @@ const ForgotPage = () => {
             onChange={(e) => setEnteredEmail(e.target.value)}
             size="large"
             className="mb-6"
+            prefix={<HiOutlineMail />}
           />
 
           <Button

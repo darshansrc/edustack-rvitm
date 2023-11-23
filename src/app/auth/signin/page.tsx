@@ -5,6 +5,7 @@ import { FiMail, FiEye, FiEyeOff } from "react-icons/fi";
 import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { MdArrowBackIosNew } from "react-icons/md";
+import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import {
   GoogleAuthProvider,
   getRedirectResult,
@@ -22,6 +23,7 @@ import { CgSpinner } from "react-icons/cg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons/faSpinner";
 import { BsStack } from "react-icons/bs";
+import { Alert, Button, Input } from "antd";
 
 const SignIn = () => {
   const [passwordShown, setPasswordShown] = useState(false);
@@ -85,20 +87,18 @@ const SignIn = () => {
         }
       });
     } catch (err) {
-      setError(err.message);
+      setError(err.code);
     } finally {
       setLoading(false);
     }
   };
 
-  const togglePasswordVisibility = (e: any) => {
-    e.preventDefault();
-    setPasswordShown(!passwordShown);
-  };
+  const handleSubmit = async () => {
+    if (!email || !password) {
+      setError("Please fill all the fields");
+      return;
+    }
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    setError("");
     setIsLoading(true); // Set loading state to true
 
     try {
@@ -139,123 +139,82 @@ const SignIn = () => {
           });
         })
         .catch((error) => {
-          setError(error.message);
+          setError(error.code);
           setIsLoading(false);
         });
     } catch (err) {
-      setError(err.message);
+      setError(err.code);
       setIsLoading(false);
     }
   };
 
-  const isFormValid = email.trim() !== "" && password.trim() !== "";
-
   return (
-    <main className={styles.pageContainer}>
-      <nav className={styles.navBar}>
-        <Link href="/">
-          <MdArrowBackIosNew style={{ fontSize: "20px" }} />
-        </Link>
-      </nav>
-      <div className={styles.formContainer}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexDirection: "row",
-          }}
-        >
-          <BsStack className="w-[55px] h-[55px] text-[#0577fb] p-2 items-center" />
-          <h1 style={{ fontSize: "25px", padding: "10px" }}> | </h1>
-          <Image
-            priority
-            alt=""
-            src="/logorv.png"
-            width={60}
-            height={60}
-            style={{
-              maxWidth: "60px",
-              maxHeight: "60px",
-              alignItems: "center",
-            }}
-          />
-        </div>
-        <div style={{ textAlign: "center", margin: "25px" }}>
-          <h1
-            style={{
-              fontWeight: "600",
-              fontFamily: "Poppins",
-              fontSize: "1.5rem",
-            }}
-          >
-            Welcome!
-          </h1>
-          <p style={{ color: "#030303", fontSize: "14px" }}>
-            Please Sign In to your account to Continue
-          </p>
-        </div>
-        <div className={styles.inputHeading}>Email Address</div>
-        <div className={styles.inputContainer}>
-          <input
-            type="email"
-            id="email"
-            placeholder="Enter your email"
-            className={styles.formInput}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required // Add the required attribute
-          />
-          <div className={styles.iconContainer}>
-            <HiOutlineMail />
-          </div>
-        </div>
-        <div className={styles.inputHeading}>Password</div>
-        <div className={styles.inputContainer}>
-          <input
-            placeholder="Enter your password"
-            className={styles.formInput}
-            type={passwordShown ? "text" : "password"}
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required // Add the required attribute
-          />
-          <span
-            onClick={togglePasswordVisibility}
-            className={styles.passwordButton}
-          >
-            {passwordShown ? <FiEye /> : <FiEyeOff />}
-          </span>
-          <div className={styles.iconContainer}>
-            <HiOutlineLockClosed />
-          </div>
-        </div>
-        <Link href="/auth/forgot-password">
-          <div className={styles.forgotPassword}>Forgot Password?</div>
-        </Link>
+    <main className="flex flex-col items-center justify-center w-[100vw] min-h-[100vh]">
+      <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px]  bg-white rounded-lg border p-4 border-solid border-gray-50">
+        <h4 className="font-poppins flex flex-row  my-6 font-semibold  text-[24px] text-gray-800 mt-8">
+          <BsStack className="w-10 h-10 text-[#0577fb] pr-2" /> Edustack
+        </h4>
 
-        <div className={error ? styles.errorMessage : ""}>
-          {error ? error : null}
+        <h5 className="font-semibold pl-2 my-3 text-sm w-full text-left">
+          Login With
+        </h5>
+
+        <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
+          College Mail
+        </p>
+
+        <Input
+          type="email"
+          id="email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          size="large"
+          className="font-poppins"
+          prefix={<HiOutlineMail />}
+        />
+
+        <p className="font-poppins w-full mt-6 text-left pl-2 text-[12px] text-gray-700 ">
+          Password
+        </p>
+
+        <Input.Password
+          placeholder="Enter your password"
+          type={passwordShown ? "text" : "password"}
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          size="large"
+          className="font-poppins"
+          iconRender={(visible) =>
+            visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+          }
+          prefix={<HiOutlineLockClosed />}
+        />
+
+        <div className="w-full text-left flex justify-start items-start pl-2 mt-2 text-blue-400 text-sm">
+          <Link href="/auth/forgot-password">Forgot Password?</Link>
         </div>
 
-        <button
-          className={styles.primaryButton}
+        {error && (
+          <Alert
+            type="error"
+            message={error}
+            className="w-full"
+            showIcon
+            style={{ marginTop: "10px" }}
+          />
+        )}
+
+        <Button
+          className="mt-4 w-full"
           onClick={handleSubmit}
-          disabled={isLoading || !isFormValid}
+          type="primary"
+          loading={isLoading}
+          size="large"
         >
-          {isLoading ? (
-            <div>
-              <FontAwesomeIcon
-                icon={faSpinner}
-                spinPulse
-                style={{ color: "#fff", marginRight: "0.5rem" }}
-              />
-              Loading
-            </div>
-          ) : (
-            "Sign In"
-          )}
-        </button>
+          Sign In
+        </Button>
         <p
           style={{
             fontSize: "14px",
@@ -265,7 +224,7 @@ const SignIn = () => {
           }}
         >
           Account not activated?{" "}
-          <Link href="/auth/activate-account" style={{ color: "blue" }}>
+          <Link href="/auth/activate-account" className="text-blue-400">
             Click here
           </Link>
         </p>
