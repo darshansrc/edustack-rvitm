@@ -25,7 +25,7 @@ export async function middleware(request: NextRequest, response: NextResponse) {
         }
       } else {
         // Delete the session cookie on failed authentication
-        if (response.cookies) {
+        if (response.cookies && session) {
           response.cookies.delete("session");
         }
         return NextResponse.redirect(new URL("/", request.url));
@@ -33,7 +33,7 @@ export async function middleware(request: NextRequest, response: NextResponse) {
     } catch (error) {
       console.error("Error checking authentication API:", error);
       // Delete the session cookie on API error
-      if (response.cookies) {
+      if (response.cookies && session) {
         response.cookies.delete("session");
       }
       return NextResponse.redirect(new URL("/", request.url));
@@ -63,7 +63,7 @@ export async function middleware(request: NextRequest, response: NextResponse) {
         }
       } else {
         // Delete the session cookie on failed authentication
-        if (response.cookies) {
+        if (response.cookies && session) {
           response.cookies.delete("session");
         }
         return NextResponse.redirect(new URL("/auth/signin", request.url));
@@ -71,7 +71,7 @@ export async function middleware(request: NextRequest, response: NextResponse) {
     } catch (error) {
       console.error("Error checking authentication API:", error);
       // Delete the session cookie on API error
-      if (response.cookies) {
+      if (response.cookies && session) {
         response.cookies.delete("session");
       }
       return NextResponse.redirect(new URL("/auth/signin", request.url));
