@@ -1,6 +1,6 @@
 "use client";
 import { auth, db } from "@/lib/firebase-config";
-import { Button, Input, Modal, Select, message } from "antd";
+import { Button, Input, Modal, Result, Select, message } from "antd";
 import {
   collection,
   collectionGroup,
@@ -25,6 +25,7 @@ interface facultyDetails {
   facultyType: string;
   facultyName: string;
   facultyDepartment: string;
+  facultyDesignation: string;
 }
 interface studentDetails {
   studentName: string;
@@ -57,6 +58,7 @@ const ActivatePage = () => {
     facultyType: "",
     facultyName: "",
     facultyDepartment: "",
+    facultyDesignation: "",
   });
 
   const [accountCreated, setAccountCreated] = useState<boolean>(false);
@@ -145,10 +147,12 @@ const ActivatePage = () => {
       const queryPath = "faculty";
       const facultyQuery = query(
         collection(db, queryPath),
-        where("email", "==", enteredEmail)
+        where("facultyEmail", "==", enteredEmail)
       );
 
       const facultySnapshot = await getDocs(facultyQuery);
+
+      console.log(facultySnapshot.docs);
 
       await Promise.all(
         facultySnapshot.docs.map(async (facultyDoc) => {
@@ -183,7 +187,6 @@ const ActivatePage = () => {
         confirmPassword
       );
       const user = res.user;
-      console.log(user);
 
       if (userType === "student") {
         const userDocRef = doc(db, "users", user.uid);
@@ -217,6 +220,10 @@ const ActivatePage = () => {
           "A Verification link has been sent to your email, please click on it to activate you account.",
       });
       setAccountCreated(true);
+      setEnteredEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setUserType("");
       setIsModalOpen(false);
     } catch (error: any) {
       setIsModalOpen(false);
@@ -228,6 +235,32 @@ const ActivatePage = () => {
       }
     }
   };
+
+  if (accountCreated) {
+    return (
+      <>
+        <div className="flex flex-col items-center justify-center w-[100vw] min-h-[100vh]">
+          <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px] bg-white rounded-lg border p-4 border-solid border-gray-50">
+            <Result
+              status="success"
+              title="Account Created Successfully!"
+              subTitle="Please check your email for a verification link. Click on it to activate your account."
+              extra={[
+                <Button
+                  key="login"
+                  type="primary"
+                  className="mt-4"
+                  onClick={() => router.push("/auth/signin")}
+                >
+                  Back to Login
+                </Button>,
+              ]}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
   return (
     <>
       <div className="flex flex-col items-center justify-center w-[100vw] min-h-[100vh]">
@@ -316,6 +349,23 @@ const ActivatePage = () => {
         onOk={handleCreateAccount}
         centered
         title="Confirm Your Details"
+        footer={[
+          <Button
+            key="back"
+            onClick={() => setIsModalOpen(false)}
+            className="rounded-lg"
+          >
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleCreateAccount}
+            className="rounded-lg"
+          >
+            Create Account
+          </Button>,
+        ]}
       >
         <div className="p-4">
           {userType === "student" ? (
@@ -353,7 +403,7 @@ const ActivatePage = () => {
               </div>
               <div className="mb-2">
                 <span className="font-bold">Designation:</span>{" "}
-                {facultyDetails.facultyType}
+                {facultyDetails.facultyDesignation}
               </div>
               <div className="mb-2">
                 <span className="font-bold">Department:</span>{" "}
