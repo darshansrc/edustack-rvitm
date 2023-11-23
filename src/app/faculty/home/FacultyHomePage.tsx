@@ -18,7 +18,7 @@ import { LuPresentation } from "react-icons/lu";
 import { Modal } from "antd";
 
 interface facultyDetails {
-  facultyType: string;
+  facultyDesignation: string;
   facultyName: string;
   facultyDepartment: string;
   userUID: string;
@@ -27,7 +27,7 @@ interface facultyDetails {
 
 const FacultyHomePage = () => {
   const [facultyDetails, setFacultyDetails] = useState<facultyDetails>({
-    facultyType: "",
+    facultyDesignation: "",
     facultyName: "",
     facultyDepartment: "",
     userUID: "",
@@ -151,7 +151,7 @@ const FacultyHomePage = () => {
               </div>
               <div className={styles.studentDetail}>
                 {" "}
-                {facultyDetails?.facultyType}, Dept. of{" "}
+                {facultyDetails?.facultyDesignation}, Dept. of{" "}
                 {facultyDetails?.facultyDepartment}
               </div>
             </div>

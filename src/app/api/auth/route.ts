@@ -60,6 +60,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ isLogged: false }, { status: 401 });
   }
 }
+
 export async function POST(request: NextRequest, response: NextResponse) {
   const authorization = headers().get("Authorization");
 
