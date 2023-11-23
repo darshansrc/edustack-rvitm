@@ -251,25 +251,21 @@ const ActivatePage = () => {
         <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px]  bg-white rounded-lg border p-4 border-solid border-gray-50">
           {accountCreated ? (
             <>
-              <div className="flex flex-col items-center justify-center w-[100vw] min-h-[100vh]">
-                <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px] bg-white rounded-lg border p-4 border-solid border-gray-50">
-                  <Result
-                    status="success"
-                    title="Account Created Successfully!"
-                    subTitle="Please check your email for a verification link. Click on it to activate your account."
-                    extra={[
-                      <Button
-                        key="login"
-                        type="primary"
-                        className="mt-4"
-                        onClick={() => router.push("/auth/signin")}
-                      >
-                        Back to Login
-                      </Button>,
-                    ]}
-                  />
-                </div>
-              </div>
+              <Result
+                status="success"
+                title="Account Created Successfully!"
+                subTitle="Please check your email for a verification link. Click on it to activate your account."
+                extra={[
+                  <Button
+                    key="login"
+                    type="primary"
+                    className="mt-4"
+                    onClick={() => router.push("/auth/signin")}
+                  >
+                    Back to Login
+                  </Button>,
+                ]}
+              />
             </>
           ) : (
             <>
