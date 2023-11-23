@@ -153,7 +153,7 @@ const ActivatePage = () => {
       await Promise.all(
         facultySnapshot.docs.map(async (facultyDoc) => {
           // Assuming "facultyDetails" is the field containing details in the document
-          const facultyDetails = facultyDoc.data().facultyDetails;
+          const facultyDetails = facultyDoc.data();
 
           if (facultyDetails) {
             messageApi.open({
