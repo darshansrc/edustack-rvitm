@@ -141,10 +141,16 @@ const ActivatePage = () => {
         })
       );
     } else if (enteredEmail && userType === "faculty") {
-      const getRef = doc(db, "faculty", enteredEmail);
-      const userDoc = await getDoc(getRef);
+      // Assuming "email" is the name of the field in the document
+      const query = query(
+        collection(db, "faculty"),
+        where("facultyEmail", "==", enteredEmail)
+      );
+      const querySnapshot = await getDocs(query);
 
-      if (userDoc.exists()) {
+      if (!isEmpty(querySnapshot.docs)) {
+        // Assuming you want to get the first document that matches the query
+        const userDoc = querySnapshot.docs[0];
         const facultyDetails = userDoc.data();
         setFacultyDetails(facultyDetails as facultyDetails);
         console.log(facultyDetails);
@@ -156,7 +162,7 @@ const ActivatePage = () => {
       } else {
         messageApi.open({
           type: "error",
-          content: "No Records Found", // Explicitly specify the type here
+          content: "No Records Found",
         });
       }
     }
