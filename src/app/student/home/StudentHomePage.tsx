@@ -129,7 +129,7 @@ const StudentHomePage = () => {
         <div style={{ marginRight: "14px" }}>
           {dataFetched ? (
             <Image
-              src={photoUrl ? photoUrl : "/None.jpg"}
+              src={photoUrl ? photoUrl : "/Default.svg"}
               alt={""}
               height={60}
               width={60}
@@ -178,7 +178,7 @@ const StudentHomePage = () => {
             priority
             width={60}
             height={60}
-            src="/logorv.png"
+            src="/logorv.svg"
             alt={""}
             style={{ margin: "0 10px", borderRadius: "50%" }}
           />

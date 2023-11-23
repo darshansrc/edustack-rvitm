@@ -14,7 +14,7 @@ export default function StudentCard(props) {
 
       <div className="max-w-[20%]  w-[20%] min-w-[20%] flex justify-center">
         <img
-          src="/None.jpg"
+          src="/Default.svg"
           className=" w-[70%] h-[70%] rounded-[50%] align-left"
           alt="StudentImage"
         />

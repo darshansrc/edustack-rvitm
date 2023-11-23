@@ -192,7 +192,7 @@ const StudentProfile = () => {
           <div className="relative flex flex-row justify-between items-center">
             {dataFetched ? (
               <Image
-                src={photoUrl ? photoUrl : "/None.jpg"}
+                src={photoUrl ? photoUrl : "/Default.svg"}
                 alt="Student Image"
                 width={112}
                 height={112}
