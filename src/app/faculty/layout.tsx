@@ -36,9 +36,9 @@ export default function DashboardLayout({
         if (userDoc.exists()) {
           const userData = userDoc.data();
           if (userData.type === "student") {
-            //  router.push("/student/home");
+            router.push("/student/home");
           } else if (userData.type === "faculty") {
-            router.push("/faculty/home");
+            // router.push("/faculty/home");
           } else if (userData.type === "parent") {
             router.push("/parent/home");
           } else {
@@ -49,7 +49,8 @@ export default function DashboardLayout({
         await signOut(auth);
       }
     };
-  });
+    checkAuth();
+  }, []);
 
   return (
     <>

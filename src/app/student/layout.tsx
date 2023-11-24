@@ -49,7 +49,8 @@ export default function DashboardLayout({
         await signOut(auth);
       }
     };
-  });
+    checkAuth();
+  }, []);
   return (
     <>
       <Navbar />
