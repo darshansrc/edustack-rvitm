@@ -2,11 +2,8 @@ import { signOut } from "firebase/auth";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { auth } from "./lib/firebase-config";
-import { useCookies } from "react-cookie";
 
 export async function middleware(request: NextRequest, response: NextResponse) {
-  const [cookies, setCookie, removeCookie] = useCookies(["session"]);
-
   const session = request.cookies.get("session");
   const { pathname } = request.nextUrl;
 
@@ -30,9 +27,8 @@ export async function middleware(request: NextRequest, response: NextResponse) {
         }
       } else {
         // Delete the session cookie on failed authentication
-        if (session) {
-          removeCookie("session");
-          console.log("Session cookie cleared");
+        if (response.cookies && session) {
+          response.cookies.delete("session");
         }
         return NextResponse.redirect(new URL("/", request.url));
       }
@@ -73,19 +69,25 @@ export async function middleware(request: NextRequest, response: NextResponse) {
           return NextResponse.redirect(new URL("/auth/signin", request.url));
         }
       } else {
-        if (session) {
-          removeCookie("session");
-          console.log("Session cookie cleared 1");
+        // Delete the session cookie on failed authentication
+        signOut(auth);
+        const response = await fetch(`${window.location.origin}/api/signout`, {
+          method: "POST",
+        });
+        if (response.status === 200) {
+          return NextResponse.redirect(new URL("/auth/signin", request.url));
         }
-
         return NextResponse.redirect(new URL("/auth/signin", request.url));
       }
     } catch (error) {
       console.error("Error checking authentication API:", error);
 
-      if (session) {
-        removeCookie("session");
-        console.log("Session cookie cleared 2");
+      signOut(auth);
+      const response = await fetch(`${window.location.origin}/api/signout`, {
+        method: "POST",
+      });
+      if (response.status === 200) {
+        return NextResponse.redirect(new URL("/auth/signin", request.url));
       }
 
       return NextResponse.redirect(new URL("/auth/signin", request.url));

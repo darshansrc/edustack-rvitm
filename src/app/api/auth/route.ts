@@ -45,16 +45,11 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error in GET function:", error);
+    console.error("Error in GET function nigha:", error);
 
-    // Clear the session cookie in case of an error
-    const options = {
-      name: "session",
-      value: "",
-      maxAge: -1,
-    };
+    cookies().delete("session");
+    console.log("Session cookie cleared 2");
 
-    cookies().set(options);
     console.log("Session cookie cleared");
 
     return NextResponse.json({ isLogged: false }, { status: 401 });
