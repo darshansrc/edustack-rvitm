@@ -1,8 +1,5 @@
-import { signOut } from "firebase/auth";
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import { auth } from "./lib/firebase-config";
-import { cookies } from "next/headers";
 
 export async function middleware(request: NextRequest, response: NextResponse) {
   const session = request.cookies.get("session");
@@ -28,8 +25,6 @@ export async function middleware(request: NextRequest, response: NextResponse) {
         }
       } else {
         // Delete the session cookie on failed authentication
-        cookies().delete("session");
-        console.log("Session cookie cleared 25");
         if (response.cookies && session) {
           response.cookies.delete("session");
         }
@@ -37,19 +32,16 @@ export async function middleware(request: NextRequest, response: NextResponse) {
       }
     } catch (error) {
       console.error("Error checking authentication API:", error);
-
-      cookies().delete("session");
-      console.log("Session cookie cleared 250");
-
+      // Delete the session cookie on API error
+      if (response.cookies && session) {
+        response.cookies.delete("session");
+      }
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
   if (pathname.startsWith("/student") || pathname.startsWith("/faculty")) {
-    if (
-      !session &&
-      (pathname.startsWith("/student") || pathname.startsWith("/faculty"))
-    ) {
+    if (!session) {
       return NextResponse.rewrite(new URL("/auth/signin", request.url));
     }
 
@@ -71,26 +63,17 @@ export async function middleware(request: NextRequest, response: NextResponse) {
         }
       } else {
         // Delete the session cookie on failed authentication
-        signOut(auth);
-        const response = await fetch(`${window.location.origin}/api/signout`, {
-          method: "POST",
-        });
-        if (response.status === 200) {
-          return NextResponse.redirect(new URL("/auth/signin", request.url));
+        if (response.cookies && session) {
+          response.cookies.delete("session");
         }
         return NextResponse.redirect(new URL("/auth/signin", request.url));
       }
     } catch (error) {
       console.error("Error checking authentication API:", error);
-
-      signOut(auth);
-      const response = await fetch(`${window.location.origin}/api/signout`, {
-        method: "POST",
-      });
-      if (response.status === 200) {
-        return NextResponse.redirect(new URL("/auth/signin", request.url));
+      // Delete the session cookie on API error
+      if (response.cookies && session) {
+        response.cookies.delete("session");
       }
-
       return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
   }
