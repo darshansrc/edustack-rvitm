@@ -108,35 +108,33 @@ const SignIn = () => {
           const getRef = doc(db, "users", user.uid);
           const userDoc = await getDoc(getRef);
 
-          fetch("/api/auth", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${await res.user.getIdToken()}`,
-            },
-          }).then(async (response) => {
-            if (response.status === 200) {
-              try {
-                if (userDoc.exists()) {
-                  const userData = userDoc.data();
-                  if (userData.type === "student") {
-                    router.push("/student/home");
-                  } else if (userData.type === "faculty") {
-                    router.push("/faculty/home");
-                  } else if (userData.type === "parent") {
-                    router.push("/parent/home");
-                  } else {
-                    setError("No Records Found");
-                    await signOut(auth);
-                    setIsLoading(false);
-                  }
-                }
-              } catch (err) {
+          // fetch("/api/auth", {
+          //   method: "POST",
+          //   headers: {
+          //     Authorization: `Bearer ${await res.user.getIdToken()}`,
+          //   },
+          // }).then(async (response) => {
+          //   if (response.status === 200) {
+          try {
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              if (userData.type === "student") {
+                router.push("/student/home");
+              } else if (userData.type === "faculty") {
+                router.push("/faculty/home");
+              } else if (userData.type === "parent") {
+                router.push("/parent/home");
+              } else {
                 setError("No Records Found");
                 await signOut(auth);
                 setIsLoading(false);
               }
             }
-          });
+          } catch (err) {
+            setError("No Records Found");
+            await signOut(auth);
+            setIsLoading(false);
+          }
         })
         .catch((error) => {
           setError(error.code);
