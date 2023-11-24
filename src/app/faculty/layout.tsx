@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import DesktopNavbar from "./components/DesktopNavBar/DesktopNavbar";
 import BottomNavbar from "./components/bottomNavbar/BottomNavbar";
