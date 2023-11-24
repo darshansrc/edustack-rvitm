@@ -36,7 +36,13 @@ export async function GET(request: NextRequest) {
       { status: 200 }
     );
   } catch (e) {
-    cookies().delete("session");
+    try {
+      cookies().delete("session");
+      console.log("Session cookie deleted !");
+    } catch (err) {
+      console.log(err);
+      console.log("Session cookie not deleted !");
+    }
     console.log(e);
     console.log("Session cookie is invalid !");
     return NextResponse.json({ isLogged: false }, { status: 401 });
