@@ -1249,28 +1249,6 @@ const AttendanceDashboard = () => {
                                   Topic
                                 </p>
                               </button>
-
-                              {/* <CSVLink
-                                onClick={() => {
-                                  setSelectedClassData(sessionObj.data);
-                                }}
-                                key="export-csv-data"
-                                data={generateCSVData()}
-                                filename={`Attendance-${subjectName}-${new Date(
-                                  selectedClassData.classDate
-                                ).toLocaleDateString("en-US", {
-                                  year: "numeric",
-                                  month: "short",
-                                  day: "numeric",
-                                })}-${formatTime(
-                                  selectedClassData.classStartTime
-                                )}-${formatTime(
-                                  selectedClassData.classEndTime
-                                )}.csv`}
-                                className="p-2 bg-slate-100 text-[#0577fb] rounded mx-2 mt-2"
-                              >
-                                <FiDownload />
-                              </CSVLink> */}
                             </div>
                           </div>
                         </Timeline.Content>

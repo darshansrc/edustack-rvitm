@@ -6,6 +6,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { AiOutlineRightCircle } from "react-icons/ai";
 import AppBar from "@mui/material/AppBar";
+import { CalendarOutlined } from "@ant-design/icons";
 import {
   Tab as MyTab,
   Tabs as MyTabs,
@@ -22,6 +23,8 @@ import { styled } from "@mui/material/styles";
 import { BiTime } from "react-icons/bi";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase-config";
+import { Alert } from "antd";
+import { Timeline } from "keep-react";
 
 interface SubjectOption {
   value: string;
@@ -594,58 +597,27 @@ function StudentAttendanceTable() {
                         Attendance Percentage:{" "}
                         {Math.round(getAttendancePercentage(index))}%
                       </Typography>
-                      {getAttendancePercentage(index) > 75 ? (
-                        <Typography
-                          style={{
-                            marginLeft: "10px",
-                            fontSize: "13px",
-                            color: "rgb(92, 128, 104)",
-                            margin: "10px",
-                            fontFamily: "Poppins",
-                          }}
-                        >
-                          <div
-                            style={{
-                              backgroundColor: "rgb(214, 237, 221)",
-                              padding: "5px",
-                              borderRadius: "5px",
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <BsCheckCircleFill style={{ marginRight: "5px" }} />{" "}
-                            Your Attendance Requirement is Satisfied
-                          </div>
-                        </Typography>
+                      {getAttendancePercentage(index) >= 75 ? (
+                        <Alert
+                          type="success"
+                          className="m-2 text-[12px]"
+                          showIcon
+                          message={`Your attendance requirement is satisifed.`}
+                        />
                       ) : (
-                        <Typography
-                          style={{
-                            marginLeft: "10px",
-                            fontSize: "13px",
-                            color: "rgb(139, 78, 78)",
-                            margin: "10px",
-                            fontFamily: "Poppins",
-                          }}
-                        >
-                          <div
-                            style={{
-                              backgroundColor: "rgb(237, 221, 221)",
-                              padding: "5px",
-                              borderRadius: "5px",
-                              display: "flex",
-                              alignItems: "center",
-                            }}
-                          >
-                            <BsXCircleFill style={{ marginRight: "5px" }} /> You
-                            need to attend{" "}
-                            {Math.ceil(
+                        <Alert
+                          type="warning"
+                          className="m-2 text-[12px]"
+                          showIcon
+                          message={`You
+                            need to attend
+                            ${Math.ceil(
                               (0.75 * getClassCount(index) -
                                 getAttendanceCount(index)) /
                                 0.25
-                            )}{" "}
-                            more classes to reach 75%.
-                          </div>
-                        </Typography>
+                            )}
+                            more class to reach 75% Attendance.`}
+                        />
                       )}
                     </div>
                   ) : (
@@ -681,77 +653,63 @@ function StudentAttendanceTable() {
                     </div>
                   )}
                 </Card>
-                <div style={{ display: "flex", flexWrap: "wrap" }}>
+                <div className="flex flex-col w-[95vw] max-w-[550px] my-8 px-6 relative">
                   {/* Iterate over attendance data for the selected subject */}
                   {attendanceData[index]
                     ?.slice()
                     .reverse()
                     .map((classData, classIndex) => (
                       <>
-                        <div key={classIndex} className={styles.cardContainer}>
-                          <div className={styles.connector}>
-                            <div className={styles.circle}></div>
-                            <Typography
-                              style={{
-                                fontFamily: "Poppins",
-                                fontSize: "14px",
-                                fontWeight: "500",
-                                color: "#0577fb",
-                                marginLeft: "10px",
-                              }}
-                            >
-                              {" "}
-                              {new Date(classData.classDate).toLocaleDateString(
-                                "en-US",
-                                {
+                        <Timeline
+                          key={classIndex}
+                          timelineBarType="dashed"
+                          gradientPoint={true}
+                        >
+                          <Timeline.Item>
+                            <Timeline.Point icon={<CalendarOutlined />} />
+                            <Timeline.Content>
+                              <Timeline.Time>
+                                {new Date(
+                                  classData.classDate
+                                ).toLocaleDateString("en-US", {
                                   year: "numeric",
                                   month: "short",
                                   day: "numeric",
-                                }
-                              )}{" "}
-                              ({getDayOfWeek(new Date(classData.classDate))})
-                            </Typography>
-                          </div>
-
-                          <div className={styles.lineCard}>
-                            <div className={styles.line}></div>
-                            <Card
-                              className={styles.card}
-                              style={{
-                                boxShadow:
-                                  "0 0 0 1px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04)",
-                              }}
-                            >
-                              <div
-                                style={{
-                                  position: "absolute",
-                                  top: "30%",
-                                  left: "5%",
-                                  color: "white",
-                                  width: "25px",
-                                  height: "25px",
-                                  borderRadius: "50%",
-                                  backgroundColor: classData.students.find(
+                                })}{" "}
+                                ({getDayOfWeek(new Date(classData.classDate))})
+                              </Timeline.Time>
+                              <div className="border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px]">
+                                <div
+                                  style={{
+                                    position: "absolute",
+                                    top: "30%",
+                                    left: "12%",
+                                    color: "white",
+                                    width: "25px",
+                                    height: "25px",
+                                    borderRadius: "50%",
+                                    backgroundColor: classData.students.find(
+                                      (student) =>
+                                        student.usn ===
+                                        studentDetails.studentUSN
+                                    )?.Present
+                                      ? "green" // Set the background color to green if present
+                                      : "red", // Set the background color to red if absent
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    fontSize: "12px",
+                                    fontFamily: "Poppins",
+                                  }}
+                                >
+                                  {classData.students.find(
                                     (student) =>
                                       student.usn === studentDetails.studentUSN
                                   )?.Present
-                                    ? "green" // Set the background color to green if present
-                                    : "red", // Set the background color to red if absent
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  fontSize: "12px",
-                                  fontFamily: "Poppins",
-                                }}
-                              >
-                                {classData.students.find(
-                                  (student) =>
-                                    student.usn === studentDetails.studentUSN
-                                )?.Present
-                                  ? "P"
-                                  : "A"}
-                              </div>
-                              <CardContent style={{ padding: "10px" }}>
+                                    ? "P"
+                                    : "A"}
+                                </div>
+
                                 <div
                                   style={{
                                     display: "flex",
@@ -788,16 +746,6 @@ function StudentAttendanceTable() {
                                       )}
                                     </Typography>
                                   </div>
-                                  {/* <AiOutlineRightCircle
-                          style={{
-                            cursor: 'pointer',
-                            position: 'absolute',
-                            top: '50%',
-                            right: '10px',
-                            fontSize: '20px',
-                            color: '#333',
-                          }}
-                        /> */}
                                 </div>
                                 <Typography
                                   style={{
@@ -814,10 +762,10 @@ function StudentAttendanceTable() {
                                       classData.absentCount) +
                                     " classmates were present"}
                                 </Typography>
-                              </CardContent>
-                            </Card>
-                          </div>
-                        </div>
+                              </div>
+                            </Timeline.Content>
+                          </Timeline.Item>
+                        </Timeline>
                       </>
                     ))}
                 </div>

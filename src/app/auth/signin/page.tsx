@@ -24,7 +24,6 @@ const SignIn = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
   const [loading, setLoading] = useState(false);
 
   function googleSignIn() {
@@ -86,60 +85,52 @@ const SignIn = () => {
   };
 
   const handleSubmit = async () => {
-    if (!email || !password) {
-      setError("Please fill all the fields");
-      return;
-    }
-
-    setIsLoading(true); // Set loading state to true
-
     try {
-      await signInWithEmailAndPassword(auth, email, password)
-        .then(async (res) => {
-          const user = res.user;
-          const getRef = doc(db, "users", user.uid);
-          const userDoc = await getDoc(getRef);
+      if (!email || !password) {
+        setError("Please fill all the fields");
+        return;
+      }
 
-          fetch("/api/auth", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${await res.user.getIdToken()}`,
-            },
-          }).then(async (response) => {
-            if (response.status === 200) {
-              try {
-                if (userDoc.exists()) {
-                  const userData = userDoc.data();
-                  if (userData.type === "student") {
-                    router.push("/student/home");
-                  } else if (userData.type === "faculty") {
-                    router.push("/faculty/home");
-                  } else if (userData.type === "parent") {
-                    router.push("/parent/home");
-                  } else {
-                    setError("No Records Found");
-                    await signOut(auth);
-                    setIsLoading(false);
-                  }
-                }
-              } catch (err) {
-                setError("No Records Found");
-                await signOut(auth);
-                setIsLoading(false);
-              }
+      setIsLoading(true);
+
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const getRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(getRef);
+
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${await user.getIdToken()}`,
+        },
+      });
+
+      if (response.status === 200) {
+        try {
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            if (userData.type === "student") {
+              router.push("/student/home");
+            } else if (userData.type === "faculty") {
+              router.push("/faculty/home");
+            } else {
+              setError("No Records Found");
+              await signOut(auth);
             }
-          });
-        })
-        .catch((error) => {
-          setError(error.code);
-          setIsLoading(false);
-        });
-    } catch (err) {
-      setError(err.code);
+          }
+        } catch (err) {
+          setError("Error processing user data");
+          await signOut(auth);
+        }
+      } else {
+        setError("Authentication failed");
+        await signOut(auth);
+      }
+    } catch (error) {
+      setError(error.code);
+    } finally {
       setIsLoading(false);
     }
   };
-
   return (
     <main className="flex flex-col items-center justify-center w-[100vw] min-h-[100vh]">
       <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px]  bg-white rounded-lg border p-4 border-solid border-gray-50">
