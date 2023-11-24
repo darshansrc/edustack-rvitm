@@ -1,27 +1,19 @@
 "use client";
 import Link from "next/link";
 import styles from "./SignIn.module.css";
-import { FiMail, FiEye, FiEyeOff } from "react-icons/fi";
 import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi";
-import { useEffect, useState } from "react";
-import { MdArrowBackIosNew } from "react-icons/md";
+import { useState } from "react";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import {
   GoogleAuthProvider,
-  getRedirectResult,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signInWithRedirect,
   signOut,
 } from "firebase/auth";
 import { auth, db, provider } from "@/lib/firebase-config";
 import { useRouter } from "next/navigation";
 import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
-import { CgSpinner } from "react-icons/cg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons/faSpinner";
 import { BsStack } from "react-icons/bs";
 import { Alert, Button, Input } from "antd";
 
