@@ -50,7 +50,6 @@ export async function middleware(request: NextRequest, response: NextResponse) {
       !session &&
       (pathname.startsWith("/student") || pathname.startsWith("/faculty"))
     ) {
-      console.log("Session cookie cleared 3334");
       return NextResponse.rewrite(new URL("/auth/signin", request.url));
     }
 
@@ -68,20 +67,29 @@ export async function middleware(request: NextRequest, response: NextResponse) {
         ) {
           // Continue to the protected route
         } else {
-          cookies().delete("session");
-          console.log("Session cookie cleared 33399");
           return NextResponse.redirect(new URL("/auth/signin", request.url));
         }
       } else {
-        cookies().delete("session");
-        console.log("Session cookie cleared 333567");
+        // Delete the session cookie on failed authentication
+        signOut(auth);
+        const response = await fetch(`${window.location.origin}/api/signout`, {
+          method: "POST",
+        });
+        if (response.status === 200) {
+          return NextResponse.redirect(new URL("/auth/signin", request.url));
+        }
         return NextResponse.redirect(new URL("/auth/signin", request.url));
       }
     } catch (error) {
       console.error("Error checking authentication API:", error);
 
-      cookies().delete("session");
-      console.log("Session cookie cleared 33356789");
+      signOut(auth);
+      const response = await fetch(`${window.location.origin}/api/signout`, {
+        method: "POST",
+      });
+      if (response.status === 200) {
+        return NextResponse.redirect(new URL("/auth/signin", request.url));
+      }
 
       return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
