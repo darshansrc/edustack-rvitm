@@ -8,52 +8,33 @@ import { db } from "@/lib/firebase-config";
 customInitApp();
 
 export async function GET(request: NextRequest) {
-  let userType: string = "";
   const session = cookies().get("session")?.value || "";
-
-  try {
-    if (!session) {
-      return NextResponse.json({ isLogged: false }, { status: 401 });
-    }
-
-    const decodedClaims = await auth().verifySessionCookie(session, true);
-
-    if (!decodedClaims) {
-      const options = {
-        name: "session",
-        value: "",
-        maxAge: -1,
-      };
-
-      cookies().set(options);
-      console.log("Session cookie cleared 1");
-      return NextResponse.json({ isLogged: false }, { status: 401 });
-    }
-
-    const userUID = decodedClaims.uid; // Get the user's UID
-    const userEmail = decodedClaims.email; // Get the user's email
-    const getRef = doc(db, "users", userUID);
-    const userDoc = await getDoc(getRef);
-
-    if (userDoc.exists()) {
-      const userData = userDoc.data();
-      userType = userData.type;
-    }
-
-    return NextResponse.json(
-      { isLogged: true, userUID, userEmail, userType },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Error in GET function nigha:", error);
-
-    cookies().delete("session");
-    console.log("Session cookie cleared 2");
-
-    console.log("Session cookie cleared");
-
+  //Validate if the cookie exist in the request
+  if (!session) {
     return NextResponse.json({ isLogged: false }, { status: 401 });
   }
+
+  //Use Firebase Admin to validate the session cookie
+  const decodedClaims = await auth().verifySessionCookie(session, true);
+
+  if (!decodedClaims) {
+    return NextResponse.json({ isLogged: false }, { status: 401 });
+  }
+  let userType;
+  const userUID = decodedClaims.uid; // Get the user's UID
+  const userEmail = decodedClaims.email; // Get the user's email
+  const getRef = doc(db, "users", userUID);
+  const userDoc = await getDoc(getRef);
+
+  if (userDoc.exists()) {
+    const userData = userDoc.data();
+    userType = userData.type;
+  }
+
+  return NextResponse.json(
+    { isLogged: true, userUID, userEmail, userType },
+    { status: 200 }
+  );
 }
 
 export async function POST(request: NextRequest, response: NextResponse) {
