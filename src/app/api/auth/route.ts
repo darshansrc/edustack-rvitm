@@ -65,7 +65,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
     if (decodedToken) {
       //Generate session cookie
-      const expiresIn = 60 * 60 * 24 * 5 * 1000 * 50;
+      const expiresIn = 300000;
       const sessionCookie = await auth().createSessionCookie(idToken, {
         expiresIn,
       });
