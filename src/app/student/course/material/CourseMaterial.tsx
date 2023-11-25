@@ -7,7 +7,7 @@ interface SubjectOption {
   value: string;
   label: string;
   subjectType: string;
-  faculties: any;
+  faculties: string[];
 }
 
 const CourseMaterial = () => {

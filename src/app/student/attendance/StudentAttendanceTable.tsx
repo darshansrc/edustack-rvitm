@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import DonutChart from "./DonutChart";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { CalendarOutlined } from "@ant-design/icons";
 import {
   Tab as MyTab,
   Tabs as MyTabs,
@@ -260,14 +259,6 @@ function StudentAttendanceTable() {
   // Calculate total attendance percentage
   const totalAttendancePercentage = Math.round(
     (totalClassesAttended / totalClassesHeld) * 100
-  );
-
-  // Filter theory and lab subjects
-  const theorySubjects = subjectOptions.filter(
-    (subject) => subject.subjectType === "theory"
-  );
-  const labSubjects = subjectOptions.filter(
-    (subject) => subject.subjectType === "lab"
   );
 
   return (
