@@ -607,9 +607,25 @@ const ScheduleDashboard = () => {
 
     const allSelectedDateEvents = [...selectedDateEvents, ...repeatingDates];
 
+    const isDatePast = (selectedDate) => {
+      const today = new Date();
+      return selectedDate > today;
+    };
+
+    const sortedEvents = selectedDateEvents.sort((a, b) => {
+      if (a.isScheduleRepeating && !b.isScheduleRepeating) {
+        return 1;
+      } else if (!a.isScheduleRepeating && b.isScheduleRepeating) {
+        return -1;
+      } else {
+        // For events with the same type (repeating or non-repeating), maintain original order
+        return 0;
+      }
+    });
+
     return (
       <div className="flex flex-col w-[95vw] max-w-[550px] my-8 px-6 relative">
-        {selectedDateEvents.map((event, index) => (
+        {sortedEvents.map((event, index) => (
           <Timeline key={index} timelineBarType="dashed" gradientPoint={true}>
             <Timeline.Item>
               <Timeline.Point icon={<CalendarBlank size={16} />} />
@@ -643,6 +659,13 @@ const ScheduleDashboard = () => {
 
                   <div className="text-slate-500 font-[Poppins] text-[12px]">
                     <span className="text-[#0577fb] font-[Poppins] text-[12px]  ">
+                      Event Type:{" "}
+                    </span>
+                    {event?.isScheduleRepeating ? "Repeating" : "Non-Repeating"}
+                  </div>
+
+                  <div className="text-slate-500 font-[Poppins] text-[12px]">
+                    <span className="text-[#0577fb] font-[Poppins] text-[12px]  ">
                       Topic:{" "}
                     </span>
                     {event?.classTopic ? event?.classTopic : "N/A"}
@@ -663,16 +686,21 @@ const ScheduleDashboard = () => {
                       event.date &&
                       event.startTime &&
                       event.endTime && (
-                        <Button type="primary" size="small">
+                        <Button
+                          type="primary"
+                          size="small"
+                          disabled={isDatePast(selectedScheduleDate)}
+                        >
                           <Link
                             href={{
                               pathname: "/faculty/attendance/attendance-form",
                               query: {
                                 classId: event.selectedClassName,
                                 subjectCode: event.selectedSubject,
-                                classDate: dayjs(event.date).format(
-                                  "YYYY-MM-DD"
-                                ),
+                                classDate:
+                                  dayjs(selectedScheduleDate).format(
+                                    "YYYY-MM-DD"
+                                  ),
                                 classStartTime: fullformatTime(event.startTime),
                                 classEndTime: fullformatTime(event.endTime),
                                 classTopic: event.classTopic,
@@ -690,8 +718,16 @@ const ScheduleDashboard = () => {
                       className="border border-solid border-red-500 text-red-500"
                     >
                       <Popconfirm
-                        title="Delete Schedule"
-                        description="Are you sure to delete this Schedule?"
+                        title={
+                          event?.isScheduleRepeating
+                            ? "Delete this repeating Schedule"
+                            : "Delete Schedule"
+                        }
+                        description={
+                          event?.isScheduleRepeating
+                            ? "Are you sure to delete this Schedule? If you delete this event it will also be deleted for all other repeated sessions"
+                            : "Are you sure to delete this Schedule?"
+                        }
                         onConfirm={() => handleDeleteSession(index)}
                         okText="Yes"
                         cancelText="No"

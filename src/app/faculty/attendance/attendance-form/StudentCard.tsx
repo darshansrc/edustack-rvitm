@@ -1,3 +1,7 @@
+import { UserOutlined } from "@ant-design/icons";
+import React from "react";
+import { Avatar, Space } from "antd";
+
 export default function StudentCard(props) {
   const attendanceStatus = props.Present
     ? "bg-[#dff0d8] border border-solid border-[#b7eb8f]"
@@ -8,19 +12,15 @@ export default function StudentCard(props) {
       className={`flex items-center  py-3 my-2 h-[80px] relative rounded-xl ${attendanceStatus}`}
       onClick={props.toggle}
     >
-      <div className="max-w-[15%] w-[15%]  flex justify-center">
+      <div className="max-w-[12%] w-[12%]  flex justify-center">
         <h6 className="text-[rgba(0, 0, 0, 0.88)]">{slNo + "."}</h6>
       </div>
 
-      <div className="max-w-[20%] bg-white w-[20%] min-w-[20%] flex justify-center">
-        <img
-          src="/Default.svg"
-          className=" w-[70%] bg-white h-[70%] rounded-[50%] align-left"
-          alt="StudentImage"
-        />
+      <div className="max-w-[15%] w-[15%] min-w-[15%] flex justify-center">
+        <Avatar size={50} icon={<UserOutlined />} />
       </div>
 
-      <div className="max-w-[50%] pl-3 w-[50%] min-w-[50%] flex flex-col justify-center">
+      <div className="max-w-[55%] pl-3 w-[55%] min-w-[55%] flex flex-col justify-center">
         <h2
           className="text-[14px] font-[400] font-[Poppins] text-[rgba(0, 0, 0, 0.88)]"
           style={{ textTransform: "capitalize" }}

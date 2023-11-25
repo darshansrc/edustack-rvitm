@@ -80,6 +80,10 @@ interface ScheduleEvent {
   selectedBatch: string;
   classTopic: string;
   classDescription: string;
+  isScheduleRepeating?: boolean;
+  repeatingStartDate?: string;
+  repeatingEndDate?: string;
+  repeatingDay?: string;
 }
 
 interface ScheduleData {
@@ -188,8 +192,19 @@ const ScheduleDashboard = () => {
     // Filter events for the selected date
     const selectedDateEvents = scheduleData?.queryResult.filter(
       (event) =>
-        new Date(event.date).toDateString() ===
-        selectedScheduleDate.toDateString()
+        (event.isScheduleRepeating &&
+          event.repeatingStartDate &&
+          event.repeatingEndDate &&
+          new Date(event.repeatingStartDate) <= selectedScheduleDate &&
+          new Date(event.repeatingEndDate) >= selectedScheduleDate &&
+          event.repeatingDay ===
+            selectedScheduleDate.toLocaleString("en-US", {
+              weekday: "long",
+            })) ||
+        (!event.isScheduleRepeating &&
+          event.date &&
+          new Date(event.date).toDateString() ===
+            selectedScheduleDate.toDateString())
     );
 
     if (!selectedDateEvents || selectedDateEvents.length === 0) {
@@ -209,9 +224,66 @@ const ScheduleDashboard = () => {
       });
     };
 
+    const fullformatTime = (date) => {
+      date = new Date(date);
+      const hours = date.getHours().toString().padStart(2, "0");
+      const minutes = date.getMinutes().toString().padStart(2, "0");
+      const time = `${hours}:${minutes}`;
+      console.log(time);
+      return time;
+    };
+
+    const getRepeatingScheduleDates = (event) => {
+      const startDate = new Date(event.repeatingStartDate);
+      const endDate = new Date(event.repeatingEndDate);
+      const daysOfWeek = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+
+      const dates: Date[] = [];
+      let currentDate: Date = new Date(startDate);
+
+      while (currentDate <= endDate) {
+        if (daysOfWeek[currentDate.getDay()] === event.repeatingDay) {
+          dates.push(new Date(currentDate));
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      return dates;
+    };
+
+    const repeatingDates = selectedDateEvents
+      .filter((event) => event.isScheduleRepeating)
+      .flatMap((event) => getRepeatingScheduleDates(event));
+
+    const allSelectedDateEvents = [...selectedDateEvents, ...repeatingDates];
+
+    const isDatePast = (selectedDate) => {
+      const today = new Date();
+      return selectedDate > today;
+    };
+
+    const sortedEvents = selectedDateEvents.sort((a, b) => {
+      if (a.isScheduleRepeating && !b.isScheduleRepeating) {
+        return 1;
+      } else if (!a.isScheduleRepeating && b.isScheduleRepeating) {
+        return -1;
+      } else {
+        // For events with the same type (repeating or non-repeating), maintain original order
+        return 0;
+      }
+    });
+
     return (
       <div className="flex flex-col w-[95vw] max-w-[550px] my-8 px-6 relative">
-        {selectedDateEvents.map((event, index) => (
+        {sortedEvents.map((event, index) => (
           <Timeline key={index} timelineBarType="dashed" gradientPoint={true}>
             <Timeline.Item>
               <Timeline.Point icon={<CalendarBlank size={16} />} />
