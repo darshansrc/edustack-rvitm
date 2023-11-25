@@ -143,7 +143,7 @@ function StudentAttendanceTable() {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [user]);
 
   async function fetchAttendanceData() {
     try {
@@ -656,7 +656,11 @@ function StudentAttendanceTable() {
                         >
                           <Timeline.Item>
                             <Timeline.Point
-                              icon={attendanceData[index]?.length - classIndex}
+                              icon={
+                                <div className="text-[12px]">
+                                  {attendanceData[index]?.length - classIndex}
+                                </div>
+                              }
                             />
                             <Timeline.Content>
                               <Timeline.Time>
@@ -669,16 +673,11 @@ function StudentAttendanceTable() {
                                 })}{" "}
                                 ({getDayOfWeek(new Date(classData.classDate))})
                               </Timeline.Time>
-                              <div className="border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px]">
+                              <div className="border border-solid border-slate-200 rounded bg-white flex flex-row justify-left items-center p-[10px] w-full">
                                 <div
                                   style={{
-                                    position: "absolute",
-                                    top: "30%",
-                                    left: "12%",
-                                    color: "white",
-                                    width: "25px",
-                                    height: "25px",
-                                    borderRadius: "50%",
+                                    minWidth: "25px",
+                                    minHeight: "25px",
                                     backgroundColor: classData.students.find(
                                       (student) =>
                                         student.usn ===
@@ -686,12 +685,8 @@ function StudentAttendanceTable() {
                                     )?.Present
                                       ? "green" // Set the background color to green if present
                                       : "red", // Set the background color to red if absent
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    fontSize: "12px",
-                                    fontFamily: "Poppins",
                                   }}
+                                  className="flex items-center justify-center text-white rounded-[50%] text-[12px] ml-2 "
                                 >
                                   {classData.students.find(
                                     (student) =>
@@ -701,58 +696,63 @@ function StudentAttendanceTable() {
                                     : "A"}
                                 </div>
 
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    position: "relative",
-                                    marginLeft: "15%",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      cursor: "pointer",
-                                      marginRight: "12px",
-                                    }}
-                                  >
-                                    <Typography
-                                      style={{
-                                        fontSize: "14px",
-                                        fontFamily: "Poppins",
-                                        fontWeight: "500",
-                                        color: "#555",
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      <BiTime style={{ marginRight: "5px" }} />
-                                      {convertTo12HourFormat(
-                                        classData.classStartTime
-                                      )}{" "}
-                                      -{" "}
-                                      {convertTo12HourFormat(
-                                        classData.classEndTime
-                                      )}
-                                    </Typography>
+                                <div className="ml-4">
+                                  <div>
+                                    <div>
+                                      <p className="flex font-semibold flex-row items-center text-[10px] font-poppins text-gray-700">
+                                        <BiTime className="mr-1" />
+                                        {"  "}
+                                        {convertTo12HourFormat(
+                                          classData.classStartTime
+                                        )}{" "}
+                                        -{" "}
+                                        {convertTo12HourFormat(
+                                          classData.classEndTime
+                                        )}
+                                      </p>
+                                    </div>
                                   </div>
+                                  <p className="text-[10px] font-poppins text-gray-700">
+                                    {classData.presentCount +
+                                      " out of your " +
+                                      (classData.presentCount +
+                                        classData.absentCount) +
+                                      " classmates were present"}
+                                  </p>
+                                  <p className="text-[10px] font-poppins text-gray-700">
+                                    <span className="font-semibold">
+                                      Marked By:
+                                    </span>{" "}
+                                    {classData.recordedByName}
+                                  </p>
+                                  {classData.classTopic && (
+                                    <p className="text-[10px] font-poppins text-gray-700">
+                                      <span className="font-semibold">
+                                        Class Topic:
+                                      </span>{" "}
+                                      {classData.classTopic ? (
+                                        classData.classTopic
+                                      ) : (
+                                        <span className="font-italic ">
+                                          {" "}
+                                          -{" "}
+                                        </span>
+                                      )}
+                                    </p>
+                                  )}
+                                  {classData.classDescription && (
+                                    <p className="text-[10px] font-poppins text-gray-700">
+                                      <span className="font-semibold">
+                                        Class Description:
+                                      </span>{" "}
+                                      {classData.classDescription ? (
+                                        classData.classDescription
+                                      ) : (
+                                        <span className="font-italic ">-</span>
+                                      )}
+                                    </p>
+                                  )}
                                 </div>
-                                <Typography
-                                  style={{
-                                    fontSize: "10px",
-                                    fontFamily: "Poppins",
-                                    fontWeight: "400",
-                                    color: "#555",
-                                    marginLeft: "15%",
-                                  }}
-                                >
-                                  {classData.presentCount +
-                                    " out of your " +
-                                    (classData.presentCount +
-                                      classData.absentCount) +
-                                    " classmates were present"}
-                                </Typography>
                               </div>
                             </Timeline.Content>
                           </Timeline.Item>
