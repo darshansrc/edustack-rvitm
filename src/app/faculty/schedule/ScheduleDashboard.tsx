@@ -19,6 +19,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa6";
 
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
+import { Checkbox } from "antd";
+
 interface ClassSubjectPair {
   branch: string;
   className: string;
@@ -78,6 +81,10 @@ interface ScheduleEvent {
   selectedBatch: string;
   classTopic: string;
   classDescription: string;
+  isScheduleRepeating?: boolean;
+  repeatingStartDate?: string;
+  repeatingEndDate?: string;
+  repeatingDay?: string;
 }
 
 interface ScheduleData {
@@ -116,6 +123,12 @@ const ScheduleDashboard = () => {
   const [scheduleSuccessful, setScheduleSuccessful] = useState<boolean>(false);
 
   const [messageApi, contextHolder] = message.useMessage();
+
+  const [repeatingStartDate, setRepeatingStartDate] = useState<any>(dayjs());
+  const [repeatingEndDate, setRepeatingEndDate] = useState<any>(dayjs());
+
+  const [isScheduleRepeating, setIsScheduleRepeating] =
+    useState<boolean>(false);
 
   const clearState = () => {
     setSelectedSubject("");
@@ -201,12 +214,29 @@ const ScheduleDashboard = () => {
   const handleSubmit = () => {
     // Validation checks
     if (
-      !selectedClassName ||
-      !selectedSubject ||
-      (isLabSubject && !selectedBatch) ||
-      !selectedDate ||
-      !startTime ||
-      !endTime
+      !isScheduleRepeating &&
+      (!selectedClassName ||
+        !selectedSubject ||
+        (isLabSubject && !selectedBatch) ||
+        !selectedDate ||
+        !startTime ||
+        !endTime)
+    ) {
+      // If any field is empty or falsy, set an error message and prevent submission
+      setError("Please fill in all fields");
+      return;
+    }
+
+    if (
+      isScheduleRepeating &&
+      (!selectedClassName ||
+        !selectedSubject ||
+        (isLabSubject && !selectedBatch) ||
+        !repeatingStartDate ||
+        !repeatingEndDate ||
+        !selectedWeekDay ||
+        !startTime ||
+        !endTime)
     ) {
       // If any field is empty or falsy, set an error message and prevent submission
       setError("Please fill in all fields");
@@ -225,30 +255,61 @@ const ScheduleDashboard = () => {
     const startParsedTime = parseTime(startTime);
     const endParsedTime = parseTime(endTime);
 
-    const startDate = new Date(selectedDate.format("YYYY-MM-DD"));
-    startDate.setHours(startParsedTime.hours, startParsedTime.minutes, 0, 0);
+    let startDate;
+    let endDate;
 
-    const endDate = new Date(selectedDate.format("YYYY-MM-DD"));
-    endDate.setHours(endParsedTime.hours, endParsedTime.minutes, 0, 0);
+    let scheduleDataSubmit;
 
-    // Your logic for form submission
-    const scheduleData = {
-      selectedClassName,
-      selectedSubject,
-      isLabSubject,
-      subjectType,
-      subjectName,
-      date: startDate.toISOString(),
-      startTime: startDate.toISOString(),
-      endTime: endDate.toISOString(),
-      faculty: user.email,
-      selectedBatch,
-      classTopic,
-      classDescription,
-    };
+    if (!isScheduleRepeating) {
+      startDate = new Date(selectedDate.format("YYYY-MM-DD"));
+      startDate.setHours(startParsedTime.hours, startParsedTime.minutes, 0, 0);
+
+      endDate = new Date(selectedDate.format("YYYY-MM-DD"));
+      endDate.setHours(endParsedTime.hours, endParsedTime.minutes, 0, 0);
+      // Your logic for form submission
+      scheduleDataSubmit = {
+        isScheduleRepeating,
+        selectedClassName,
+        selectedSubject,
+        isLabSubject,
+        subjectType,
+        subjectName,
+        date: startDate.toISOString(),
+        startTime: startDate.toISOString(),
+        endTime: endDate.toISOString(),
+        faculty: user.email,
+        selectedBatch,
+        classTopic,
+        classDescription,
+      };
+    } else {
+      startDate = new Date(repeatingStartDate?.format("YYYY-MM-DD"));
+      startDate.setHours(startParsedTime.hours, startParsedTime.minutes, 0, 0);
+
+      endDate = new Date(repeatingEndDate?.format("YYYY-MM-DD"));
+      endDate.setHours(endParsedTime.hours, endParsedTime.minutes, 0, 0);
+
+      scheduleDataSubmit = {
+        isScheduleRepeating,
+        selectedClassName,
+        selectedSubject,
+        isLabSubject,
+        subjectType,
+        subjectName,
+        repeatingStartDate,
+        repeatingEndDate,
+
+        date: startDate.toISOString(),
+        startTime: startDate.toISOString(),
+        endTime: endDate.toISOString(),
+        repeatingDay: selectedWeekDay,
+        faculty: user.email,
+        selectedBatch,
+      };
+    }
 
     // Call the submitForm function to send data to the API
-    submitForm(scheduleData);
+    submitForm(scheduleDataSubmit);
   };
 
   const generateTimeOptions = (): TimeOption[] => {
@@ -437,12 +498,55 @@ const ScheduleDashboard = () => {
 
   const router = useRouter();
 
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+  const [selectedWeekDay, setSelectedWeekDay] = useState("");
+
+  const handleWeekDayChange = (value: string) => {
+    console.log(`Selected day: ${value}`);
+    setSelectedWeekDay(value);
+    // You can do something with the selected day here, such as updating state
+  };
+
+  const { RangePicker } = DatePicker;
+
+  const handleDateChange = (dates) => {
+    // 'dates' is an array containing [from, to] dates
+    setRepeatingStartDate(dates[0]);
+    setRepeatingEndDate(dates[1]);
+    console.log(dates[0]);
+    console.log(dates[0]);
+  };
+
+  const onRepeatingChange = (e: CheckboxChangeEvent) => {
+    console.log(`checked = ${e.target.checked}`);
+    setIsScheduleRepeating(e.target.checked);
+  };
+
   const renderScheduleTimeline = () => {
     // Filter events for the selected date
     const selectedDateEvents = scheduleData?.queryResult.filter(
       (event) =>
-        new Date(event.date).toDateString() ===
-        selectedScheduleDate.toDateString()
+        (event.isScheduleRepeating &&
+          event.repeatingStartDate &&
+          event.repeatingEndDate &&
+          new Date(event.repeatingStartDate) <= selectedScheduleDate &&
+          new Date(event.repeatingEndDate) >= selectedScheduleDate &&
+          event.repeatingDay ===
+            selectedScheduleDate.toLocaleString("en-US", {
+              weekday: "long",
+            })) ||
+        (!event.isScheduleRepeating &&
+          event.date &&
+          new Date(event.date).toDateString() ===
+            selectedScheduleDate.toDateString())
     );
 
     if (!selectedDateEvents || selectedDateEvents.length === 0) {
@@ -470,6 +574,38 @@ const ScheduleDashboard = () => {
       console.log(time);
       return time;
     };
+
+    const getRepeatingScheduleDates = (event) => {
+      const startDate = new Date(event.repeatingStartDate);
+      const endDate = new Date(event.repeatingEndDate);
+      const daysOfWeek = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
+
+      const dates: Date[] = [];
+      let currentDate: Date = new Date(startDate);
+
+      while (currentDate <= endDate) {
+        if (daysOfWeek[currentDate.getDay()] === event.repeatingDay) {
+          dates.push(new Date(currentDate));
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      return dates;
+    };
+
+    const repeatingDates = selectedDateEvents
+      .filter((event) => event.isScheduleRepeating)
+      .flatMap((event) => getRepeatingScheduleDates(event));
+
+    const allSelectedDateEvents = [...selectedDateEvents, ...repeatingDates];
 
     return (
       <div className="flex flex-col w-[95vw] max-w-[550px] my-8 px-6 relative">
@@ -686,197 +822,201 @@ const ScheduleDashboard = () => {
         ]}
         title={"Schedule New Class"}
       >
-        {!scheduleSuccessful ? (
-          <div className="flex items-center flex-col  justify-center w-full">
-            <div className="flex flex-col items-center">
-              <p className="text-left font-[Poppins] font-[500] text-[12px] mt-2 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
-                Class
-              </p>
-              <AntSelect
-                value={selectedClassName || undefined}
-                onChange={(value) => {
-                  setSelectedClassName(value);
-                  setSelectedSubject("");
-                  setIsLabSubject(false);
-                  setSelectedBatch("");
-                }}
-                size="large"
-                placeholder="Select Class"
-                className="w-[85vw] max-w-[450px]"
-              >
-                {Object.keys(uniqueClassOptions).map((className, index) => (
-                  <AntSelect.Option key={index} value={className}>
-                    {uniqueClassOptions[className][0].classSemester}SEM{" "}
-                    {className}
-                  </AntSelect.Option>
-                ))}
-              </AntSelect>
+        <div className="flex items-center flex-col  justify-center w-full">
+          <div className="flex flex-col items-center">
+            <div className="w-[85vw] max-w-[450px] my-2 flex flex-row justify-left">
+              <Checkbox onChange={onRepeatingChange}>
+                Is Schedule Repeating?
+              </Checkbox>
+            </div>
+            <p className="text-left font-[Poppins] font-[500] text-[12px] mt-2 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
+              Class
+            </p>
+            <AntSelect
+              value={selectedClassName || undefined}
+              onChange={(value) => {
+                setSelectedClassName(value);
+                setSelectedSubject("");
+                setIsLabSubject(false);
+                setSelectedBatch("");
+              }}
+              size="large"
+              placeholder="Select Class"
+              className="w-[85vw] max-w-[450px]"
+            >
+              {Object.keys(uniqueClassOptions).map((className, index) => (
+                <AntSelect.Option key={index} value={className}>
+                  {uniqueClassOptions[className][0].classSemester}SEM{" "}
+                  {className}
+                </AntSelect.Option>
+              ))}
+            </AntSelect>
+            {selectedClassName && (
+              <>
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-6 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
+                  Subject
+                </p>
+                <AntSelect
+                  value={selectedSubject || undefined}
+                  onChange={handleSubjectChange}
+                  placeholder="Select Subject"
+                  className="w-[85vw] max-w-[450px]"
+                  size="large"
+                >
+                  {uniqueClassOptions[selectedClassName].map((pair, index) => (
+                    <AntSelect.Option key={index} value={pair.code}>
+                      {pair.subjectName} ({pair.code})
+                    </AntSelect.Option>
+                  ))}
+                </AntSelect>
+              </>
+            )}
+            {isLabSubject && (
+              <>
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
+                  Batch
+                </p>
+                <AntSelect
+                  value={selectedBatch || undefined}
+                  onChange={handleBatchChange}
+                  placeholder="Select Lab Batch"
+                  className="w-[85vw] max-w-[450px]"
+                  size="large"
+                >
+                  {batchOptions.map((option) => (
+                    <AntSelect.Option key={option.value} value={option.value}>
+                      {option.label}
+                    </AntSelect.Option>
+                  ))}
+                </AntSelect>
+              </>
+            )}
 
-              {selectedClassName && (
-                <>
-                  <p className="text-left font-[Poppins] font-[500] text-[12px] mt-6 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
-                    Subject
-                  </p>
-                  <AntSelect
-                    value={selectedSubject || undefined}
-                    onChange={handleSubjectChange}
-                    placeholder="Select Subject"
-                    className="w-[85vw] max-w-[450px]"
-                    size="large"
-                  >
-                    {uniqueClassOptions[selectedClassName].map(
-                      (pair, index) => (
-                        <AntSelect.Option key={index} value={pair.code}>
-                          {pair.subjectName} ({pair.code})
-                        </AntSelect.Option>
-                      )
-                    )}
-                  </AntSelect>
-                </>
-              )}
+            {isScheduleRepeating ? (
+              <>
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
+                  Select Date Range
+                </p>
+                <RangePicker
+                  defaultValue={[dayjs(), dayjs()]}
+                  className="w-[85vw] max-w-[450px]"
+                  inputReadOnly
+                  size="large"
+                  format="ddd, MMM D"
+                  onChange={handleDateChange}
+                  value={[repeatingStartDate, repeatingEndDate]}
+                />
 
-              {isLabSubject && (
-                <>
-                  <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
-                    Batch
-                  </p>
-                  <AntSelect
-                    value={selectedBatch || undefined}
-                    onChange={handleBatchChange}
-                    placeholder="Select Lab Batch"
-                    className="w-[85vw] max-w-[450px]"
-                    size="large"
-                  >
-                    {batchOptions.map((option) => (
-                      <AntSelect.Option key={option.value} value={option.value}>
-                        {option.label}
-                      </AntSelect.Option>
-                    ))}
-                  </AntSelect>
-                </>
-              )}
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
+                  Select Day
+                </p>
+                <AntSelect
+                  placeholder="Select a day"
+                  className="w-[85vw] max-w-[450px]"
+                  size="large"
+                  onChange={handleWeekDayChange}
+                >
+                  {daysOfWeek.map((day) => (
+                    <AntSelect.Option key={day} value={day}>
+                      {day}
+                    </AntSelect.Option>
+                  ))}
+                </AntSelect>
+              </>
+            ) : (
+              <>
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
+                  Date
+                </p>
+                <DatePicker
+                  defaultValue={dayjs()}
+                  className="w-[85vw] max-w-[450px]"
+                  inputReadOnly
+                  size="large"
+                  format="ddd, MMM D"
+                  onChange={setSelectedDate}
+                  value={selectedDate || undefined}
+                  placeholder="Select Date"
+                  disabledDate={(current) =>
+                    current && current < dayjs().subtract(1, "day")
+                  }
+                />
+              </>
+            )}
 
-              <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
-                Date
-              </p>
-              <DatePicker
-                defaultValue={dayjs()}
-                style={{
-                  width: "100%",
-                  maxWidth: "100%",
-                  textOverflow: "ellipsis",
-                }}
-                inputReadOnly
-                size="large"
-                format="ddd, MMM D"
-                onChange={setSelectedDate}
-                value={selectedDate || undefined}
-                placeholder="Select Date"
-                disabledDate={(current) =>
-                  current && current < dayjs().subtract(1, "day")
-                }
-              />
-
-              <div className="flex flex-row justify-between   w-full">
-                <div className="w-full">
-                  <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
-                    Start Time
-                  </p>
-                  <AntSelect
-                    value={startTime || undefined}
-                    onChange={handleStartTimeChange}
-                    placeholder="Select Start Time"
-                    className="w-11/12 mr-[8%]"
-                    size="large"
-                  >
-                    {timeOptions.map((option) => (
-                      <AntSelect.Option key={option.value} value={option.value}>
-                        {option.label}
-                      </AntSelect.Option>
-                    ))}
-                  </AntSelect>
-                </div>
-
-                <div className="w-full">
-                  <p className="text-left ml-[8%] font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
-                    End Time
-                  </p>
-                  <AntSelect
-                    value={endTime || undefined}
-                    onChange={(value) => setEndTime(value)}
-                    placeholder="Select End Time"
-                    className="w-11/12 ml-[8%]"
-                    size="large"
-                  >
-                    {timeOptions.map((option) => (
-                      <AntSelect.Option key={option.value} value={option.value}>
-                        {option.label}
-                      </AntSelect.Option>
-                    ))}
-                  </AntSelect>
-                </div>
+            <div className="flex flex-row justify-between   w-full ">
+              <div className="w-full">
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 ">
+                  Start Time
+                </p>
+                <AntSelect
+                  value={startTime || undefined}
+                  onChange={handleStartTimeChange}
+                  placeholder="Select Start Time"
+                  className="w-11/12 mr-[8%]"
+                  size="large"
+                >
+                  {timeOptions.map((option) => (
+                    <AntSelect.Option key={option.value} value={option.value}>
+                      {option.label}
+                    </AntSelect.Option>
+                  ))}
+                </AntSelect>
               </div>
 
-              <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
-                Topic of Class
-              </p>
-              <Input
-                placeholder="Enter Topic of Class (optional)"
-                onChange={(e) => setClassTopic(e.target.value)}
-                size="large"
-              />
-
-              <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-full">
-                Class Description
-              </p>
-              <TextArea
-                placeholder="Enter Class Description or any Instructions if necessary (optional)"
-                onChange={(e) => setClassDescription(e.target.value)}
-                className="mb-4"
-                size="large"
-              />
-
-              {error && (
-                <div className="bg-red-100 w-full text-red-500 rounded-lg mx-4  mb-2 font-[Poppins] p-2 ">
-                  {error}
-                </div>
-              )}
+              <div className="w-full">
+                <p className="text-left ml-[8%] font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 ">
+                  End Time
+                </p>
+                <AntSelect
+                  value={endTime || undefined}
+                  onChange={(value) => setEndTime(value)}
+                  placeholder="Select End Time"
+                  className="w-11/12 ml-[8%]"
+                  size="large"
+                >
+                  {timeOptions.map((option) => (
+                    <AntSelect.Option key={option.value} value={option.value}>
+                      {option.label}
+                    </AntSelect.Option>
+                  ))}
+                </AntSelect>
+              </div>
             </div>
+
+            {!isScheduleRepeating && (
+              <>
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
+                  Topic of Class
+                </p>
+                <Input
+                  placeholder="Enter Topic of Class (optional)"
+                  onChange={(e) => setClassTopic(e.target.value)}
+                  size="large"
+                  className="w-[85vw] max-w-[450px]"
+                />
+                <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
+                  Class Description
+                </p>
+                <TextArea
+                  placeholder="Enter Class Description or any Instructions if necessary (optional)"
+                  onChange={(e) => setClassDescription(e.target.value)}
+                  className="mb-4"
+                  size="large"
+                  style={{
+                    width: "85vw",
+                    maxWidth: "450px",
+                  }}
+                />
+              </>
+            )}
+            {error && (
+              <div className="bg-red-100 w-full text-red-500 rounded-lg mx-4  mb-2 font-[Poppins] p-2 ">
+                {error}
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="w-full mt-4">
-            <div className="flex flex-col border border-dashed border-slate-400 rounded my-2">
-              <p className="text-green-500 p-2 borderd w-full  my-2 text-center">
-                Class Scheduled Successfully!
-              </p>
-
-              <p className="pl-1 text-slate-700 font-[Poppins] text-[12px]">
-                Class: {selectedClassName}
-              </p>
-              <p className="pl-1 text-slate-700 font-[Poppins] text-[12px]">
-                Subject: {subjectName + "(" + selectedSubject + ")"}
-              </p>
-              <p className="pl-1 text-slate-700 font-[Poppins] text-[12px]">
-                Date: {selectedDate.format("DD MMM, YYYY")}
-              </p>
-              <p className="pl-1 text-slate-700 font-[Poppins] text-[12px] pb-4">
-                time:{" "}
-                {convertTo12HourFormat(startTime) +
-                  "-" +
-                  convertTo12HourFormat(endTime)}
-              </p>
-            </div>
-
-            <div>
-              <button
-                onClick={clearState}
-                className="bg-[#0577fb] w-full text-white rounded-lg  mt-4 mb-4 font-[Poppins] p-2 hover:bg-[#0577fb] focus:outline-none focus:ring focus:ring-blue-300"
-              >
-                Schedule Another Class
-              </button>
-            </div>
-          </div>
-        )}
+        </div>
       </AntdModal>
       {contextHolder}
     </>
