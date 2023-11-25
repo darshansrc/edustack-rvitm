@@ -36,6 +36,7 @@ interface AttendanceData {
   presentCount: number;
   absentCount: number;
   length: number;
+  filter: any;
 }
 
 interface StyledTabProps {
@@ -509,17 +510,7 @@ function StudentAttendanceTable() {
             </MyTabs>
           </div>
 
-          <h6
-            style={{
-              marginTop: "20px",
-              marginBottom: "0px",
-              marginLeft: "10px",
-              color: "grey",
-              fontFamily: "Poppins",
-              fontWeight: "500",
-              fontSize: "14px",
-            }}
-          >
+          <h6 className="mt-[20px] ml-[10px] text-gray-800 font-poppins font-semibold text-sm">
             PREVIOUS CLASSES
           </h6>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -647,6 +638,16 @@ function StudentAttendanceTable() {
                   {attendanceData[index]
                     ?.slice()
                     .reverse()
+                    .filter((classData) => {
+                      // Check if subjectType is "lab" and labBatch is equal to studentLabBatch
+                      if (subject.subjectType === "lab") {
+                        return (
+                          classData.labBatch === studentDetails.studentLabBatch
+                        );
+                      }
+                      // If subjectType is not "lab", include all attendance data
+                      return true;
+                    })
                     .map((classData, classIndex) => (
                       <>
                         <Timeline
@@ -658,7 +659,19 @@ function StudentAttendanceTable() {
                             <Timeline.Point
                               icon={
                                 <div className="text-[12px]">
-                                  {attendanceData[index]?.length - classIndex}
+                                  {attendanceData[index]?.filter(
+                                    (classData) => {
+                                      // Check if subjectType is "lab" and labBatch is equal to studentLabBatch
+                                      if (subject.subjectType === "lab") {
+                                        return (
+                                          classData.labBatch ===
+                                          studentDetails.studentLabBatch
+                                        );
+                                      }
+                                      // If subjectType is not "lab", include all attendance data
+                                      return true;
+                                    }
+                                  ).length - classIndex}
                                 </div>
                               }
                             />
