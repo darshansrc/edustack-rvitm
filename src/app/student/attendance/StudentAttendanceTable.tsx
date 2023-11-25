@@ -1,11 +1,8 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DonutChart from "./DonutChart";
-import { Chart } from "chart.js/auto";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { AiOutlineRightCircle } from "react-icons/ai";
-import AppBar from "@mui/material/AppBar";
 import { CalendarOutlined } from "@ant-design/icons";
 import {
   Tab as MyTab,
@@ -15,10 +12,9 @@ import {
 } from "react-tabs";
 import "react-datepicker/dist/react-datepicker.css";
 import "./StudentAttendanceTable.css";
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import { Box, Card, Typography } from "@mui/material";
 import styles from "./StudentAttendanceTable.module.css";
 import Skeleton from "@mui/material/Skeleton";
-import { BsCheckCircleFill, BsXCircleFill } from "react-icons/bs";
 import { styled } from "@mui/material/styles";
 import { BiTime } from "react-icons/bi";
 import { onAuthStateChanged } from "firebase/auth";
@@ -39,6 +35,7 @@ interface AttendanceData {
   sessionTime: string;
   presentCount: number;
   absentCount: number;
+  length: number;
 }
 
 interface StyledTabProps {
@@ -135,14 +132,6 @@ function StudentAttendanceTable() {
     const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     return daysOfWeek[date.getDay()];
   }
-
-  const customComparator = (a, b) => {
-    const lastCharA = a.value.slice(-1);
-    const lastCharB = b.value.slice(-1);
-    if (lastCharA < lastCharB) return -1;
-    if (lastCharA > lastCharB) return 1;
-    return 0;
-  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
@@ -606,7 +595,7 @@ function StudentAttendanceTable() {
                         />
                       ) : (
                         <Alert
-                          type="warning"
+                          type="error"
                           className="m-2 text-[12px]"
                           showIcon
                           message={`You
@@ -666,7 +655,9 @@ function StudentAttendanceTable() {
                           gradientPoint={true}
                         >
                           <Timeline.Item>
-                            <Timeline.Point icon={<CalendarOutlined />} />
+                            <Timeline.Point
+                              icon={attendanceData[index]?.length - classIndex}
+                            />
                             <Timeline.Content>
                               <Timeline.Time>
                                 {new Date(
