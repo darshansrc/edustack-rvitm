@@ -275,12 +275,6 @@ const ScheduleDashboard = () => {
               <div className="md:block hidden font-poppins pl-4 pt-2 pb-4 font-[400] text-[#0577fb] text-[20px]">
                 Your Schedule
               </div>
-              <Alert
-                message="Schedule and manage classes with ease. Leave topic descriptions and instructions for students prior to class. Mark attendance fast in the class with pre-scheduled classes."
-                type="info"
-                showIcon
-                className="my-3"
-              />
               <div className={styles.selectedDateBar}>
                 <div className={styles.selectedDate}>
                   {selectedScheduleDate.toLocaleString("en-US", {
