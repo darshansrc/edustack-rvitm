@@ -247,67 +247,67 @@ const TopNavbar = ({ name }) => {
         footer={[]}
       >
         <div className="flex flex-col items-center justify-center">
-          <p className="font-poppins font-semibold text-[20px]">Developed By</p>
+          <p className="font-poppins font-semibold text-[20px] mb-7">
+            About Edustack
+          </p>
 
-          <div className="flex flex-row my-2">
+          <div className="flex w-11/12 items-left flex-row my-2">
             <Image
               src={"/darshan.jpg"}
-              width={50}
-              height={50}
-              className="rounded-[50%] max-w-[50px] max-h-[50px]"
+              width={60}
+              height={60}
+              className="rounded-[50%] max-w-[60px] mx-2  max-h-[60px]"
               alt=""
             />
-            <div>
-              <p className="font-poppins font-semibold text-[14px] mt-2">
+            <div className="flex flex-col justify-center">
+              <p className="font-poppins font-semibold text-[14px] ">
                 Darshan Gowda
               </p>
-              <p className="font-poppins  text-[12px] mt-2">
+              <p className="font-poppins  text-[12px] ">
                 Developer, 5th sem ISE
               </p>
             </div>
           </div>
 
-          <div className="flex flex-row my-2">
+          <div className="flex w-11/12 items-left flex-row my-4">
             <Image
               src={"/dhyaan.jpeg"}
-              width={50}
-              height={50}
-              className="rounded-[50%] max-w-[50px] max-h-[50px]"
+              width={60}
+              height={60}
+              className="rounded-[50%] mx-2 max-w-[60px] max-h-[60px] "
               alt=""
             />
-            <div>
-              <p className="font-poppins font-semibold text-[14px] mt-2">
+            <div className="flex flex-col justify-center">
+              <p className="font-poppins font-semibold text-[14px] ">
                 Dhyaan Kotian
               </p>
-              <p className="font-poppins  text-[12px] mt-2">
-                Contributor, 5th sem CSE
+              <p className="font-poppins  text-[12px]">
+                UI/UX Contributor, 5th sem CSE
               </p>
             </div>
           </div>
 
-          <div className="flex flex-row my-2">
+          <div className="flex w-11/12 items-left flex-row my-2">
             <Image
               src={"/abhijat.jpg"}
-              width={50}
-              height={50}
-              className="rounded-[50%] max-w-[50px] max-h-[50px]"
+              width={60}
+              height={60}
+              className="rounded-[50%] mx-2 max-w-[60px] max-h-[60px]"
               alt=""
             />
-            <div>
-              <p className="font-poppins font-semibold text-[14px] mt-2">
+            <div className="flex flex-col justify-center">
+              <p className="font-poppins font-semibold text-[14px] ">
                 Abhijat Dakshesh
               </p>
-              <p className="font-poppins  text-[12px] mt-2">
+              <p className="font-poppins  text-[12px] ">
                 Deployment Management, 5th sem ISE
               </p>
             </div>
           </div>
 
-          <p className="font-poppins font-semibold text-[16px] mt-2"></p>
-          <p className="font-poppins font-semibold text-[16px] mt-2">and</p>
-          <p className="font-poppins font-semibold text-[16px] mt-2"></p>
-          <p className="font-poppins flex flex-row items-center justify-center  text-[14px] mt-5">
-            Built with <FaReact /> ReactJS and <IoLogoFirebase /> Firebase
+          <p className="font-poppins flex flex-row items-center justify-center  text-[14px] mt-8">
+            Platform Built with <FaReact className="mx-1" /> ReactJS and{" "}
+            <IoLogoFirebase className="mx-1" /> Firebase
           </p>
         </div>
       </AntModal>
