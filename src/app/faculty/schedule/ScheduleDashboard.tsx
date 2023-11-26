@@ -849,10 +849,19 @@ const ScheduleDashboard = () => {
       <AntdModal
         centered
         open={scheduleClassModalOpen}
-        onCancel={() => setScheduleClassModalOpen(false)}
+        onCancel={() => {
+          setScheduleClassModalOpen(false);
+          clearState();
+        }}
         onOk={handleSubmit}
         footer={[
-          <Button key="back" onClick={() => setScheduleClassModalOpen(false)}>
+          <Button
+            key="back"
+            onClick={() => {
+              setScheduleClassModalOpen(false);
+              clearState();
+            }}
+          >
             Cancel
           </Button>,
           <Button
