@@ -34,6 +34,7 @@ interface ClassSubjectPair {
   subjectName: string;
   subjectType: string;
   year: string;
+  faculties: string[];
 }
 
 interface ClassSubjectPairsList extends Array<ClassSubjectPair> {}
@@ -127,6 +128,8 @@ const ScheduleDashboard = () => {
   const [repeatingStartDate, setRepeatingStartDate] = useState<any>(dayjs());
   const [repeatingEndDate, setRepeatingEndDate] = useState<any>(dayjs());
 
+  const [subjectFaculty, setSubjectFaculty] = useState<any>([]);
+
   const [isScheduleRepeating, setIsScheduleRepeating] =
     useState<boolean>(false);
 
@@ -168,18 +171,12 @@ const ScheduleDashboard = () => {
     if (selectedSubjectPair) {
       setSubjectType(selectedSubjectPair.subjectType);
       setSubjectName(selectedSubjectPair.subjectName);
+      setSubjectFaculty(selectedSubjectPair.faculties);
     }
   };
 
   const handleBatchChange = (value: any) => {
     setSelectedBatch(value);
-  };
-
-  const success = () => {
-    messageApi.open({
-      type: "success",
-      content: "Schedule Deleted Successfully",
-    });
   };
 
   const submitForm = async (formData) => {
@@ -277,7 +274,7 @@ const ScheduleDashboard = () => {
         date: startDate.toISOString(),
         startTime: startDate.toISOString(),
         endTime: endDate.toISOString(),
-        faculty: user.email,
+        faculty: subjectFaculty,
         selectedBatch,
         classTopic,
         classDescription,
@@ -303,7 +300,7 @@ const ScheduleDashboard = () => {
         startTime: startDate.toISOString(),
         endTime: endDate.toISOString(),
         repeatingDay: selectedWeekDay,
-        faculty: user.email,
+        faculty: subjectFaculty,
         selectedBatch,
       };
     }
@@ -666,10 +663,19 @@ const ScheduleDashboard = () => {
 
                   <div className="text-slate-500 font-[Poppins] text-[12px]">
                     <span className="text-[#0577fb] font-[Poppins] text-[12px]  ">
-                      Topic:{" "}
+                      Faculty:{" "}
                     </span>
-                    {event?.classTopic ? event?.classTopic : "N/A"}
+                    {event?.faculty ? event?.faculty.join(", ") : "-"}
                   </div>
+
+                  {event.classTopic && (
+                    <div className="text-slate-500 font-[Poppins] text-[12px]">
+                      <span className="text-[#0577fb] font-[Poppins] text-[12px]  ">
+                        Topic:{" "}
+                      </span>
+                      {event?.classTopic}
+                    </div>
+                  )}
 
                   {event.classDescription && (
                     <div className="text-slate-500 font-[Poppins] text-[12px]">
@@ -679,6 +685,7 @@ const ScheduleDashboard = () => {
                       {event?.classDescription}
                     </div>
                   )}
+
                   <div className="flex flex-row gap-2 max-w-[70%] my-2">
                     {event &&
                       event.selectedClassName &&
@@ -927,6 +934,24 @@ const ScheduleDashboard = () => {
                 </AntSelect>
               </>
             )}
+
+            <p className="text-left font-[Poppins] font-[500] text-[12px] mt-5 pl-2 text-slate-600 w-[85vw] max-w-[450px]">
+              Faculty
+            </p>
+            <AntSelect
+              mode="multiple"
+              value={subjectFaculty}
+              placeholder="Select faculties"
+              className="w-[85vw] max-w-[450px]"
+              size="large"
+              onChange={(value) => setSubjectFaculty(value)}
+            >
+              {subjectFaculty.map((faculty) => (
+                <AntSelect.Option key={faculty} value={faculty}>
+                  {faculty}
+                </AntSelect.Option>
+              ))}
+            </AntSelect>
 
             {isScheduleRepeating ? (
               <>

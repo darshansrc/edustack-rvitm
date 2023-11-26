@@ -190,22 +190,31 @@ const ScheduleDashboard = () => {
 
   const renderScheduleTimeline = () => {
     // Filter events for the selected date
-    const selectedDateEvents = scheduleData?.queryResult.filter(
-      (event) =>
-        (event.isScheduleRepeating &&
-          event.repeatingStartDate &&
-          event.repeatingEndDate &&
-          new Date(event.repeatingStartDate) <= selectedScheduleDate &&
-          new Date(event.repeatingEndDate) >= selectedScheduleDate &&
-          event.repeatingDay ===
-            selectedScheduleDate.toLocaleString("en-US", {
-              weekday: "long",
-            })) ||
-        (!event.isScheduleRepeating &&
-          event.date &&
-          new Date(event.date).toDateString() ===
-            selectedScheduleDate.toDateString())
-    );
+    const selectedDateEvents = scheduleData?.queryResult
+      .filter((event) => {
+        // Check if subjectType is "lab" and labBatch is equal to studentLabBatch
+        if (event.subjectType === "lab") {
+          return event.selectedBatch === studentDetails.studentLabBatch;
+        }
+        // If subjectType is not "lab", include all attendance data
+        return true;
+      })
+      .filter(
+        (event) =>
+          (event.isScheduleRepeating &&
+            event.repeatingStartDate &&
+            event.repeatingEndDate &&
+            new Date(event.repeatingStartDate) <= selectedScheduleDate &&
+            new Date(event.repeatingEndDate) >= selectedScheduleDate &&
+            event.repeatingDay ===
+              selectedScheduleDate.toLocaleString("en-US", {
+                weekday: "long",
+              })) ||
+          (!event.isScheduleRepeating &&
+            event.date &&
+            new Date(event.date).toDateString() ===
+              selectedScheduleDate.toDateString())
+      );
 
     if (!selectedDateEvents || selectedDateEvents.length === 0) {
       return (
@@ -319,7 +328,7 @@ const ScheduleDashboard = () => {
                     <span className="text-[#0577fb] font-[Poppins] text-[12px]  ">
                       Faculty:{" "}
                     </span>
-                    {event?.faculty ? event?.faculty : "N/A"}
+                    {event?.faculty ? event?.faculty.join(", ") : "N/A"}
                   </div>
                   {event.classDescription && (
                     <div className="text-slate-500 font-[Poppins] text-[12px]">
