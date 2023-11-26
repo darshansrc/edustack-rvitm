@@ -122,7 +122,7 @@ const ActivatePage = () => {
             const classDocRef = doc(db, "database", className);
             const classDocSnapshot = await getDoc(classDocRef);
 
-            if (studentDoc.data()) {
+            if (classDocSnapshot.exists() && studentDoc.data()) {
               messageApi.open({
                 type: "success",
                 content: "Student details fetched!",
