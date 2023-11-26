@@ -130,7 +130,12 @@ const TopNavbar = ({ name }) => {
         <div className={styles.openNavbar}>
           <div className={styles.openNavbarContainer}>
             <Link href="/student/home">
-              <div className={styles.openNavbarItem}>Home</div>
+              <div
+                onClick={() => setOpen(false)}
+                className={styles.openNavbarItem}
+              >
+                Home
+              </div>
             </Link>
             {/* <div className={styles.openNavbarItem}>
               <div className={styles.themeSelector}>
@@ -151,7 +156,7 @@ const TopNavbar = ({ name }) => {
               </div>
             </div> */}
 
-            <div className={styles.openNavbarItem}>Report Bug</div>
+            {/* <div className={styles.openNavbarItem}>Report Bug</div> */}
             <div
               className={styles.openNavbarItem}
               onClick={() => setAboutModalOpen(true)}
@@ -161,6 +166,7 @@ const TopNavbar = ({ name }) => {
 
             <Link href={"/student/profile"} shallow={true}>
               <div
+                onClick={() => setOpen(false)}
                 className={styles.openNavbarButton}
                 style={{ marginTop: "40px", color: "#0577fb" }}
               >
@@ -237,11 +243,12 @@ const TopNavbar = ({ name }) => {
         open={aboutModalopen}
         onOk={() => setAboutModalOpen(false)}
         onCancel={() => setAboutModalOpen(false)}
-        title="About EduStack"
+        title=""
+        footer={[]}
       >
         <div className="flex flex-col items-center justify-center">
           <p className="font-poppins font-semibold text-[20px]">Developed By</p>
-          <p className="font-poppins font-semibold text-[20px] mt-2">
+          <p className="font-poppins font-semibold text-[16px] mt-2">
             Darshan Gowda (5th sem ISE)
           </p>
           <p className="font-poppins font-semibold text-[16px] mt-2">
@@ -251,7 +258,7 @@ const TopNavbar = ({ name }) => {
           <p className="font-poppins font-semibold text-[16px] mt-2">
             Dhyaan Kotian (5th sem CSE)
           </p>
-          <p className="font-poppins font-semibold text-[14px] mt-5">
+          <p className="font-poppins flex flex-row font-semibold text-[14px] mt-5">
             Built with <FaReact /> ReactJS and <IoLogoFirebase /> Firebase
           </p>
         </div>
