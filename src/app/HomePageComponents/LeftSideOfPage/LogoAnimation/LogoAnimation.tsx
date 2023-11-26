@@ -7,7 +7,7 @@ function LogoAnimation() {
     <>
       <div className={styles.OuterLayer}>
         <div
-          className={`${styles.blendingWrapper} scale-150 max-[540px]:scale-125 mt-5 max-[900px]:mb-[-70px]`}
+          className={`${styles.blendingWrapper}  mt-5 max-[900px]:mb-[-70px]`}
         >
           <motion.div
             className={styles.LogoShapeLayer3}

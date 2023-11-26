@@ -9,6 +9,7 @@
 .blendingWrapper {
   /*This way, the LogoShapeLayer1, LogoShapeLayer2, and LogoShapeLayer3 will blend with each other, but not with the OuterLayer's background color*/
   isolation: isolate;
+
   display: flex;
   flex-direction: column-reverse;
 }
