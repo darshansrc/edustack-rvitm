@@ -84,8 +84,18 @@ const SignIn = () => {
     }
   };
 
+  const removeCookieSafely = (cookieName: string) => {
+    // Check if the document is mounted
+    if (typeof document !== "undefined") {
+      // Remove the cookie
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    } else {
+      console.warn("Document is not mounted. Cookie removal skipped.");
+    }
+  };
   const handleSubmit = async () => {
     try {
+      removeCookieSafely("session");
       if (!email || !password) {
         setError("Please fill all the fields");
         return;
