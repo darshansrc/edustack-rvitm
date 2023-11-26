@@ -114,46 +114,53 @@ const ActivatePage = () => {
         where("email", "==", enteredEmail)
       );
       const studentSnapshot = await getDocs(studentQuery);
+      try {
+        await Promise.all(
+          studentSnapshot.docs.map(async (studentDoc) => {
+            const className = studentDoc.ref.parent.parent?.id || "";
+            const studentID = studentDoc.ref.id;
+            const classDocRef = doc(db, "database", className);
+            const classDocSnapshot = await getDoc(classDocRef);
 
-      await Promise.all(
-        studentSnapshot.docs.map(async (studentDoc) => {
-          const className = studentDoc.ref.parent.parent?.id || "";
-          const studentID = studentDoc.ref.id;
-          const classDocRef = doc(db, "database", className);
-          const classDocSnapshot = await getDoc(classDocRef);
-
-          if (classDocSnapshot.exists()) {
-            messageApi.open({
-              type: "success",
-              content: "Student details fetched!",
-            });
-            const classSemester = classDocSnapshot.data().currentSemester;
-            const studentLabBatch = studentDoc.data().labBatch;
-            const studentName = studentDoc.data().name;
-            const studentUSN = studentDoc.data().usn;
-            const studentEmail = studentDoc.data().email;
-            const studentDetails = {
-              studentName,
-              studentEmail,
-              studentID,
-              studentUSN,
-              studentLabBatch,
-              classSemester,
-              className,
-            };
-            console.log(studentDetails);
-            setStudentDetails(studentDetails as studentDetails);
-            setIsModalOpen(true);
-            setSubmitButtonLoading(false);
-          } else {
-            messageApi.open({
-              type: "error",
-              content: "No Records Found", // Explicitly specify the type here
-            });
-            setSubmitButtonLoading(false);
-          }
-        })
-      );
+            if (studentDoc.data()) {
+              messageApi.open({
+                type: "success",
+                content: "Student details fetched!",
+              });
+              const classSemester = classDocSnapshot.data().currentSemester;
+              const studentLabBatch = studentDoc.data().labBatch;
+              const studentName = studentDoc.data().name;
+              const studentUSN = studentDoc.data().usn;
+              const studentEmail = studentDoc.data().email;
+              const studentDetails = {
+                studentName,
+                studentEmail,
+                studentID,
+                studentUSN,
+                studentLabBatch,
+                classSemester,
+                className,
+              };
+              console.log(studentDetails);
+              setStudentDetails(studentDetails as studentDetails);
+              setIsModalOpen(true);
+              setSubmitButtonLoading(false);
+            } else {
+              messageApi.open({
+                type: "error",
+                content: "No Records Found", // Explicitly specify the type here
+              });
+              setSubmitButtonLoading(false);
+            }
+          })
+        );
+      } catch (err) {
+        messageApi.open({
+          type: "error",
+          content: "No Records Found", // Explicitly specify the type here
+        });
+        setSubmitButtonLoading(false);
+      }
     } else if (enteredEmail && userType === "faculty") {
       const queryPath = "faculty";
       const facultyQuery = query(
