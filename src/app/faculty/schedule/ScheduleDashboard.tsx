@@ -467,7 +467,11 @@ const ScheduleDashboard = () => {
               "-" +
               sessionToDelete?.startTime +
               "-" +
-              sessionToDelete?.endTime,
+              sessionToDelete?.endTime +
+              "-" +
+              sessionToDelete?.selectedSubject +
+              "-" +
+              sessionToDelete?.selectedBatch,
             // Include any other necessary data for identification
           }),
         }
