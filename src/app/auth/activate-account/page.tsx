@@ -115,6 +115,14 @@ const ActivatePage = () => {
       );
       const studentSnapshot = await getDocs(studentQuery);
 
+      if (studentSnapshot.empty) {
+        messageApi.open({
+          type: "error",
+          content: "No Records Found", // Explicitly specify the type here
+        });
+        setSubmitButtonLoading(false);
+      }
+
       if (studentSnapshot.docs) {
         await Promise.all(
           studentSnapshot.docs.map(async (studentDoc) => {
@@ -122,6 +130,14 @@ const ActivatePage = () => {
             const studentID = studentDoc.ref.id;
             const classDocRef = doc(db, "database", className);
             const classDocSnapshot = await getDoc(classDocRef);
+
+            if (!(classDocSnapshot.exists() && studentDoc.data())) {
+              messageApi.open({
+                type: "error",
+                content: "No Records Found", // Explicitly specify the type here
+              });
+              setSubmitButtonLoading(false);
+            }
 
             if (classDocSnapshot.exists() && studentDoc.data()) {
               messageApi.open({
@@ -155,7 +171,7 @@ const ActivatePage = () => {
             }
           })
         );
-      } else if (!studentSnapshot.docs) {
+      } else if (studentSnapshot.empty) {
         messageApi.open({
           type: "error",
           content: "No Records Found", // Explicitly specify the type here
@@ -173,11 +189,27 @@ const ActivatePage = () => {
 
       console.log(facultySnapshot.docs);
 
+      if (facultySnapshot.empty) {
+        messageApi.open({
+          type: "error",
+          content: "No Records Found", // Explicitly specify the type here
+        });
+        setSubmitButtonLoading(false);
+      }
+
       if (facultySnapshot.docs) {
         await Promise.all(
           facultySnapshot.docs.map(async (facultyDoc) => {
             // Assuming "facultyDetails" is the field containing details in the document
             const facultyDetails = facultyDoc.data();
+
+            if (!facultyDetails) {
+              messageApi.open({
+                type: "error",
+                content: "No Records Found", // Explicitly specify the type here
+              });
+              setSubmitButtonLoading(false);
+            }
 
             if (facultyDetails) {
               messageApi.open({
@@ -198,13 +230,6 @@ const ActivatePage = () => {
             }
           })
         );
-      }
-      if (!studentSnapshot.docs) {
-        messageApi.open({
-          type: "error",
-          content: "No Records Found", // Explicitly specify the type here
-        });
-        setSubmitButtonLoading(false);
       }
     }
 
