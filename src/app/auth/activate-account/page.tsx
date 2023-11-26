@@ -155,7 +155,7 @@ const ActivatePage = () => {
             }
           })
         );
-      } else {
+      } else if (!studentSnapshot.docs) {
         messageApi.open({
           type: "error",
           content: "No Records Found", // Explicitly specify the type here
@@ -198,7 +198,8 @@ const ActivatePage = () => {
             }
           })
         );
-      } else {
+      }
+      if (!studentSnapshot.docs) {
         messageApi.open({
           type: "error",
           content: "No Records Found", // Explicitly specify the type here
