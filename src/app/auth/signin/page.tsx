@@ -57,6 +57,7 @@ const SignIn = () => {
             await user.delete();
           } catch (err) {
             console.log("could not delete!");
+            await user.delete();
           }
         }
 
