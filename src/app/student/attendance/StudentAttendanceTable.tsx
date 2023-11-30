@@ -753,6 +753,30 @@ function StudentAttendanceTable() {
                                       classData.absentCount) +
                                     " classmates were present"}
                                 </Typography>
+                                <Typography
+                                  style={{
+                                    fontSize: "10px",
+                                    fontFamily: "Poppins",
+                                    fontWeight: "400",
+                                    color: "#555",
+                                    marginLeft: "15%",
+                                  }}
+                                >
+                                 Class Topic:  {classData.classTopic}
+                                </Typography>
+                                { classData.classDescription && (
+                                                                  <Typography
+                                                                  style={{
+                                                                    fontSize: "10px",
+                                                                    fontFamily: "Poppins",
+                                                                    fontWeight: "400",
+                                                                    color: "#555",
+                                                                    marginLeft: "15%",
+                                                                  }}
+                                                                >
+                                                                 Class Topic:  {classData.classDescription}
+                                                                </Typography>
+                                )}
                               </div>
                             </Timeline.Content>
                           </Timeline.Item>
