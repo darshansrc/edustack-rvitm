@@ -7,6 +7,7 @@
   background: linear-gradient(#0577fb, #0577fb, #0655af);
   border-radius: 40px;
   transform: rotate(-45deg);
+  z-index: -1;
 }
 
 .pill2 {
@@ -19,6 +20,7 @@
   border-radius: 200px;
   border: 30px solid #d2d5e6;
   transform: rotate(-45deg);
+  z-index: -1;
 }
 
 .pill3 {
@@ -30,6 +32,7 @@
   background: linear-gradient(#0577fb, #0655af);
   border-radius: 70px;
   transform: rotate(-45deg);
+  z-index: -1;
 }
 
 .pill4 {
@@ -38,7 +41,8 @@
   position: absolute;
   height: 300px;
   width: 120px;
-  background: linear-gradient(#0577fb, #0577fb, #0655af);
+  background: linear-gradient(#0655af, #0577fb, #0655af);
   border-radius: 70px;
   transform: rotate(-45deg);
+  z-index: -1;
 }

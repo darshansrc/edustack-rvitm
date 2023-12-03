@@ -1,37 +1,21 @@
-import LogoAnimation from "./LogoAnimation/LogoAnimation";
-import { motion } from "framer-motion";
+import SignInForHomePage from "../../auth/signin/SignInForHomePage";
 
-const LeftSideOfPage = () => {
+const LeftSideOfPage = (props) => {
+  const widthClass =
+    props.showSide === "leftSide" ? "w-full" : "w-1/2 max-md:hidden";
+
   return (
-    <>
-      <div className=" h-full w-1/2 flex flex-col justify-evenly items-center">
-        <motion.div className="mb-[-30px]">
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 2 }}
-            className="font-extrabold text-9xl text-[#0577fb] font-poppins"
-            style={{
-              WebkitTextStroke: "0.5px white",
-            }}
-          >
-            Edu
-          </motion.span>
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 3 }}
-            className="font-extrabold text-9xl text-[#0577fb] font-poppins"
-            style={{
-              WebkitTextStroke: "0.5px white",
-            }}
-          >
-            stack
-          </motion.span>
-        </motion.div>
-        <LogoAnimation />
-      </div>
-    </>
+    <div key={props.showSide} className={`relative h-screen ${widthClass}`}>
+      {/* the key prop is set to props.showSide.
+      This means that when showSide changes,
+      a new instance of the div and SignInForHomePage component will be created,
+       triggering a re-render and the animation. */}
+      <SignInForHomePage
+        loginType={props.loginType}
+        showSide={props.showSide}
+        setShowSide={props.setShowSide}
+      />
+    </div>
   );
 };
 
