@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import styles from "./SignIn.module.css";
+import styles from "./SignInForHomePage.module.css";
 import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi";
 import { useState } from "react";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
@@ -14,10 +14,11 @@ import { auth, db, provider } from "@/lib/firebase-config";
 import { useRouter } from "next/navigation";
 import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
-import { BsStack } from "react-icons/bs";
 import { Alert, Button, Input } from "antd";
+import LogoAnimation from "@/app/HomePageComponents/RightSideOfPage/LogoAnimation/LogoAnimation";
+import { motion } from "framer-motion";
 
-const SignIn = () => {
+const SignInForHomePage = (props) => {
   const [passwordShown, setPasswordShown] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -143,14 +144,65 @@ const SignIn = () => {
     }
   };
   return (
-    <main className="flex flex-col items-center justify-center w-[100vw] min-h-[100vh]">
-      <div className="flex flex-col items-center justify-center w-11/12 max-w-[450px]  bg-white rounded-lg border p-4 border-solid border-gray-50">
+    <main className="flex flex-col items-center justify-center w-full min-h-[100vh]">
+      <div className="relative flex flex-col items-center justify-center w-[95%] max-w-[450px]  bg-white rounded-lg border p-4 border-solid border-gray-50">
+        {/* {props.showSide === "leftSide" && (
+          <Button
+            onClick={() => props.setShowSide("rightSide")}
+            type="primary"
+            className="absolute top-0 left-0 m-2"
+          >
+            Back
+          </Button>
+        )} Ant d button*/}
+        {props.showSide === "leftSide" && (
+          <button
+            type="button"
+            onClick={() => {
+              if (window.matchMedia("(min-width: 768px)").matches) {
+                props.setShowSide("bothSides");
+              } else {
+                props.setShowSide("rightSide");
+              }
+            }}
+            className="absolute top-0 left-0 m-2 text-white bg-[#1677ff] hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 "
+          >
+            <svg
+              className="w-4 h-4 transform rotate-180"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 10"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1 5h12m0 0L9 1m4 4L9 9"
+              />
+            </svg>
+            <span className="sr-only"></span>
+          </button>
+        )}
         <h4 className="font-poppins flex flex-row  my-6 font-semibold  text-[24px] text-gray-800 mt-8">
-          <BsStack className="w-10 h-10 text-[#0577fb] pr-2" /> Edustack
+          <div className="w-10 h-10 pr-4 mr-2 mt-[-150px]">
+            <LogoAnimation scale={"0.25"} />
+          </div>
+          Edustack
         </h4>
 
         <h5 className="font-semibold pl-2 my-3 text-sm w-full text-left">
-          Login With
+          Login as{" "}
+          <motion.span
+            key={props.loginType}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7 }}
+            className="text-[#1677ff] transition-colors duration-200"
+          >
+            {props.loginType}
+          </motion.span>
         </h5>
 
         <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
@@ -201,7 +253,7 @@ const SignIn = () => {
         )}
 
         <Button
-          className="mt-4 w-full"
+          className="mt-4 w-full font-poppins"
           onClick={handleSubmit}
           type="primary"
           loading={isLoading}
@@ -259,4 +311,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignInForHomePage;

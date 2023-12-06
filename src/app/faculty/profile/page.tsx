@@ -18,7 +18,7 @@ const StudentProfile = () => {
   const photosStorageRef = ref(storage, "photos");
 
   interface facultyDetails {
-    facultyType: string;
+    facultyDesignation: string;
     facultyName: string;
     facultyDepartment: string;
     userUID: string;
@@ -26,7 +26,7 @@ const StudentProfile = () => {
   }
 
   const [facultyDetails, setFacultyDetails] = useState<facultyDetails>({
-    facultyType: "",
+    facultyDesignation: "",
     facultyName: "",
     facultyDepartment: "",
     userUID: "",
@@ -242,10 +242,10 @@ const StudentProfile = () => {
               )}
             </p>
 
-            <p className="text-[#0577fb] font-bold text-xs pb-1">Profession</p>
+            <p className="text-[#0577fb] font-bold text-xs pb-1">Designation</p>
             <p className="text-sm font-medium text-neutral-700 font-[Poppins] pb-4">
               {dataFetched ? (
-                facultyDetails?.facultyType
+                facultyDetails?.facultyDesignation
               ) : (
                 <Skeleton
                   variant="text"

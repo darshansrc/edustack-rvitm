@@ -58,6 +58,7 @@ export async function GET(request: NextRequest) {
     label: string;
     subjectType: string;
     subjectSemester: number;
+    faculties: string[];
   }[] = [];
   let attendanceDocs: any[] = []; // Replace 'any' with the actual type of your attendance data
 
@@ -126,6 +127,7 @@ export async function GET(request: NextRequest) {
                     const subjectLabel = data.name;
                     const subjectType = data.theoryLab;
                     const subjectSemester = data.semester;
+                    const faculties = data.faculties;
 
                     // Store subject options separately
                     subjectOptions.push({
@@ -133,6 +135,7 @@ export async function GET(request: NextRequest) {
                       label: subjectLabel,
                       subjectType,
                       subjectSemester,
+                      faculties,
                     });
 
                     try {

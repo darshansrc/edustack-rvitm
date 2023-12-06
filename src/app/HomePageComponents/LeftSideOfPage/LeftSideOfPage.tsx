@@ -1,24 +1,21 @@
-import LogoAnimation from "./LogoAnimation/LogoAnimation";
-import { motion } from "framer-motion";
+import SignInForHomePage from "../../auth/signin/SignInForHomePage";
 
-const LeftSideOfPage = () => {
+const LeftSideOfPage = (props) => {
+  const widthClass =
+    props.showSide === "leftSide" ? "w-full" : "w-1/2 max-md:hidden";
+
   return (
-    <>
-      <div className=" h-full w-1/2 flex flex-col justify-evenly items-center">
-        <motion.h1
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, delay: 2 }}
-          className="font-extrabold text-9xl text-[#0577fb] font-poppins mb-[-30px]"
-          style={{
-            WebkitTextStroke: "0.5px white",
-          }}
-        >
-          EduStack
-        </motion.h1>
-        <LogoAnimation />
-      </div>
-    </>
+    <div key={props.showSide} className={`relative h-screen ${widthClass}`}>
+      {/* the key prop is set to props.showSide.
+      This means that when showSide changes,
+      a new instance of the div and SignInForHomePage component will be created,
+       triggering a re-render and the animation. */}
+      <SignInForHomePage
+        loginType={props.loginType}
+        showSide={props.showSide}
+        setShowSide={props.setShowSide}
+      />
+    </div>
   );
 };
 

@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import DonutChart from "./DonutChart";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { CalendarOutlined } from "@ant-design/icons";
 import {
   Tab as MyTab,
   Tabs as MyTabs,
@@ -36,6 +35,7 @@ interface AttendanceData {
   presentCount: number;
   absentCount: number;
   length: number;
+  filter: any;
 }
 
 interface StyledTabProps {
@@ -143,7 +143,7 @@ function StudentAttendanceTable() {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [user]);
 
   async function fetchAttendanceData() {
     try {
@@ -259,14 +259,6 @@ function StudentAttendanceTable() {
   // Calculate total attendance percentage
   const totalAttendancePercentage = Math.round(
     (totalClassesAttended / totalClassesHeld) * 100
-  );
-
-  // Filter theory and lab subjects
-  const theorySubjects = subjectOptions.filter(
-    (subject) => subject.subjectType === "theory"
-  );
-  const labSubjects = subjectOptions.filter(
-    (subject) => subject.subjectType === "lab"
   );
 
   return (
@@ -509,17 +501,7 @@ function StudentAttendanceTable() {
             </MyTabs>
           </div>
 
-          <h6
-            style={{
-              marginTop: "20px",
-              marginBottom: "0px",
-              marginLeft: "10px",
-              color: "grey",
-              fontFamily: "Poppins",
-              fontWeight: "500",
-              fontSize: "14px",
-            }}
-          >
+          <h6 className="mt-[20px] ml-[10px] text-gray-800 font-poppins font-semibold text-sm">
             PREVIOUS CLASSES
           </h6>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -647,6 +629,16 @@ function StudentAttendanceTable() {
                   {attendanceData[index]
                     ?.slice()
                     .reverse()
+                    .filter((classData) => {
+                      // Check if subjectType is "lab" and labBatch is equal to studentLabBatch
+                      if (subject.subjectType === "lab") {
+                        return (
+                          classData.labBatch === studentDetails.studentLabBatch
+                        );
+                      }
+                      // If subjectType is not "lab", include all attendance data
+                      return true;
+                    })
                     .map((classData, classIndex) => (
                       <>
                         <Timeline
@@ -656,7 +648,23 @@ function StudentAttendanceTable() {
                         >
                           <Timeline.Item>
                             <Timeline.Point
-                              icon={attendanceData[index]?.length - classIndex}
+                              icon={
+                                <div className="text-[12px]">
+                                  {attendanceData[index]?.filter(
+                                    (classData) => {
+                                      // Check if subjectType is "lab" and labBatch is equal to studentLabBatch
+                                      if (subject.subjectType === "lab") {
+                                        return (
+                                          classData.labBatch ===
+                                          studentDetails.studentLabBatch
+                                        );
+                                      }
+                                      // If subjectType is not "lab", include all attendance data
+                                      return true;
+                                    }
+                                  ).length - classIndex}
+                                </div>
+                              }
                             />
                             <Timeline.Content>
                               <Timeline.Time>
@@ -669,16 +677,11 @@ function StudentAttendanceTable() {
                                 })}{" "}
                                 ({getDayOfWeek(new Date(classData.classDate))})
                               </Timeline.Time>
-                              <div className="border border-solid border-slate-200 rounded bg-white flex flex-col justify-center p-[10px]  pr-[30px]">
+                              <div className="border border-solid border-slate-200 rounded bg-white flex flex-row justify-left items-center p-[10px] w-full">
                                 <div
                                   style={{
-                                    position: "absolute",
-                                    top: "30%",
-                                    left: "12%",
-                                    color: "white",
-                                    width: "25px",
-                                    height: "25px",
-                                    borderRadius: "50%",
+                                    minWidth: "25px",
+                                    minHeight: "25px",
                                     backgroundColor: classData.students.find(
                                       (student) =>
                                         student.usn ===
@@ -686,12 +689,8 @@ function StudentAttendanceTable() {
                                     )?.Present
                                       ? "green" // Set the background color to green if present
                                       : "red", // Set the background color to red if absent
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    fontSize: "12px",
-                                    fontFamily: "Poppins",
                                   }}
+                                  className="flex items-center justify-center text-white rounded-[50%] text-[12px] ml-2 "
                                 >
                                   {classData.students.find(
                                     (student) =>
@@ -701,82 +700,63 @@ function StudentAttendanceTable() {
                                     : "A"}
                                 </div>
 
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    justifyContent: "space-between",
-                                    alignItems: "center",
-                                    position: "relative",
-                                    marginLeft: "15%",
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      cursor: "pointer",
-                                      marginRight: "12px",
-                                    }}
-                                  >
-                                    <Typography
-                                      style={{
-                                        fontSize: "14px",
-                                        fontFamily: "Poppins",
-                                        fontWeight: "500",
-                                        color: "#555",
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                      }}
-                                    >
-                                      <BiTime style={{ marginRight: "5px" }} />
-                                      {convertTo12HourFormat(
-                                        classData.classStartTime
-                                      )}{" "}
-                                      -{" "}
-                                      {convertTo12HourFormat(
-                                        classData.classEndTime
-                                      )}
-                                    </Typography>
+                                <div className="ml-4">
+                                  <div>
+                                    <div>
+                                      <p className="flex font-semibold flex-row items-center text-[10px] font-poppins text-gray-700">
+                                        <BiTime className="mr-1" />
+                                        {"  "}
+                                        {convertTo12HourFormat(
+                                          classData.classStartTime
+                                        )}{" "}
+                                        -{" "}
+                                        {convertTo12HourFormat(
+                                          classData.classEndTime
+                                        )}
+                                      </p>
+                                    </div>
                                   </div>
+                                  <p className="text-[10px] font-poppins text-gray-700">
+                                    {classData.presentCount +
+                                      " out of your " +
+                                      (classData.presentCount +
+                                        classData.absentCount) +
+                                      " classmates were present"}
+                                  </p>
+                                  <p className="text-[10px] font-poppins text-gray-700">
+                                    <span className="font-semibold">
+                                      Marked By:
+                                    </span>{" "}
+                                    {classData.recordedByName}
+                                  </p>
+                                  {classData.classTopic && (
+                                    <p className="text-[10px] font-poppins text-gray-700">
+                                      <span className="font-semibold">
+                                        Class Topic:
+                                      </span>{" "}
+                                      {classData.classTopic ? (
+                                        classData.classTopic
+                                      ) : (
+                                        <span className="font-italic ">
+                                          {" "}
+                                          -{" "}
+                                        </span>
+                                      )}
+                                    </p>
+                                  )}
+                                  {classData.classDescription && (
+                                    <p className="text-[10px] font-poppins text-gray-700">
+                                      <span className="font-semibold">
+                                        Class Description:
+                                      </span>{" "}
+                                      {classData.classDescription ? (
+                                        classData.classDescription
+                                      ) : (
+                                        <span className="font-italic ">-</span>
+                                      )}
+                                    </p>
+                                  )}
                                 </div>
-                                <Typography
-                                  style={{
-                                    fontSize: "10px",
-                                    fontFamily: "Poppins",
-                                    fontWeight: "400",
-                                    color: "#555",
-                                    marginLeft: "15%",
-                                  }}
-                                >
-                                  {classData.presentCount +
-                                    " out of your " +
-                                    (classData.presentCount +
-                                      classData.absentCount) +
-                                    " classmates were present"}
-                                </Typography>
-                                <Typography
-                                  style={{
-                                    fontSize: "10px",
-                                    fontFamily: "Poppins",
-                                    fontWeight: "400",
-                                    color: "#555",
-                                    marginLeft: "15%",
-                                  }}
-                                >
-                                 Class Topic:  {classData.classTopic}
-                                </Typography>
-                                { classData.classDescription && (
-                                                                  <Typography
-                                                                  style={{
-                                                                    fontSize: "10px",
-                                                                    fontFamily: "Poppins",
-                                                                    fontWeight: "400",
-                                                                    color: "#555",
-                                                                    marginLeft: "15%",
-                                                                  }}
-                                                                >
-                                                                 Class Topic:  {classData.classDescription}
-                                                                </Typography>
-                                )}
                               </div>
                             </Timeline.Content>
                           </Timeline.Item>

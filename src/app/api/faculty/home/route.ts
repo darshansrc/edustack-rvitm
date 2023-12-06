@@ -2,15 +2,7 @@ import { auth } from "firebase-admin";
 import { customInitApp } from "@/lib/firebase-admin-config";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import {
-  collection,
-  collectionGroup,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, doc, getDocs, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase-config";
 
 customInitApp();
@@ -43,9 +35,27 @@ export async function GET(request: NextRequest) {
   const userUID = decodedClaims.uid; // Get the user's UID
 
   if (decodedClaims.email) {
-    const getRef = doc(db, "faculty", decodedClaims.email);
-    const userDoc = await getDoc(getRef);
-    facultyDetails = userDoc.data() as facultyDetails;
+    const queryPath = "faculty";
+    const facultyQuery = query(
+      collection(db, queryPath),
+      where("facultyEmail", "==", decodedClaims.email)
+    );
+
+    const facultySnapshot = await getDocs(facultyQuery);
+
+    console.log(facultySnapshot.docs);
+
+    await Promise.all(
+      facultySnapshot.docs.map(async (facultyDoc) => {
+        // Assuming "facultyDetails" is the field containing details in the document
+        const data = facultyDoc.data() as facultyDetails;
+
+        if (data) {
+          facultyDetails = data;
+          console.log(facultyDetails);
+        }
+      })
+    );
   }
 
   return NextResponse.json(

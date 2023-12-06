@@ -115,45 +115,69 @@ const ActivatePage = () => {
       );
       const studentSnapshot = await getDocs(studentQuery);
 
-      await Promise.all(
-        studentSnapshot.docs.map(async (studentDoc) => {
-          const className = studentDoc.ref.parent.parent?.id || "";
-          const studentID = studentDoc.ref.id;
-          const classDocRef = doc(db, "database", className);
-          const classDocSnapshot = await getDoc(classDocRef);
+      if (studentSnapshot.empty) {
+        messageApi.open({
+          type: "error",
+          content: "No Records Found", // Explicitly specify the type here
+        });
+        setSubmitButtonLoading(false);
+      }
 
-          if (classDocSnapshot.exists()) {
-            messageApi.open({
-              type: "success",
-              content: "Student details fetched!",
-            });
-            const classSemester = classDocSnapshot.data().currentSemester;
-            const studentLabBatch = studentDoc.data().labBatch;
-            const studentName = studentDoc.data().name;
-            const studentUSN = studentDoc.data().usn;
-            const studentEmail = studentDoc.data().email;
-            const studentDetails = {
-              studentName,
-              studentEmail,
-              studentID,
-              studentUSN,
-              studentLabBatch,
-              classSemester,
-              className,
-            };
-            console.log(studentDetails);
-            setStudentDetails(studentDetails as studentDetails);
-            setIsModalOpen(true);
-            setSubmitButtonLoading(false);
-          } else {
-            messageApi.open({
-              type: "error",
-              content: "No Records Found", // Explicitly specify the type here
-            });
-            setSubmitButtonLoading(false);
-          }
-        })
-      );
+      if (studentSnapshot.docs) {
+        await Promise.all(
+          studentSnapshot.docs.map(async (studentDoc) => {
+            const className = studentDoc.ref.parent.parent?.id || "";
+            const studentID = studentDoc.ref.id;
+            const classDocRef = doc(db, "database", className);
+            const classDocSnapshot = await getDoc(classDocRef);
+
+            if (!(classDocSnapshot.exists() && studentDoc.data())) {
+              messageApi.open({
+                type: "error",
+                content: "No Records Found", // Explicitly specify the type here
+              });
+              setSubmitButtonLoading(false);
+            }
+
+            if (classDocSnapshot.exists() && studentDoc.data()) {
+              messageApi.open({
+                type: "success",
+                content: "Student details fetched!",
+              });
+              const classSemester = classDocSnapshot.data().currentSemester;
+              const studentLabBatch = studentDoc.data().labBatch;
+              const studentName = studentDoc.data().name;
+              const studentUSN = studentDoc.data().usn;
+              const studentEmail = studentDoc.data().email;
+              const studentDetails = {
+                studentName,
+                studentEmail,
+                studentID,
+                studentUSN,
+                studentLabBatch,
+                classSemester,
+                className,
+              };
+              console.log(studentDetails);
+              setStudentDetails(studentDetails as studentDetails);
+              setIsModalOpen(true);
+              setSubmitButtonLoading(false);
+            } else {
+              messageApi.open({
+                type: "error",
+                content: "No Records Found", // Explicitly specify the type here
+              });
+              setSubmitButtonLoading(false);
+            }
+          })
+        );
+      } else if (studentSnapshot.empty) {
+        messageApi.open({
+          type: "error",
+          content: "No Records Found", // Explicitly specify the type here
+        });
+        setSubmitButtonLoading(false);
+      }
     } else if (enteredEmail && userType === "faculty") {
       const queryPath = "faculty";
       const facultyQuery = query(
@@ -165,31 +189,51 @@ const ActivatePage = () => {
 
       console.log(facultySnapshot.docs);
 
-      await Promise.all(
-        facultySnapshot.docs.map(async (facultyDoc) => {
-          // Assuming "facultyDetails" is the field containing details in the document
-          const facultyDetails = facultyDoc.data();
+      if (facultySnapshot.empty) {
+        messageApi.open({
+          type: "error",
+          content: "No Records Found", // Explicitly specify the type here
+        });
+        setSubmitButtonLoading(false);
+      }
 
-          if (facultyDetails) {
-            messageApi.open({
-              type: "success",
-              content: "Faculty details fetched!",
-            });
+      if (facultySnapshot.docs) {
+        await Promise.all(
+          facultySnapshot.docs.map(async (facultyDoc) => {
+            // Assuming "facultyDetails" is the field containing details in the document
+            const facultyDetails = facultyDoc.data();
 
-            console.log(facultyDetails);
-            setFacultyDetails(facultyDetails as facultyDetails);
-            setIsModalOpen(true);
-            setSubmitButtonLoading(false);
-          } else {
-            messageApi.open({
-              type: "error",
-              content: "No Records Found",
-            });
-            setSubmitButtonLoading(false);
-          }
-        })
-      );
+            if (!facultyDetails) {
+              messageApi.open({
+                type: "error",
+                content: "No Records Found", // Explicitly specify the type here
+              });
+              setSubmitButtonLoading(false);
+            }
+
+            if (facultyDetails) {
+              messageApi.open({
+                type: "success",
+                content: "Faculty details fetched!",
+              });
+
+              console.log(facultyDetails);
+              setFacultyDetails(facultyDetails as facultyDetails);
+              setIsModalOpen(true);
+              setSubmitButtonLoading(false);
+            } else {
+              messageApi.open({
+                type: "error",
+                content: "No Records Found",
+              });
+              setSubmitButtonLoading(false);
+            }
+          })
+        );
+      }
     }
+
+    setSubmitButtonLoading(false);
   };
 
   const handleCreateAccount = async () => {

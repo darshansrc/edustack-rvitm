@@ -18,7 +18,7 @@ import { auth } from "@/lib/firebase-config";
 import Link from "next/link";
 import { ModalDialog } from "@mui/joy";
 import { BsStack } from "react-icons/bs";
-import { Modal as AntModal } from "antd";
+import { Modal as AntModal, Avatar } from "antd";
 import { FaReact } from "react-icons/fa6";
 import { IoLogoFirebase } from "react-icons/io5";
 
@@ -130,7 +130,12 @@ const TopNavbar = ({ name }) => {
         <div className={styles.openNavbar}>
           <div className={styles.openNavbarContainer}>
             <Link href="/student/home">
-              <div className={styles.openNavbarItem}>Home</div>
+              <div
+                onClick={() => setOpen(false)}
+                className={styles.openNavbarItem}
+              >
+                Home
+              </div>
             </Link>
             {/* <div className={styles.openNavbarItem}>
               <div className={styles.themeSelector}>
@@ -151,7 +156,7 @@ const TopNavbar = ({ name }) => {
               </div>
             </div> */}
 
-            <div className={styles.openNavbarItem}>Report Bug</div>
+            {/* <div className={styles.openNavbarItem}>Report Bug</div> */}
             <div
               className={styles.openNavbarItem}
               onClick={() => setAboutModalOpen(true)}
@@ -161,6 +166,7 @@ const TopNavbar = ({ name }) => {
 
             <Link href={"/student/profile"} shallow={true}>
               <div
+                onClick={() => setOpen(false)}
                 className={styles.openNavbarButton}
                 style={{ marginTop: "40px", color: "#0577fb" }}
               >
@@ -237,22 +243,71 @@ const TopNavbar = ({ name }) => {
         open={aboutModalopen}
         onOk={() => setAboutModalOpen(false)}
         onCancel={() => setAboutModalOpen(false)}
-        title="About EduStack"
+        title=""
+        footer={[]}
       >
         <div className="flex flex-col items-center justify-center">
-          <p className="font-poppins font-semibold text-[20px]">Developed By</p>
-          <p className="font-poppins font-semibold text-[20px] mt-2">
-            Darshan Gowda (5th sem ISE)
+          <p className="font-poppins font-semibold text-[20px] mb-7">
+            About Edustack
           </p>
-          <p className="font-poppins font-semibold text-[16px] mt-2">
-            Abhijat Dakshesh (5th sem ISE)
-          </p>
-          <p className="font-poppins font-semibold text-[16px] mt-2">and</p>
-          <p className="font-poppins font-semibold text-[16px] mt-2">
-            Dhyaan Kotian (5th sem CSE)
-          </p>
-          <p className="font-poppins font-semibold text-[14px] mt-5">
-            Built with <FaReact /> ReactJS and <IoLogoFirebase /> Firebase
+
+          <div className="flex w-11/12 items-left flex-row my-2">
+            <Image
+              src={"/darshan.jpg"}
+              width={60}
+              height={60}
+              className="rounded-[50%] max-w-[60px] mx-2  max-h-[60px]"
+              alt=""
+            />
+            <div className="flex flex-col justify-center">
+              <p className="font-poppins font-semibold text-[14px] ">
+                Darshan Gowda
+              </p>
+              <p className="font-poppins  text-[12px] ">
+                Developer, 5th sem ISE
+              </p>
+            </div>
+          </div>
+
+          <div className="flex w-11/12 items-left flex-row my-4">
+            <Image
+              src={"/dhyaan.jpeg"}
+              width={60}
+              height={60}
+              className="rounded-[50%] mx-2 max-w-[60px] max-h-[60px] "
+              alt=""
+            />
+            <div className="flex flex-col justify-center">
+              <p className="font-poppins font-semibold text-[14px] ">
+                Dhyaan Kotian
+              </p>
+              <p className="font-poppins  text-[12px]">
+                UI/UX Contributor, 5th sem CSE
+              </p>
+            </div>
+          </div>
+
+          <div className="flex w-11/12 items-left flex-row my-2">
+            <Image
+              src={"/abhijat.jpg"}
+              width={60}
+              height={60}
+              className="rounded-[50%] mx-2 max-w-[60px] max-h-[60px]"
+              alt=""
+            />
+            <div className="flex flex-col justify-center">
+              <p className="font-poppins font-semibold text-[14px] ">
+                Abhijat Dakshesh
+              </p>
+              <p className="font-poppins  text-[12px] ">
+                Deployment Management, 5th sem ISE
+              </p>
+            </div>
+          </div>
+
+          <p className="font-poppins flex flex-row items-center justify-center  text-[14px] mt-8">
+            Platform Built with <FaReact className="mx-1" /> ReactJS and{" "}
+            <IoLogoFirebase className="mx-1" /> Firebase
           </p>
         </div>
       </AntModal>
