@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import Navbar from "../components/navbar/Navbar";
 import styles1 from "../components/navbar/Navbar.module.css";
-import TopNavbar from "../components/topnavbar/TopNavbar";
-import styles from "../course/Course.module.css";
+import TopNavbar from "@/app/student/components/topnavbar/TopNavbar";
+import styles from "@/app/student/course/Course.module.css";
 
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
