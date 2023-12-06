@@ -292,7 +292,7 @@ function StudentAttendanceTable() {
                 }}
               >
                 {dataFetched ? (
-                  <>Your ward's Attendance Summary</>
+                  <p>Attendance Summary of your ward</p>
                 ) : (
                   <Skeleton
                     variant="text"
