@@ -1,0 +1,141 @@
+.navBar {
+  position: fixed;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  z-index: 1;
+}
+
+.pageContainer {
+  background-color: #fafafa;
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+@media (min-width: 768px) {
+  .navItem {
+    display: none;
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 400;
+    margin: 5px;
+    gap: 5px;
+    color: #474747;
+    font-size: 14px;
+  }
+
+  /* for desktop view */
+  .navLogo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #00000014;
+    display: none;
+  }
+
+  .navBar {
+    display: none;
+    flex-direction: column;
+    top: 0;
+    left: 0;
+    border-right: 1px solid #dddddd;
+    height: 100vh;
+    width: 80px;
+    box-shadow: 4px 0 5px rgba(232, 232, 232, 0.1);
+  }
+
+  .navItem {
+    flex-direction: column;
+    justify-content: left;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 10px;
+    display: none;
+  }
+
+  .navItem:hover {
+    background-color: #f6f6f6;
+    display: none;
+  }
+
+  .navItemActive {
+    display: flex;
+    margin: 5px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-weight: 400;
+    gap: 5px;
+    background-color: #e9edff;
+    color: #0577fb;
+    justify-content: left;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 10px;
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .pageContainer {
+    background-color: #fafafa;
+    min-height: 100vh;
+    padding-bottom: 60px;
+    padding-top: 55px;
+  }
+
+  .navLogo {
+    display: none;
+  }
+
+  .navText {
+    display: block;
+  }
+
+  /* for mobile view */
+  .navBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 -4px 6px rgba(0, 0, 0, 0.04);
+    background-color: #ffffff;
+  }
+
+  .navItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 10px;
+    height: 7vh;
+    min-width: 20vw;
+    min-height: 50px;
+  }
+
+  .navItemActive {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #0577fb;
+    font-size: 10px;
+    height: 7vh;
+    min-width: 20vw;
+    min-height: 50px;
+  }
+
+  .navTextActive {
+    display: block;
+  }
+}

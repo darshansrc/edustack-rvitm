@@ -231,6 +231,87 @@ const ActivatePage = () => {
           })
         );
       }
+    } else if (enteredEmail && userType === "parent") {
+      const queryPath = "students";
+      const collectionGroupRef = collectionGroup(db, queryPath);
+
+      const fatherEmailQuery = query(
+        collectionGroupRef,
+        where("fatherEmail", "==", enteredEmail)
+      );
+
+      const motherEmailQuery = query(
+        collectionGroupRef,
+        where("motherEmail", "==", enteredEmail)
+      );
+
+      const [fatherEmailSnapshot, motherEmailSnapshot] = await Promise.all([
+        getDocs(fatherEmailQuery),
+        getDocs(motherEmailQuery),
+      ]);
+
+      const combinedSnapshot = [
+        ...fatherEmailSnapshot.docs,
+        ...motherEmailSnapshot.docs,
+      ];
+
+      if (combinedSnapshot.length === 0) {
+        messageApi.open({
+          type: "error",
+          content: "No Records Found",
+        });
+        setSubmitButtonLoading(false);
+        return;
+      }
+
+      await Promise.all(
+        combinedSnapshot.map(async (studentDoc) => {
+          const className = studentDoc.ref.parent.parent?.id || "";
+          const studentID = studentDoc.ref.id;
+          const classDocRef = doc(db, "database", className);
+          const classDocSnapshot = await getDoc(classDocRef);
+
+          if (!(classDocSnapshot.exists() && studentDoc.data())) {
+            messageApi.open({
+              type: "error",
+              content: "No Records Found",
+            });
+            setSubmitButtonLoading(false);
+            return;
+          }
+
+          if (classDocSnapshot.exists() && studentDoc.data()) {
+            messageApi.open({
+              type: "success",
+              content: "Student details fetched!",
+            });
+            const classSemester = classDocSnapshot.data().currentSemester;
+            const studentLabBatch = studentDoc.data().labBatch;
+            const studentName = studentDoc.data().name;
+            const studentUSN = studentDoc.data().usn;
+            const studentEmail = studentDoc.data().email;
+            const studentDetails = {
+              studentName,
+              studentEmail,
+              studentID,
+              studentUSN,
+              studentLabBatch,
+              classSemester,
+              className,
+            };
+            console.log(studentDetails);
+            setStudentDetails(studentDetails as studentDetails);
+            setIsModalOpen(true);
+            setSubmitButtonLoading(false);
+          } else {
+            messageApi.open({
+              type: "error",
+              content: "No Records Found",
+            });
+            setSubmitButtonLoading(false);
+          }
+        })
+      );
     }
 
     setSubmitButtonLoading(false);
@@ -251,6 +332,19 @@ const ActivatePage = () => {
         await setDoc(userDocRef, {
           email: enteredEmail,
           type: "student",
+          name: studentDetails.studentName,
+          usn: studentDetails.studentUSN,
+          labBatch: studentDetails.studentLabBatch,
+          semester: studentDetails.classSemester,
+          className: studentDetails.className,
+        });
+      }
+
+      if (userType === "parent") {
+        const userDocRef = doc(db, "users", user.uid);
+        await setDoc(userDocRef, {
+          email: enteredEmail,
+          type: "parent",
           name: studentDetails.studentName,
           usn: studentDetails.studentUSN,
           labBatch: studentDetails.studentLabBatch,
@@ -347,6 +441,7 @@ const ActivatePage = () => {
               >
                 <Select.Option value="student">Student</Select.Option>
                 <Select.Option value="faculty">Faculty</Select.Option>
+                <Select.Option value="parent">Parent</Select.Option>
               </Select>
 
               <p className="font-poppins w-full text-left pl-2 text-[12px] text-gray-700 mt-3">
@@ -453,18 +548,43 @@ const ActivatePage = () => {
               </div>
             </div>
           ) : (
+            userType === "faculty" && (
+              <div>
+                <div className="mb-2">
+                  <span className="font-bold">Name:</span>{" "}
+                  {facultyDetails.facultyName}
+                </div>
+                <div className="mb-2">
+                  <span className="font-bold">Designation:</span>{" "}
+                  {facultyDetails.facultyDesignation}
+                </div>
+                <div className="mb-2">
+                  <span className="font-bold">Department:</span>{" "}
+                  {facultyDetails.facultyDepartment}
+                </div>
+              </div>
+            )
+          )}
+          {userType === "parent" && (
             <div>
               <div className="mb-2">
-                <span className="font-bold">Name:</span>{" "}
-                {facultyDetails.facultyName}
+                <span className="font-bold">Ward Name:</span>{" "}
+                {studentDetails.studentName}
               </div>
+
               <div className="mb-2">
-                <span className="font-bold">Designation:</span>{" "}
-                {facultyDetails.facultyDesignation}
+                <span className="font-bold">Ward USN:</span>{" "}
+                {studentDetails.studentUSN}
               </div>
+
               <div className="mb-2">
-                <span className="font-bold">Department:</span>{" "}
-                {facultyDetails.facultyDepartment}
+                <span className="font-bold">Ward Semester:</span>{" "}
+                {studentDetails.classSemester}-SEM
+              </div>
+
+              <div className="mb-2">
+                <span className="font-bold">Ward Class Name:</span>{" "}
+                {studentDetails.className}
               </div>
             </div>
           )}

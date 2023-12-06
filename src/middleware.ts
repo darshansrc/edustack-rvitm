@@ -22,6 +22,8 @@ export async function middleware(request: NextRequest, response: NextResponse) {
           return NextResponse.redirect(new URL("/student/home", request.url));
         } else if (userType === "faculty") {
           return NextResponse.redirect(new URL("/faculty/home", request.url));
+        } else if (userType === "parent") {
+          return NextResponse.redirect(new URL("/parent/home", request.url));
         }
       } else {
         return NextResponse.redirect(new URL("/auth/signin", request.url));
@@ -32,7 +34,11 @@ export async function middleware(request: NextRequest, response: NextResponse) {
     }
   }
 
-  if (pathname.startsWith("/student") || pathname.startsWith("/faculty")) {
+  if (
+    pathname.startsWith("/student") ||
+    pathname.startsWith("/faculty") ||
+    pathname.startsWith("/parent")
+  ) {
     if (!session) {
       return NextResponse.rewrite(new URL("/auth/signin", request.url));
     }
@@ -47,7 +53,8 @@ export async function middleware(request: NextRequest, response: NextResponse) {
 
         if (
           (userType === "student" && pathname.startsWith("/student")) ||
-          (userType === "faculty" && pathname.startsWith("/faculty"))
+          (userType === "faculty" && pathname.startsWith("/faculty")) ||
+          (userType === "parent" && pathname.startsWith("/parent"))
         ) {
           // Continue to the protected route
         } else {
@@ -76,6 +83,8 @@ export async function middleware(request: NextRequest, response: NextResponse) {
           return NextResponse.redirect(new URL("/student/home", request.url));
         } else if (userType === "faculty") {
           return NextResponse.redirect(new URL("/faculty/home", request.url));
+        } else if (userType === "parent") {
+          return NextResponse.redirect(new URL("/parent/home", request.url));
         }
       }
     } catch (error) {

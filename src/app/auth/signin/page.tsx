@@ -123,6 +123,8 @@ const SignIn = () => {
               router.push("/student/home");
             } else if (userData.type === "faculty") {
               router.push("/faculty/home");
+            } else if (userData.type === "parent") {
+              router.push("/parent/home");
             } else {
               setError("No Records Found");
               await signOut(auth);
