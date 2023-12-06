@@ -148,13 +148,16 @@ function StudentAttendanceTable() {
   async function fetchAttendanceData() {
     try {
       const responseAPI = await fetch(
-        `${window.location.origin}/api/student/attendance`,
+        `${window.location.origin}/api/parent/attendance`,
         {
           method: "GET",
         }
       );
       if (responseAPI.status === 200) {
         const responseBody = await responseAPI.json();
+        console.log(responseBody.studentDetails);
+        console.log(responseBody.subjectOptions);
+        console.log(responseBody.attendanceDocs);
         setStudentDetails(responseBody.studentDetails);
         setSubjectOptions(responseBody.subjectOptions);
         setAttendanceData(responseBody.attendanceDocs);
@@ -289,7 +292,7 @@ function StudentAttendanceTable() {
                 }}
               >
                 {dataFetched ? (
-                  <>Attendance Summary</>
+                  <>Your ward's Attendance Summary</>
                 ) : (
                   <Skeleton
                     variant="text"
@@ -555,8 +558,8 @@ function StudentAttendanceTable() {
                           fontFamily: "Poppins",
                         }}
                       >
-                        You have attended {getAttendanceCount(index)} out of{" "}
-                        {getClassCount(index)} Classes.
+                        Your ward has attended {getAttendanceCount(index)} out
+                        of {getClassCount(index)} Classes.
                       </Typography>
                       <Typography
                         style={{
@@ -568,28 +571,6 @@ function StudentAttendanceTable() {
                         Attendance Percentage:{" "}
                         {Math.round(getAttendancePercentage(index))}%
                       </Typography>
-                      {getAttendancePercentage(index) >= 75 ? (
-                        <Alert
-                          type="success"
-                          className="m-2 text-[12px]"
-                          showIcon
-                          message={`Your attendance requirement is satisifed.`}
-                        />
-                      ) : (
-                        <Alert
-                          type="error"
-                          className="m-2 text-[12px]"
-                          showIcon
-                          message={`You
-                            need to attend
-                            ${Math.ceil(
-                              (0.75 * getClassCount(index) -
-                                getAttendanceCount(index)) /
-                                0.25
-                            )}
-                            more class to reach 75% Attendance.`}
-                        />
-                      )}
                     </div>
                   ) : (
                     <div
@@ -716,13 +697,7 @@ function StudentAttendanceTable() {
                                       </p>
                                     </div>
                                   </div>
-                                  <p className="text-[10px] font-poppins text-gray-700">
-                                    {classData.presentCount +
-                                      " out of your " +
-                                      (classData.presentCount +
-                                        classData.absentCount) +
-                                      " classmates were present"}
-                                  </p>
+
                                   <p className="text-[10px] font-poppins text-gray-700">
                                     <span className="font-semibold">
                                       Marked By:
