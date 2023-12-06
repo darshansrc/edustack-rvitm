@@ -292,7 +292,9 @@ function StudentAttendanceTable() {
                 }}
               >
                 {dataFetched ? (
-                  <p>Attendance Summary of your ward</p>
+                  <p>
+                    Attendance Summary <br /> of your ward
+                  </p>
                 ) : (
                   <Skeleton
                     variant="text"
@@ -365,6 +367,7 @@ function StudentAttendanceTable() {
                         style={{
                           borderTopRightRadius: "10px",
                           paddingRight: "10px",
+                          paddingBottom: "10px",
                         }}
                       >
                         Attendance Percentage
