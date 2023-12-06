@@ -72,13 +72,22 @@ export async function GET(request: NextRequest) {
     const collectionGroupRef = collectionGroup(db, queryPath);
     const studentQuery = query(
       collectionGroupRef,
-      where("fatherEmail", "==", decodedClaims.email),
+      where("fatherEmail", "==", decodedClaims.email)
+    );
+    const studentFatherSnapshot = await getDocs(studentQuery);
+
+    const studentMotherQuery = query(
+      collectionGroupRef,
       where("motherEmail", "==", decodedClaims.email)
     );
-    const studentSnapshot = await getDocs(studentQuery);
+    const studentMotherSnapshot = await getDocs(studentMotherQuery);
+
+    let studentSnapshot = studentFatherSnapshot.docs.concat(
+      studentMotherSnapshot.docs
+    );
 
     await Promise.all(
-      studentSnapshot.docs.map(async (studentDoc) => {
+      studentSnapshot.map(async (studentDoc) => {
         const className = studentDoc.ref.parent.parent?.id || "";
         const studentID = studentDoc.ref.id;
         const classDocRef = doc(db, "database", className);
