@@ -307,6 +307,7 @@ const FacultyHomePage = () => {
         onOk={() => setAssignmentModal(false)}
         onCancel={() => setAssignmentModal(false)}
         centered={true}
+        footer={null}
       >
         <PostAssignment />
       </Modal>

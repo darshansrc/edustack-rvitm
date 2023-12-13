@@ -568,7 +568,7 @@ function StudentAttendanceTable() {
                         Attendance Percentage:{" "}
                         {Math.round(getAttendancePercentage(index))}%
                       </Typography>
-                      {getAttendancePercentage(index) >= 75 ? (
+                      {getAttendancePercentage(index) >= 85 ? (
                         <Alert
                           type="success"
                           className="m-2 text-[12px]"
@@ -583,11 +583,11 @@ function StudentAttendanceTable() {
                           message={`You
                             need to attend
                             ${Math.ceil(
-                              (0.75 * getClassCount(index) -
+                              (0.85 * getClassCount(index) -
                                 getAttendanceCount(index)) /
                                 0.25
                             )}
-                            more class to reach 75% Attendance.`}
+                            more class to reach 85% Attendance.`}
                         />
                       )}
                     </div>

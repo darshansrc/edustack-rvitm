@@ -550,6 +550,17 @@ const ScheduleDashboard = () => {
             selectedScheduleDate.toDateString())
     );
 
+    // Sort events by startTime
+    selectedDateEvents?.sort((a, b) => {
+      const timeA =
+        new Date(a.startTime).getUTCHours() * 60 +
+        new Date(a.startTime).getUTCMinutes();
+      const timeB =
+        new Date(b.startTime).getUTCHours() * 60 +
+        new Date(b.startTime).getUTCMinutes();
+      return timeA - timeB;
+    });
+
     if (!selectedDateEvents || selectedDateEvents.length === 0) {
       return (
         <div className={styles.noClassContainer}>
