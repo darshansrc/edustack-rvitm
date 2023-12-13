@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { LuPresentation } from "react-icons/lu";
 import { Modal } from "antd";
+import PostAssignment from "../assignment/PostAssignment";
 
 interface facultyDetails {
   facultyDesignation: string;
@@ -35,6 +36,7 @@ const FacultyHomePage = () => {
   const [dataFetched, setDataFetched] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [assignmentModal, setAssignmentModal] = useState<boolean>(false);
   const storage = getStorage();
 
   useEffect(() => {
@@ -261,7 +263,10 @@ const FacultyHomePage = () => {
             </div>
           </Link>
 
-          <div className={styles.menuItem} onClick={() => setIsModalOpen(true)}>
+          <div
+            className={styles.menuItem}
+            onClick={() => setAssignmentModal(true)}
+          >
             <div className={styles.menuItemIcon}>
               <RxReader
                 size={25}
@@ -295,6 +300,15 @@ const FacultyHomePage = () => {
       >
         {" "}
         This feature is still under Development.
+      </Modal>
+
+      <Modal
+        open={assignmentModal}
+        onOk={() => setAssignmentModal(false)}
+        onCancel={() => setAssignmentModal(false)}
+        centered={true}
+      >
+        <PostAssignment />
       </Modal>
     </>
   );
