@@ -63,14 +63,7 @@ const SignIn = () => {
 
         if (response.status === 200) {
           if (userDoc.exists()) {
-            const userData = userDoc.data();
-            if (userData.type === "student") {
-              router.push("/student/home");
-            } else if (userData.type === "faculty") {
-              router.push("/faculty/home");
-            } else if (userData.type === "parent") {
-              router.push("/parent/home");
-            }
+            router.refresh();
           }
         } else {
           setError(
@@ -85,18 +78,8 @@ const SignIn = () => {
     }
   };
 
-  const removeCookieSafely = (cookieName: string) => {
-    // Check if the document is mounted
-    if (typeof document !== "undefined") {
-      // Remove the cookie
-      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-    } else {
-      console.warn("Document is not mounted. Cookie removal skipped.");
-    }
-  };
   const handleSubmit = async () => {
     try {
-      removeCookieSafely("session");
       if (!email || !password) {
         setError("Please fill all the fields");
         return;
@@ -117,14 +100,17 @@ const SignIn = () => {
 
       if (response.status === 200) {
         try {
+          if (typeof window !== "undefined") {
+            localStorage.clear();
+          }
           if (userDoc.exists()) {
             const userData = userDoc.data();
             if (userData.type === "student") {
-              router.push("/student/home");
+              router.refresh();
             } else if (userData.type === "faculty") {
-              router.push("/faculty/home");
+              router.refresh();
             } else if (userData.type === "parent") {
-              router.push("/parent/home");
+              router.refresh();
             } else {
               setError("No Records Found");
               await signOut(auth);

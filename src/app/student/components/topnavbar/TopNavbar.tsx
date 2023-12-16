@@ -43,6 +43,9 @@ const TopNavbar = ({ name }) => {
       method: "POST",
     });
     if (response.status === 200) {
+      if (typeof window !== "undefined") {
+        localStorage.clear();
+      }
       router.push("https://edustack-app.vercel.app/logout");
     }
   };
