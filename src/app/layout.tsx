@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
-import { Analytics } from "@vercel/analytics/react";
-
-import StyledComponentsRegistry from "./AntdRegistry";
+import StyleRegistry from "./StyleRegistry";
 
 export const metadata: Metadata = {
   title: "EduStack",
@@ -32,8 +29,7 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Analytics />
-        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
+        <StyleRegistry>{children}</StyleRegistry>
       </body>
     </html>
   );
