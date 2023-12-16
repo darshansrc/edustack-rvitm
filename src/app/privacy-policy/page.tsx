@@ -45,7 +45,7 @@ const EdustackPrivacyPolicy = () => {
         <p className="text-gray-700 mb-4">
           We take the security of your information seriously. While we do not
           collect any user data, we implement security measures to protect any
-          non-personal data associated with the app's functionality.
+          non-personal data associated with the app functionality.
         </p>
 
         <h2 className="text-xl font-bold mb-2 mt-4">Third-Party Services:</h2>
