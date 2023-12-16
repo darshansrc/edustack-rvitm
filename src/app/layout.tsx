@@ -3,7 +3,7 @@ import "./globals.css";
 
 import { Analytics } from "@vercel/analytics/react";
 
-import StyledComponentsRegistry from "../lib/AntdRegistry";
+import StyledComponentsRegistry from "./AntdRegistry";
 
 export const metadata: Metadata = {
   title: "EduStack",

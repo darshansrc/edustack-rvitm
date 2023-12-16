@@ -113,20 +113,22 @@ const SignIn = () => {
               router.refresh();
             } else {
               setError("No Records Found");
+              setIsLoading(false);
               await signOut(auth);
             }
           }
         } catch (err) {
           setError("Error processing user data");
+          setIsLoading(false);
           await signOut(auth);
         }
       } else {
         setError("Authentication failed");
+        setIsLoading(false);
         await signOut(auth);
       }
     } catch (error) {
       setError(error.code);
-    } finally {
       setIsLoading(false);
     }
   };
