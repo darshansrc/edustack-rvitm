@@ -190,6 +190,8 @@ const ScheduleDashboard = () => {
 
   const renderScheduleTimeline = () => {
     // Filter events for the selected date
+
+    // Filter events for the selected date
     const selectedDateEvents = scheduleData?.queryResult
       .filter((event) => {
         // Check if subjectType is "lab" and labBatch is equal to studentLabBatch
@@ -215,6 +217,17 @@ const ScheduleDashboard = () => {
             new Date(event.date).toDateString() ===
               selectedScheduleDate.toDateString())
       );
+
+    // Sort events by startTime
+    selectedDateEvents?.sort((a, b) => {
+      const timeA =
+        new Date(a.startTime).getUTCHours() * 60 +
+        new Date(a.startTime).getUTCMinutes();
+      const timeB =
+        new Date(b.startTime).getUTCHours() * 60 +
+        new Date(b.startTime).getUTCMinutes();
+      return timeA - timeB;
+    });
 
     if (!selectedDateEvents || selectedDateEvents.length === 0) {
       return (
@@ -292,7 +305,7 @@ const ScheduleDashboard = () => {
 
     return (
       <div className="flex flex-col w-[95vw] max-w-[550px] my-8 px-6 relative">
-        {sortedEvents.map((event, index) => (
+        {sortedEvents?.map((event, index) => (
           <Timeline key={index} timelineBarType="dashed" gradientPoint={true}>
             <Timeline.Item>
               <Timeline.Point icon={<CalendarBlank size={16} />} />
