@@ -43,7 +43,7 @@ const TopNavbar = ({ name }) => {
       method: "POST",
     });
     if (response.status === 200) {
-      router.push("/");
+      router.push("https://app.edu-stack.com/logout");
     }
   };
 
