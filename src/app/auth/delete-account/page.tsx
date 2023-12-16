@@ -8,7 +8,7 @@ import { BsStack, BsTrash } from "react-icons/bs";
 const DeleteAccount = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [confirmDelete, setConfirmDelete] = useState(false);
-  const [user, setUser] = useState<any>(); // Replace with your authentication library's user object
+  const [user, setUser] = useState<any>();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
