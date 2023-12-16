@@ -21,6 +21,7 @@
     "@mui/x-date-pickers": "^6.18.1",
     "@vercel/analytics": "^1.1.1",
     "antd": "^5.12.2",
+    "antd-style": "^3.6.1",
     "chart.js": "^4.4.0",
     "chartjs": "^0.3.24",
     "dayjs": "^1.11.10",

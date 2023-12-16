@@ -69,7 +69,8 @@ const StyledTabs = styled((props: StyledTabsProps) => (
   <Tabs
     {...props}
     variant="scrollable"
-    scrollButtons="auto"
+    scrollButtons
+    allowScrollButtonsMobile
     TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
   />
 ))({
@@ -976,7 +977,7 @@ const AttendanceDashboard = () => {
           />
         </div>
 
-        <div className=" sticky z-[50] bg-white w-full max-w-full">
+        <div className=" sticky z-[50] md:bg-white bg-[#fafafa] w-full max-w-full">
           <h4 className="pl-4  font-poppins  font-semibold bg-white w-full  text-gray-800  text-[14px] md:text-[18px]">
             Your Subjects
           </h4>
@@ -988,7 +989,7 @@ const AttendanceDashboard = () => {
               {classSubjectPairList.map((pair, index) => (
                 <StyledTab
                   key={index}
-                  label={`${pair.classSemester}-SEM ${pair.className} - ${pair.code}`}
+                  label={`${pair.className} - ${pair.code}`}
                   value={pair}
                 />
               ))}
