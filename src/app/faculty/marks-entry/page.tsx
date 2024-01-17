@@ -6,6 +6,14 @@ import useMessage from "antd/es/message/useMessage";
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { IoChevronBackSharp } from "react-icons/io5";
+import { CSVLink } from "react-csv";
+
+interface CsvDataRow {
+  Name: string;
+  USN: string;
+  "Test Marks": string;
+  "Ass./Quiz Marks": string;
+}
 
 const MarksEntryForm = () => {
   const [formStep, setFormStep] = useState(1);
@@ -23,6 +31,8 @@ const MarksEntryForm = () => {
   const [step1Error, setStep1Error] = useState<string>("");
 
   const [studentData, setStudentData] = useState<any[]>([]);
+
+  const [tableCsvData, setTableCsvData] = useState<CsvDataRow[]>([]);
 
   const [studentMarks, setStudentMarks] = useState<{
     [key: string]: {
@@ -319,6 +329,18 @@ const MarksEntryForm = () => {
     setIsConfirmationModalVisible(false);
   };
 
+  useEffect(() => {
+    setTableCsvData(
+      studentData.map((student) => ({
+        Name: student.name,
+        USN: student.usn,
+        "Test Marks": studentMarks[student.usn]?.obtainedTestMarks || "-",
+        "Ass./Quiz Marks":
+          studentMarks[student.usn]?.obtainedAssignmentMarks || "-",
+      }))
+    );
+  }, [studentData, studentMarks]);
+
   const stepOne = () => (
     <>
       <TopNavbar name="Marks Entry" />
@@ -513,7 +535,16 @@ const MarksEntryForm = () => {
                 </div>
               </div>
 
-              <div className="h-full flex items-center w-full justify-end ">
+              <div className="h-full flex items-center w-full gap-2 justify-end ">
+                <Button className="h-full">
+                  <CSVLink
+                    data={tableCsvData}
+                    filename={`${subjectName}_${testCode}_Table.csv`}
+                    target="_blank"
+                  >
+                    Download CSV
+                  </CSVLink>
+                </Button>
                 <Button
                   type={isEditMode ? "default" : "primary"}
                   className="h-full"
@@ -533,6 +564,7 @@ const MarksEntryForm = () => {
                 )}
               </div>
             </div>
+
             <Table
               size="small"
               dataSource={studentData.map((student) => ({
