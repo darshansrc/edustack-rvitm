@@ -9,7 +9,7 @@ customInitApp();
 
 export async function GET(request: NextRequest) {
   const session = cookies().get("session")?.value || "";
-  //Validate if the cookie exist in the request
+  //Validate if the cookie exist in the requestt
   if (!session) {
     return NextResponse.json({ isLogged: false }, { status: 401 });
   }
